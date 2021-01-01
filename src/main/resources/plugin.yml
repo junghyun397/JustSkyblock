@@ -1,0 +1,42 @@
+name: Mine2021
+main: do1phin.mine2021.ServerManager
+version: "${pom.version}"
+api: ["1.0.0"]
+author: do1phin
+description: 언제 어디서나 즐기는 나만의 세상
+website: htttp://Mine24.net
+load: STARTUP
+
+commands:
+  가입:
+    description: Mine24 계정을 생성합니다.
+    usage: /가입 [비밀번호]
+    permission: mine2021.auth
+  로그인:
+    description: Mine24에 로그인 합니다.
+    usage: /로그인 [비밀번호]
+    permission: mine2021.auth
+  이동:
+    description: 다른 유저의 구역으로 이동합니다.
+    usage: /이동 [닉네임]
+    permission: mine2021.general
+  b:
+    description: 유저를 차단합니다.sp
+    usage: /b [닉네임]
+    permission: mine2021.management
+  k:
+    description: 유저를 추방합니다.
+    usage: /k [닉네임]
+    permission: mine2021.management
+
+
+permissions:
+  mine2021.auth:
+    description: "계정 접근 권한"
+    default: true
+  mine2021.general:
+    description: "서버 이용 권한"
+    default: false
+  mine2021.management:
+    description: "관리 권한"
+    default: op
