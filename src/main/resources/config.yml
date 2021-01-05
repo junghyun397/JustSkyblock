@@ -1,0 +1,19 @@
+Provider: Yaml
+
+skyblock:
+  distance: 256
+
+oregen:
+  l1block:
+    1: 1
+    2: 2
+  l2block:
+    1: 1
+    2: 2
+    3: 3
+
+db:
+  host: "localhost"
+  port: 3306
+  user: "root"
+  password: "your-password-here"

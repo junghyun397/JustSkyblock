@@ -21,7 +21,7 @@ commands:
     usage: /이동 [닉네임]
     permission: mine2021.general
   b:
-    description: 유저를 차단합니다.sp
+    description: 유저를 차단합니다.
     usage: /b [닉네임]
     permission: mine2021.management
   k:
