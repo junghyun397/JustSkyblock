@@ -6,13 +6,13 @@ import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerPreLoginEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import do1phin.mine2021.data.PlayerData;
-import do1phin.mine2021.ui.PrefixTool;
+import do1phin.mine2021.ui.MessageAgent;
 import do1phin.mine2021.utils.NukkitUtility;
 import do1phin.mine2021.utils.Pair;
 
 public class ServerEventListener implements Listener {
 
-    private ServerAgent serverAgent;
+    private final ServerAgent serverAgent;
 
     ServerEventListener(ServerAgent serverAgent) {
         this.serverAgent = serverAgent;
@@ -20,13 +20,9 @@ public class ServerEventListener implements Listener {
 
     @EventHandler
     public void onPlayerPreLogin(final PlayerPreLoginEvent event) {
-        PlayerData playerData = this.serverAgent.registerPlayer(
-                event.getPlayer().getName(),
-                event.getPlayer().getAddress(),
-                event.getPlayer().getUniqueId().getMostSignificantBits()
-        );
+        PlayerData playerData = this.serverAgent.registerPlayerData(event.getPlayer());
 
-        Pair<String, String> namePair = PrefixTool.getNamePair(event.getPlayer().getName(), playerData.getPlayerGroup());
+        Pair<String, String> namePair = MessageAgent.getNamePair(event.getPlayer().getName(), playerData.getPlayerGroup());
         event.getPlayer().setDisplayName(namePair.a);
         event.getPlayer().setNameTag(namePair.b);
     }
@@ -41,7 +37,7 @@ public class ServerEventListener implements Listener {
     public void onPlayerQuit(final PlayerQuitEvent event) {
         event.setQuitMessage("");
         NukkitUtility.broadcastPopUP(event.getPlayer().getServer(), "§7-" + event.getPlayer().getName());
-        ServerAgent.getInstance().purgePlayer(event.getPlayer().getName());
+        this.serverAgent.purgePlayerData(event.getPlayer().getUniqueId().toString());
     }
 
 }

@@ -1,53 +1,65 @@
 package do1phin.mine2021.data;
 
+import cn.nukkit.Player;
+import com.sun.istack.internal.Nullable;
+import do1phin.mine2021.skyblock.data.SkyblockData;
+
 public class PlayerData {
 
+    private final Player player;
+    private final boolean online;
+
+    private final String uuid;
     private final String name;
     private final String ip;
-    private final long uuid;
 
-    private final PlayerGroup playerGroup;
+    private final PlayerCategory playerCategory;
     private final int section;
+    private final SkyblockData skyblockData;
 
-    private PlayerStatus playerStatus;
+    public PlayerData(@Nullable Player player, String uuid, String name, String ip, PlayerCategory playerCategory, int section, SkyblockData skyblockData) {
+        this.player = player;
+        this.online = player != null;
 
-    public PlayerData(String name, String ip, long uuid, PlayerGroup playerGroup, int section) {
+        this.uuid = uuid;
         this.name = name;
         this.ip = ip;
-        this.uuid = uuid;
 
-        this.playerGroup = playerGroup;
+        this.playerCategory = playerCategory;
         this.section = section;
+        this.skyblockData = skyblockData;
+    }
 
-        this.playerStatus = PlayerStatus.NEED_REGISTER;
+    public Player getPlayer() {
+        return this.player;
+    }
+
+    public boolean isOnline() {
+        return this.online;
+    }
+
+    public String getUuid() {
+        return this.uuid;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public String getIp() {
-        return ip;
+        return this.ip;
     }
 
-    public long getUuid() {
-        return uuid;
+    public PlayerCategory getPlayerGroup() {
+        return this.playerCategory;
     }
 
-    public PlayerGroup getPlayerGroup() {
-        return playerGroup;
-    }
-
-    public void setPlayerStatus(PlayerStatus playerStatus) {
-        this.playerStatus = playerStatus;
-    }
-
-    public PlayerStatus getPlayerStatus() {
-        return playerStatus;
+    public SkyblockData getSkyblockData() {
+        return this.skyblockData;
     }
 
     public int getSection() {
-        return section;
+        return this.section;
     }
 
 }

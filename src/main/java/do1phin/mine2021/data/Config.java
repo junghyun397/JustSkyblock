@@ -6,23 +6,29 @@ import java.util.Map;
 public class Config {
 
     public final int skyblockDistance;
+    public final List<List<Integer>> defaultIslandShape;
 
     public final List<Map<Integer, Float>> itemGenDict;
+
+    public final String databaseType;
 
     public final String dbHost;
     public final int dbPort;
     public final String dbUser;
     public final String dbPassword;
 
-    public Config(cn.nukkit.utils.Config pluginConfig) {
-        this.skyblockDistance = pluginConfig.getInt("skyblock.distance");
+    public Config(cn.nukkit.utils.Config config) {
+        this.skyblockDistance = config.getInt("skyblock.distance");
+        this.defaultIslandShape = null;
 
         this.itemGenDict = null;
 
-        this.dbHost = pluginConfig.getString("db.host");
-        this.dbPort = pluginConfig.getInt("db.port");
-        this.dbUser = pluginConfig.getString("db.user");
-        this.dbPassword = pluginConfig.getString("db.password");
+        this.databaseType = "Mysql";
+
+        this.dbHost = config.getString("db.host");
+        this.dbPort = config.getInt("db.port");
+        this.dbUser = config.getString("db.user");
+        this.dbPassword = config.getString("db.password");
     }
 
 }

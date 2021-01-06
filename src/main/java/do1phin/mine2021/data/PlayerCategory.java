@@ -1,11 +1,11 @@
 package do1phin.mine2021.data;
 
-public enum PlayerGroup {
+public enum PlayerCategory {
     USER(0), STAFF(10);
 
-    private final int value;
+    public final int value;
 
-    PlayerGroup(int value) {
+    PlayerCategory(int value) {
         this.value = value;
     }
 }
