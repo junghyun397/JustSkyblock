@@ -4,14 +4,17 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("unchecked")
 public class SkyblockData {
 
     private ProtectionType protectionType;
 
-    private String[] collaborators;
+    private List<String> collaborators;
 
-    public SkyblockData(ProtectionType protectionType, String[] collaborators) {
+    public SkyblockData(ProtectionType protectionType, List<String> collaborators) {
         this.protectionType = protectionType;
         this.collaborators = collaborators;
     }
@@ -24,11 +27,11 @@ public class SkyblockData {
         this.protectionType = protectionType;
     }
 
-    public String[] getCollaborators() {
+    public List<String> getCollaborators() {
         return collaborators;
     }
 
-    public void setCollaborators(String[] collaborators) {
+    public void setCollaborators(List<String> collaborators) {
         this.collaborators = collaborators;
     }
 
@@ -43,14 +46,14 @@ public class SkyblockData {
         final JSONParser jsonParser = new JSONParser();
         try {
             JSONObject jsonObject = (JSONObject) jsonParser.parse(json);
-            return new SkyblockData((ProtectionType) jsonObject.get("projection-type"), (String[]) jsonObject.get("collaborators"));
+            return new SkyblockData(ProtectionType.valueOf((Integer) jsonObject.get("protection-type")), (List<String>) jsonObject.get("collaborators"));
         } catch (ParseException e) {
             return SkyblockData.getDefault();
         }
     }
 
     public static SkyblockData getDefault() {
-        return new SkyblockData(ProtectionType.ALLOW_ONLY_OWNER, new String[0]);
+        return new SkyblockData(ProtectionType.ALLOW_ONLY_OWNER, new ArrayList<>());
     }
 
 }

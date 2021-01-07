@@ -1,19 +1,139 @@
 Provider: Yaml
 
 skyblock:
-  distance: 256
+  distance: 512
+  default-island-shape: [[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+                         [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+                         [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+                         [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]]
 
 oregen:
-  l1block:
-    1: 1
-    2: 2
-  l2block:
-    1: 1
-    2: 2
-    3: 3
+  l1gen:
+    id: 247
+    meta: 0
+    blocks:
+      0.0: 10
+      1.0: 20
+      55.1: 10
+  l2gen:
+    id: 247
+    meta: 1
+    blocks:
+      0.0: 10
+      1.0: 20
+      55.1: 10
+  l3gen:
+    id: 246
+    meta: 0
+    blocks:
+      0.0: 10
+      1.0: 20
+      55.1: 10
+  l4gen:
+    id: 247
+    meta: 2
+    blocks:
+      0.0: 10
+      1.0: 20
+      55.1: 10
+  l5gen:
+    id: 252
+    meta: 0
+    blocks:
+      0.0: 10
+      1.0: 20
+      55.1: 10
 
 db:
-  host: "localhost"
-  port: 3306
-  user: "root"
-  password: "your-password-here"
+  type: "Mysql"
+  sqlite:
+    db-file: "user-info.sqlite3"
+  mysql:
+    host: "localhost"
+    port: 3306
+    user: "root"
+    password: "your-password-here"
+
+category:
+  user:
+    id: 0
+    display-name: "§2[유저]§f "
+    nametag: "§7<<§l§fname§r§7>>"
+  staff:
+    id: 10
+    display-name: "§b[Staff]§f "
+    nametag: "§7<<§l§bname§r§7>>"
+
+prefix:
+  info: "<§e안내§f>"
+  notice: "<§e공지§f>"
+
+text:
+  skyblock:
+    protection-type:
+      protection-type: "보호 수준"
+      allow-only-owner: "나만"
+      allow-invited: "초대된"
+      allow-all: "모두"
+
+formui:
+  skyblock:
+    motd: ""
+
+command:
+  management:
+    ban-command:
+      command: "ban"
+      description: "유저를 차단합니다."
+      usage: "/b <닉네임>"
+      format-error: "/ban <닉네임> <시간> 형식으로 입력해 주시기 바랍니다."
+      ban-succeed: "player 를 date 일 동안 차단 했습니다."
+      ban-failed-playernotfound: "player 를 찾을 수 없습니다."
+    kick-command:
+      command: "kick"
+      description: "유저를 추방합니다."
+      usage: "/k <닉네임>"
+      format-error: "/k <닉네임> 형식으로 입력해 주시기 바랍니다."
+      kick-succeed: "player 를 추방 했습니다."
+      kick-failed: "player 를 찾을 수 없습니다."
+    category-command:
+      command: "c"
+      description: "유저의 칭호를 바꿉니다."
+      usage: "/c <닉네임> <ID>"
+      format-error: "/c <닉네임> <ID> 형식으로 입력해 주시기 바랍니다."
+      update-succeed: "player 를 category-name 으로 분류했습니다."
+      update-failed-idnotfound: "분류 ID id 를 찾을 수 없습니다."
+      update-failed-playernotfound: "player 를 찾을 수 없습니다."
+  skyblock:
+    teleport-command:
+      command: "이동"
+      description: "다른 유저의 구역으로 이동합니다."
+      usage: "/이동 <닉네임>"
+      format-error: "/이동 <닉네임> 형식으로 입력해 주시기 바랍니다."
+      teleport-succeed: "player 의 구역으로 이동했습니다."
+      teleport-failed-playernotfound: "player 님을 찾을 수 없습니다."
+    invite-command:
+      command: "초대"
+      description: "다른 유저를 내 구역으로 초대합니다."
+      usage: "/초대 <닉네임>"
+      format-error: "/초대 <닉네임> 형식으로 입력해 주시기 바랍니다."
+      invite-failed-playernotfound: "player 님을 찾을 수 없습니다."
+    purge-command:
+      command: "추방"
+      description: "내 구역으로 초대된 유저를 추방합니다."
+      usage: "/추방 <닉네임>"
+      format-error: "/추방 <닉네임> 형식으로 입력해 주시기 바랍니다."
+      purge-failed-playernotinvited: "player 님은 초대 목록에 존재하지 않습니다."
+    protection-type-command:
+      command: "보호"
+      description: "내 구역의 보호 수준을 설정합니다."
+      usage: "/보호 <나만|초대된|모두>"
+      format-error: "/보호 <나만|초대된|모두> 형식으로 입력해 주시기 바랍니다."
+      protection-type-updated: "내 구역의 보호 수준이 protection-type 으로 설정 되었습니다."
+
+message:
+  general:
+    on-player-first-join: "player 님이 서버에 처음 접속하셨습니다."
+    oregen-upgrade-succeed: "생성 블록이 level 단계로 업그레이드 되었습니다."
+  skyblock:
+    protection-type-warning: "player님의 구역은 protection-type 수준으로 보호되고 있습니다."

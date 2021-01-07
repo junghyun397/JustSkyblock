@@ -1,7 +1,6 @@
 package do1phin.mine2021.data;
 
 import cn.nukkit.Player;
-import com.sun.istack.internal.Nullable;
 import do1phin.mine2021.skyblock.data.SkyblockData;
 
 public class PlayerData {
@@ -13,11 +12,13 @@ public class PlayerData {
     private final String name;
     private final String ip;
 
-    private final PlayerCategory playerCategory;
+    private final int playerCategory;
     private final int section;
     private final SkyblockData skyblockData;
 
-    public PlayerData(@Nullable Player player, String uuid, String name, String ip, PlayerCategory playerCategory, int section, SkyblockData skyblockData) {
+    private final long banDate;
+
+    public PlayerData(Player player, String uuid, String name, String ip, int playerCategory, int section, SkyblockData skyblockData, long banDate) {
         this.player = player;
         this.online = player != null;
 
@@ -28,6 +29,8 @@ public class PlayerData {
         this.playerCategory = playerCategory;
         this.section = section;
         this.skyblockData = skyblockData;
+
+        this.banDate = banDate;
     }
 
     public Player getPlayer() {
@@ -50,16 +53,20 @@ public class PlayerData {
         return this.ip;
     }
 
-    public PlayerCategory getPlayerGroup() {
+    public int getPlayerCategory() {
         return this.playerCategory;
+    }
+
+    public int getSection() {
+        return this.section;
     }
 
     public SkyblockData getSkyblockData() {
         return this.skyblockData;
     }
 
-    public int getSection() {
-        return this.section;
+    public long getBanDate() {
+        return this.banDate;
     }
 
 }

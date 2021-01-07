@@ -1,15 +1,14 @@
 package do1phin.mine2021.data.db;
 
 import cn.nukkit.Player;
-import com.sun.istack.internal.Nullable;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.PlayerData;
-import do1phin.mine2021.data.PlayerCategory;
 import do1phin.mine2021.skyblock.data.SkyblockData;
 
 import java.sql.*;
 import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.TimeZone;
 
 public class DatabaseAgent {
@@ -22,11 +21,11 @@ public class DatabaseAgent {
         this.RDBSHelper = RDBSHelper;
     }
 
-    public PlayerData getPlayerData(String uuid) {
+    public Optional<PlayerData> getPlayerData(String uuid) {
         return this.getPlayerData(null, uuid);
     }
 
-    public PlayerData getPlayerData(@Nullable Player player, String uuid) {
+    public Optional<PlayerData> getPlayerData(Player player, String uuid) {
         try {
             final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
                     "SELECT * FROM user_info WHERE uuid=?;");
@@ -35,13 +34,15 @@ public class DatabaseAgent {
             pstmt.clearParameters();
 
             if (rs.next())
-                return new PlayerData(player, uuid, rs.getString("name"), rs.getString("ip"),
-                        PlayerCategory.values()[rs.getInt("category")],
-                        rs.getInt("section"), SkyblockData.fromJSON(rs.getString("island_setting")));
+                return Optional.of(new PlayerData(player, uuid, rs.getString("name"), rs.getString("ip"),
+                        rs.getInt("category"),
+                        rs.getInt("section"), SkyblockData.fromJSON(rs.getString("island_setting")),
+                        rs.getTimestamp("ban-date").getTime()));
         } catch (SQLException e) {
             this.serverAgent.loggerCritical(e.getMessage());
         }
-        return null;
+
+        return Optional.empty();
     }
 
     public void registerPlayerData(PlayerData playerData) {
@@ -49,12 +50,13 @@ public class DatabaseAgent {
 
         try {
             final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
-                    "INSERT INTO user_info(uuid, name, ip, register_date) VALUES (?, ?, ?, ?);");
+                    "INSERT INTO user_info(uuid, name, ip, register_date, island_setting) VALUES (?, ?, ?, ?, ?);");
 
             pstmt.setString(1, playerData.getUuid());
             pstmt.setString(2, playerData.getName());
             pstmt.setString(3, playerData.getIp());
             pstmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()), calendar);
+            pstmt.setString(5, playerData.getSkyblockData().toJSON());
 
             pstmt.execute();
             pstmt.clearParameters();
@@ -66,13 +68,14 @@ public class DatabaseAgent {
     public void updatePlayerData(PlayerData playerData) {
         try {
             final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
-                            "UPDATE user_info SET name=?, category=?, ip=?, island_setting=?, WHERE uuid=?;");
+                            "UPDATE user_info SET name=?, category=?, ip=?, island_setting=?, ban_date=? WHERE uuid=?;");
 
             pstmt.setString(1, playerData.getName());
-            pstmt.setInt(2, playerData.getPlayerGroup().value);
+            pstmt.setInt(2, playerData.getPlayerCategory());
             pstmt.setString(3, playerData.getIp());
             pstmt.setString(4, playerData.getSkyblockData().toJSON());
             pstmt.setString(5, playerData.getUuid());
+            pstmt.setTimestamp(6, new Timestamp(playerData.getBanDate()));
 
             pstmt.executeUpdate();
             pstmt.clearParameters();
@@ -90,6 +93,7 @@ public class DatabaseAgent {
         } catch (SQLException e) {
             this.serverAgent.loggerCritical(e.getMessage());
         }
+
         return 0;
     }
 

@@ -15,7 +15,7 @@ public class MysqlHelper extends RDBSHelper {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             this.connection = DriverManager.getConnection(
-                    "jdbc:mysql://" + this.config.dbHost + ":" + this.config.dbPort + "/mine24?serverTimezone=UTC",
+                    "jdbc:mysql://" + this.config.dbHost + ":" + this.config.dbPort + "/mine24?serverTimezone=UTC&autoReconnection=true",
                     this.config.dbUser, this.config.dbPassword);
             return true;
         } catch (SQLException | ClassNotFoundException e) {
