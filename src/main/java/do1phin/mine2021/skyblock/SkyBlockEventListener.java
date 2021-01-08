@@ -1,17 +1,19 @@
 package do1phin.mine2021.skyblock;
 
 import cn.nukkit.event.EventHandler;
+import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.player.PlayerChunkRequestEvent;
+import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerRespawnEvent;
 
 public class SkyBlockEventListener implements Listener {
 
-    SkyBlockAgent skyBlockAgent;
+    private final SkyBlockAgent skyBlockAgent;
 
-    SkyBlockEventListener(SkyBlockAgent skyBlockAgent) {
+    public SkyBlockEventListener(SkyBlockAgent skyBlockAgent) {
         this.skyBlockAgent = skyBlockAgent;
     }
 
@@ -22,16 +24,21 @@ public class SkyBlockEventListener implements Listener {
 
     @EventHandler
     public void onPlayerRespawn(final PlayerRespawnEvent event) {
-        event.setRespawnPosition(this.skyBlockAgent.getIslandSpawnPosition(this.skyBlockAgent.getIslandSection(event.getPlayer().getPosition())));
+        event.setRespawnPosition(this.skyBlockAgent.getSkyblockSpawnPosition(this.skyBlockAgent.getSkyblockSectionByPosition(event.getPlayer().getPosition())));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(final BlockPlaceEvent event) {
         event.setCancelled(!this.skyBlockAgent.canPlayerModifyBlock(event.getPlayer(), event.getBlock().getX(), event.getBlock().getZ()));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(final BlockBreakEvent event) {
+        event.setCancelled(!this.skyBlockAgent.canPlayerModifyBlock(event.getPlayer(), event.getBlock().getX(), event.getBlock().getZ()));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerInteract(final PlayerInteractEvent event) {
         event.setCancelled(!this.skyBlockAgent.canPlayerModifyBlock(event.getPlayer(), event.getBlock().getX(), event.getBlock().getZ()));
     }
 

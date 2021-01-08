@@ -3,6 +3,8 @@ package do1phin.mine2021.data;
 import cn.nukkit.Player;
 import do1phin.mine2021.skyblock.data.SkyblockData;
 
+import java.sql.Timestamp;
+
 public class PlayerData {
 
     private final Player player;
@@ -16,9 +18,9 @@ public class PlayerData {
     private final int section;
     private final SkyblockData skyblockData;
 
-    private final long banDate;
+    private final Timestamp banDate;
 
-    public PlayerData(Player player, String uuid, String name, String ip, int playerCategory, int section, SkyblockData skyblockData, long banDate) {
+    public PlayerData(Player player, String uuid, String name, String ip, int playerCategory, int section, SkyblockData skyblockData, Timestamp banDate) {
         this.player = player;
         this.online = player != null;
 
@@ -65,7 +67,7 @@ public class PlayerData {
         return this.skyblockData;
     }
 
-    public long getBanDate() {
+    public Timestamp getBanDate() {
         return this.banDate;
     }
 

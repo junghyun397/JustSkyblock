@@ -2,6 +2,7 @@ package do1phin.mine2021;
 
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
+import cn.nukkit.event.level.LevelLoadEvent;
 import cn.nukkit.event.player.*;
 import do1phin.mine2021.utils.NukkitUtility;
 
@@ -11,6 +12,11 @@ public class ServerEventListener implements Listener {
 
     ServerEventListener(ServerAgent serverAgent) {
         this.serverAgent = serverAgent;
+    }
+
+    @EventHandler
+    public void onLevelLoad(final LevelLoadEvent event) {
+        if (event.getLevel().getName().equals("world")) this.serverAgent.setMainLevel(event.getLevel());
     }
 
     @EventHandler
@@ -26,9 +32,10 @@ public class ServerEventListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent event) {
+        this.serverAgent.purgePlayerData(event.getPlayer().getUniqueId().toString());
+
         event.setQuitMessage("");
         NukkitUtility.broadcastPopUP(event.getPlayer().getServer(), "§7-" + event.getPlayer().getName());
-        this.serverAgent.purgePlayerData(event.getPlayer().getUniqueId().toString());
     }
 
     @EventHandler
@@ -37,7 +44,8 @@ public class ServerEventListener implements Listener {
     }
 
     @EventHandler
-    public void on(final PlayerEvent event) {
+    public void onPlayerAchievementAwarded(final PlayerAchievementAwardedEvent event) {
+        event.setCancelled();
     }
 
 }

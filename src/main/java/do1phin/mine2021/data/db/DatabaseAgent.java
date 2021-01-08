@@ -30,14 +30,15 @@ public class DatabaseAgent {
             final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
                     "SELECT * FROM user_info WHERE uuid=?;");
             pstmt.setString(1, uuid);
+
             ResultSet rs = pstmt.executeQuery();
             pstmt.clearParameters();
 
             if (rs.next())
                 return Optional.of(new PlayerData(player, uuid, rs.getString("name"), rs.getString("ip"),
                         rs.getInt("category"),
-                        rs.getInt("section"), SkyblockData.fromJSON(rs.getString("island_setting")),
-                        rs.getTimestamp("ban-date").getTime()));
+                        rs.getInt("section"), SkyblockData.fromJSON(rs.getInt("section"), rs.getString("island_setting")),
+                        rs.getTimestamp("ban_date")));
         } catch (SQLException e) {
             this.serverAgent.loggerCritical(e.getMessage());
         }
@@ -74,14 +75,49 @@ public class DatabaseAgent {
             pstmt.setInt(2, playerData.getPlayerCategory());
             pstmt.setString(3, playerData.getIp());
             pstmt.setString(4, playerData.getSkyblockData().toJSON());
-            pstmt.setString(5, playerData.getUuid());
-            pstmt.setTimestamp(6, new Timestamp(playerData.getBanDate()));
+            pstmt.setTimestamp(5, playerData.getBanDate());
+
+            pstmt.setString(6, playerData.getUuid());
 
             pstmt.executeUpdate();
             pstmt.clearParameters();
         } catch (SQLException e) {
             this.serverAgent.loggerCritical(e.getMessage());
         }
+    }
+
+    public Optional<String> getUUIDbyPlayerName(String name) {
+        try {
+            final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
+                    "SELECT uuid FROM user_info WHERE name=?;");
+            pstmt.setString(1, name);
+
+            ResultSet rs = pstmt.executeQuery();
+            pstmt.clearParameters();
+
+            if (rs.next()) return Optional.of(rs.getString("uuid"));
+        } catch (SQLException e) {
+            this.serverAgent.loggerCritical(e.getMessage());
+        }
+
+        return Optional.empty();
+    }
+
+    public Optional<String> getPlayerNameByUUID(String uuid) {
+        try {
+            final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
+                    "SELECT name FROM user_info WHERE uuid=?;");
+            pstmt.setString(1, uuid);
+
+            ResultSet rs = pstmt.executeQuery();
+            pstmt.clearParameters();
+
+            if (rs.next()) return Optional.of(rs.getString("name"));
+        } catch (SQLException e) {
+            this.serverAgent.loggerCritical(e.getMessage());
+        }
+
+        return Optional.empty();
     }
 
     public int getCurrentSection() {

@@ -13,9 +13,11 @@ public class Config {
     public final int skyblockDistance;
     public final int[][][] defaultIslandShape;
 
-    public final Map<Integer, Float>[] itemGenDict;
+    public final Map<Integer, Float>[] blockGenDict;
 
     public final String databaseType;
+
+    public final String dbFileName;
 
     public final String dbHost;
     public final int dbPort;
@@ -28,9 +30,11 @@ public class Config {
         this.skyblockDistance = config.getInt("skyblock.distance");
         this.defaultIslandShape = this.parseDefaultIslandShape(config.getList("skyblock.default-island-shape"));
 
-        this.itemGenDict = this.parseOreGenDict(config.getSection("oregen"));
+        this.blockGenDict = this.parseBlockGenDict(config.getSection("blockgen"));
 
         this.databaseType = config.getString("db.type").toUpperCase();
+
+        this.dbFileName = config.getString("db.sqlite.db-file");
 
         this.dbHost = config.getString("db.mysql.host");
         this.dbPort = config.getInt("db.mysql.port");
@@ -42,8 +46,12 @@ public class Config {
         return null;
     }
 
-    private Map<Integer, Float>[] parseOreGenDict(ConfigSection value) {
+    private Map<Integer, Float>[] parseBlockGenDict(ConfigSection value) {
         return null;
+    }
+
+    public String getString(String key) {
+        return this.pluginConfig.getString(key);
     }
 
     public cn.nukkit.utils.Config getPluginConfig() {

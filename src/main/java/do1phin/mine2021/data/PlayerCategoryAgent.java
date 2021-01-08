@@ -1,7 +1,6 @@
 package do1phin.mine2021.data;
 
 import cn.nukkit.utils.ConfigSection;
-import do1phin.mine2021.utils.Pair;
 import do1phin.mine2021.utils.Tuple;
 
 import java.util.HashMap;
@@ -16,11 +15,14 @@ public class PlayerCategoryAgent {
     }
 
     public Map<Integer, Tuple<String, String, String>> getPlayerCategoryMap() {
-        return playerCategoryMap;
+        return this.playerCategoryMap;
     }
 
-    public Pair<String, String> getPrefixPair(String name, int playerCategory) {
-        return new Pair<>(this.playerCategoryMap.get(playerCategory).b + name, this.playerCategoryMap.get(playerCategory).c);
+    public void setPlayerNameTag(PlayerData playerData) {
+        playerData.getPlayer().setDisplayName(this.playerCategoryMap.get(
+                playerData.getPlayerCategory()).b.replaceFirst("%name", playerData.getName()));
+        playerData.getPlayer().setNameTag(this.playerCategoryMap.get(
+                playerData.getPlayerCategory()).c.replaceFirst("%name", playerData.getName()));
     }
 
     private Map<Integer, Tuple<String, String, String>> buildPlayerCategoryMap(ConfigSection configSection) {
