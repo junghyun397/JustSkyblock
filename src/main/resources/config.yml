@@ -8,47 +8,58 @@ Provider: Yaml
 
 skyblock:
   distance: 16
-  default-island-shape: [[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-                         [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-                         [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
-                         [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]]
+  default-island-shape: [[[0, 0, 31, 37, 0, 0], [0, 31, 0, 31, 31, 0], [31, 31, 0, 37, 0, 0], [0, 0, 31, 0, 31, 0], [0, 0, 38, 0, 31, 0], [0, 0, 0, 31, 0, 0]],
+                         [[0, 0, 2, 2, 0, 0], [0, 2, 2, 2, 2, 0], [2, 2, 2, 2, 2, 2], [2, 2, 2, 2, 2, 2], [0, 2, 2, 2, 2, 0], [0, 0, 2, 2, 0, 0]],
+                         [[0, 0, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0], [1, 1, 7, 7, 1, 1], [1, 1, 7, 7, 1, 1], [0, 1, 1, 1, 1, 0], [0, 0, 1, 1, 0, 0]],
+                         [[0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0], [0, 1, 1, 1, 1, 0], [0, 0, 1, 1, 0, 0], [0, 0, 0, 0, 0, 0]],
+                         [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 0, 0], [0, 0, 1, 1, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]]
+  default-item-list:
+    270-0: 1
+    271-0: 1
+    269-0: 1
+    325-8: 2
+    325-10: 1
+    351-15: 10
+    19-0: 1
+    297-0: 64
 
 blockgen:
-  l1gen:
-    id: 247
+  levels: 5
+  l1:
+    id: 19
     meta: 0
     blocks:
-      0.0: 10
-      1.0: 20
-      55.1: 10
-  l2gen:
+      1-0: 0.4
+      2-0: 0.4
+      17-0: 0.2
+  l2:
     id: 247
     meta: 1
     blocks:
-      0.0: 10
-      1.0: 20
-      55.1: 10
-  l3gen:
+      1-0: 0.4
+      2-0: 0.4
+      17-0: 0.2
+  l3:
     id: 246
     meta: 0
     blocks:
-      0.0: 10
-      1.0: 20
-      55.1: 10
-  l4gen:
+      1-0: 0.4
+      2-0: 0.4
+      17-0: 0.2
+  l4:
     id: 247
     meta: 2
     blocks:
-      0.0: 10
-      1.0: 20
-      55.1: 10
-  l5gen:
+      1-0: 0.4
+      2-0: 0.4
+      17-0: 0.2
+  l5:
     id: 252
     meta: 0
     blocks:
-      0.0: 10
-      1.0: 20
-      55.1: 10
+      1-0: 0.4
+      2-0: 0.4
+      17-0: 0.2
 
 
 # =================
@@ -75,11 +86,11 @@ db:
 category:
   user:
     id: 0
-    display-name: "§2[유저]§f %name"
+    display-name: "<§2[유저]§f %name>"
     nametag: "§7<<§l§f%name§r§7>>"
   staff:
     id: 10
-    display-name: "§b[Staff]§f %name"
+    display-name: "<§b[Staff]§f %name>"
     nametag: "§7<<§l§b%name§r§7>>"
 
 
@@ -87,6 +98,9 @@ category:
 # User Interface settings
 # =================
 
+prefix:
+  info: "<§e안내§f>"
+  notice: "<§e공지§f>"
 
 text:
   skyblock:
@@ -96,16 +110,20 @@ text:
       allow-invited: "초대된"
       allow-all: "모두"
 
-prefix:
-  info: "<§e안내§f>"
-  notice: "<§e공지§f>"
-
 message:
   general:
-    on-player-first-join: "player 님이 서버에 처음 접속하셨습니다."
-    oregen-upgrade-succeed: "생성 블록이 %level 단계로 업그레이드 되었습니다."
+    on-player-join: "%player 님이 접속했습니다."
+    on-player-quit: "%player 님이 나갔습니다."
+    on-player-first-join: "%player 님이 서버에 처음 접속하셨습니다."
   skyblock:
-    protection-type-warning: "player님의 구역은 %protection-type 수준으로 보호되고 있습니다."
+    teleport-succeed: "%player 의 구역으로 이동했습니다."
+    invite-succeed: "%player 님을 내 구역으로 초대했습니다."
+    invite-received: "%owner 님의 구역으로 초대되었습니다."
+    purge-succeed: "%player 님을 내 구역에서 추방했습니다."
+    protection-type-updated: "내 구역의 보호 수준이 %protection-type 으로 설정 되었습니다."
+    protection-type-warning: "%player님의 구역은 %protection-type 수준으로 보호되고 있습니다."
+  oregen:
+    oregen-upgrade-succeed: "생성 블록이 %level 단계로 업그레이드 되었습니다."
 
 command:
   management:
@@ -114,7 +132,7 @@ command:
       description: "유저를 차단합니다."
       usage: "/b <닉네임>"
       format-error: "/ban <닉네임> <시간> 형식으로 입력해 주시기 바랍니다."
-      ban-succeed: "%player 를 %date 일 동안 차단 했습니다."
+      ban-succeed: "%player 를 %date 일 동안 차단했습니다."
       ban-failed-playernotfound: "%player 를 찾을 수 없습니다."
     kick-command:
       command: "k"
@@ -136,15 +154,12 @@ command:
       command: "이동"
       description: "내 구역 또는 다른 유저의 구역으로 이동합니다."
       usage: "/이동 또는 /이동 <닉네임>"
-      teleport-succeed: "%player 의 구역으로 이동했습니다."
       teleport-failed-playernotfound: "%player 님을 찾을 수 없습니다."
     invite-command:
       command: "초대"
       description: "다른 유저를 내 구역으로 초대합니다."
       usage: "/초대 <닉네임>"
       format-error: "/초대 <닉네임> 형식으로 입력해 주시기 바랍니다."
-      invite-succeed: "%player 님을 내 구역으로 초대했습니다."
-      invite-received: "%owner 님의 구역으로 초대되었습니다."
       invite-failed-playeralradyinvited: "%player 님은 이미 내 구역에 초대되어 있습니다."
       invite-failed-playernotfound: "%player 님을 찾을 수 없습니다."
     purge-command:
@@ -152,7 +167,6 @@ command:
       description: "내 구역으로 초대된 유저를 추방합니다."
       usage: "/추방 <닉네임>"
       format-error: "/추방 <닉네임> 형식으로 입력해 주시기 바랍니다."
-      purge-succeed: "$player 님을 내 구역에서 추방했습니다."
       purge-failed-playernotfound: "%player 님을 찾을 수 없습니다."
       purge-failed-playernotinvited: "%player 님은 초대 목록에 존재하지 않습니다."
     invite-list-command:
@@ -166,4 +180,3 @@ command:
       description: "내 구역의 보호 수준을 설정합니다."
       usage: "/보호 <나만|초대된|모두>"
       format-error: "/보호 <나만|초대된|모두> 형식으로 입력해 주시기 바랍니다."
-      protection-type-updated: "내 구역의 보호 수준이 %protection-type 으로 설정 되었습니다."

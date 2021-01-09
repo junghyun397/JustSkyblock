@@ -7,6 +7,7 @@ import cn.nukkit.plugin.PluginBase;
 import do1phin.mine2021.blockgen.BlockGenEventListener;
 import do1phin.mine2021.data.Config;
 import do1phin.mine2021.data.PlayerCategoryAgent;
+import do1phin.mine2021.data.PlayerCategoryEventListener;
 import do1phin.mine2021.data.PlayerData;
 import do1phin.mine2021.data.db.DatabaseAgent;
 import do1phin.mine2021.data.db.MysqlHelper;
@@ -42,8 +43,6 @@ public class ServerAgent extends PluginBase {
 
     private final Map<String, PlayerData> playerDataMap = new HashMap<>();
 
-    private Level mainLevel = null;
-
     public void loggerInfo(String message) {
         this.getLogger().info(message);
     }
@@ -78,7 +77,7 @@ public class ServerAgent extends PluginBase {
 
         RDBSHelper rdbsHelper;
 
-        if (config.databaseType.equals("MYSQL")) rdbsHelper = new MysqlHelper(config);
+        if (config.getString("db.type").equalsIgnoreCase("mysql")) rdbsHelper = new MysqlHelper(config);
         else rdbsHelper = new Sqlite3Helper(config);
 
         if (!rdbsHelper.connect()) {
@@ -89,15 +88,16 @@ public class ServerAgent extends PluginBase {
 
         this.loggerInfo("rdbms connected.");
 
-        this.playerCategoryAgent = new PlayerCategoryAgent(config);
         this.databaseAgent = new DatabaseAgent(this, rdbsHelper);
         this.messageAgent = new MessageAgent(this, config);
         this.skyBlockAgent = new SkyBlockAgent(this, this.databaseAgent, this.messageAgent, config);
         this.blockGenAgent = new BlockGenAgent(this, this.messageAgent, config);
+        this.playerCategoryAgent = new PlayerCategoryAgent(this, config);
 
         this.getServer().getPluginManager().registerEvents(new ServerEventListener(this), this);
         this.getServer().getPluginManager().registerEvents(new SkyBlockEventListener(this.skyBlockAgent), this);
         this.getServer().getPluginManager().registerEvents(new BlockGenEventListener(this.blockGenAgent), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerCategoryEventListener(this.playerCategoryAgent), this);
 
         this.getServer().getCommandMap().register("mine2021", new TeleportCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
         this.getServer().getCommandMap().register("mine2021", new InviteCommand(this, this.messageAgent, config, this.skyBlockAgent));
@@ -123,7 +123,7 @@ public class ServerAgent extends PluginBase {
                 this.databaseAgent.updatePlayerData(playerData.get());
         } else {
             int section = this.databaseAgent.getCurrentSection()+1;
-            playerData = Optional.of(new PlayerData(player, uuid, name, ip, 0, section, SkyblockData.getDefault(section), null));
+            playerData = Optional.of(new PlayerData(player, uuid, name, ip, 0, SkyblockData.getDefault(section), null));
             this.registerNewPlayer(playerData.get());
         }
 
@@ -131,6 +131,8 @@ public class ServerAgent extends PluginBase {
 
         this.skyBlockAgent.registerSkyblockData(playerData.get());
         this.playerCategoryAgent.setPlayerNameTag(playerData.get());
+
+        this.messageAgent.sendBroadcast("message.general.on-player-join", new String[]{"%player"}, new String[]{player.getName()});
     }
 
     public PlayerData getPlayerData(Player player) {
@@ -143,8 +145,10 @@ public class ServerAgent extends PluginBase {
         else return Optional.empty();
     }
 
-    public void purgePlayerData(String uuid) {
-        this.playerDataMap.remove(uuid);
+    public void purgePlayerData(Player player) {
+        this.messageAgent.sendBroadcast("message.general.on-player-quit", new String[]{"%player"}, new String[]{player.getName()});
+
+        this.playerDataMap.remove(player.getUniqueId().toString());
     }
 
     private void registerNewPlayer(PlayerData playerData) {
@@ -154,14 +158,6 @@ public class ServerAgent extends PluginBase {
         this.messageAgent.sendPlayerFirstJoinMessage(playerData);
 
         this.skyBlockAgent.registerNewSkyblock(playerData);
-    }
-
-    public void setMainLevel(Level level) {
-        this.mainLevel = level;
-    }
-
-    public Level getMainLevel() {
-        return this.mainLevel;
     }
 
 }

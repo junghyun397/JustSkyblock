@@ -33,7 +33,7 @@ public class TeleportCommand extends SkyblockCommand {
         if (!(commandSender instanceof Player) || !commandSender.hasPermission(this.getPermission())) return false;
 
         if (args.length == 0) {
-            this.skyBlockAgent.teleportPlayerToSkyblock((Player) commandSender, ((Player) commandSender).getUniqueId().toString());
+            this.skyBlockAgent.teleportPlayerToSkyblock((Player) commandSender, commandSender.getName(), ((Player) commandSender).getUniqueId().toString());
         } else {
             Optional<String> targetUUID = this.databaseAgent.getUUIDbyPlayerName(args[0]);
             if (!targetUUID.isPresent()) {
@@ -42,7 +42,7 @@ public class TeleportCommand extends SkyblockCommand {
                 return false;
             }
 
-            this.skyBlockAgent.teleportPlayerToSkyblock((Player) commandSender, targetUUID.get());
+            this.skyBlockAgent.teleportPlayerToSkyblock((Player) commandSender, args[0], targetUUID.get());
         }
 
         return true;

@@ -1,6 +1,7 @@
 package do1phin.mine2021.skyblock;
 
 import cn.nukkit.Player;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
 import do1phin.mine2021.ServerAgent;
@@ -10,6 +11,7 @@ import do1phin.mine2021.data.db.DatabaseAgent;
 import do1phin.mine2021.skyblock.data.ProtectionType;
 import do1phin.mine2021.skyblock.data.SkyblockData;
 import do1phin.mine2021.ui.MessageAgent;
+import do1phin.mine2021.utils.Tuple;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,34 +24,40 @@ public class SkyBlockAgent {
     private final MessageAgent messageAgent;
     private final DatabaseAgent databaseAgent;
 
-    private final Config config;
+    private final int sectionDistance;
 
-    private Map<Integer, SkyblockData> skyblockDataMap = new HashMap<>();
+    private final int[][][] defaultIslandShape;
+    private final List<Tuple<Integer, Integer, Integer>> defaultItemList;
+
+    private final Map<Integer, SkyblockData> skyblockDataMap = new HashMap<>();
+
+    private Level mainLevel = null;
 
     public SkyBlockAgent(ServerAgent serverAgent, DatabaseAgent databaseAgent, MessageAgent messageAgent, Config config) {
         this.serverAgent = serverAgent;
         this.messageAgent = messageAgent;
         this.databaseAgent = databaseAgent;
 
-        this.config = config;
+        this.sectionDistance = config.getPluginConfig().getInt("skyblock.distance");
 
-        serverAgent.getServer().getPluginManager().registerEvents(new SkyBlockEventListener(this), serverAgent);
-    }
-
-    public void registerSkyblockData(PlayerData playerData) {
-        this.skyblockDataMap.put(playerData.getSection(), playerData.getSkyblockData());
+        this.defaultIslandShape = config.parseSkyblockDefaultIslandShape();
+        this.defaultItemList = config.parseSkyblockDefaultItemList();
     }
 
     public int getSkyblockSectionByUUID(String uuid) {
         Optional<PlayerData> playerData = this.serverAgent.getPlayerData(uuid);
-        if (playerData.isPresent()) return playerData.get().getSection();
+        if (playerData.isPresent()) return playerData.get().getSkyblockData().getSection();
 
         playerData = this.databaseAgent.getPlayerData(uuid);
-        return playerData.map(PlayerData::getSection).orElse(0);
+        return playerData.map(data -> data.getSkyblockData().getSection()).orElse(0);
     }
 
     public int getSkyblockSectionByPosition(Position position) {
         return 0;
+    }
+
+    public void registerSkyblockData(PlayerData playerData) {
+        this.skyblockDataMap.put(playerData.getSkyblockData().getSection(), playerData.getSkyblockData());
     }
 
     public SkyblockData getSkyblockData(Player player) {
@@ -62,11 +70,16 @@ public class SkyBlockAgent {
         else return Optional.empty();
     }
 
+    public void purgeSkyblockData(int section) {
+        this.skyblockDataMap.remove(section);
+    }
+
     public void registerNewSkyblock(PlayerData playerData) {
-        Position islandSpawnPosition = this.getSkyblockSpawnPosition(playerData.getSection());
+        Position islandSpawnPosition = this.getSkyblockSpawnPosition(playerData.getSkyblockData().getSection());
 
         playerData.getPlayer().setSpawn(islandSpawnPosition);
         this.generateNewSkyblock(playerData);
+        this.giveDefaultSkyblockItem(playerData);
         playerData.getPlayer().teleport(islandSpawnPosition);
     }
 
@@ -74,7 +87,12 @@ public class SkyBlockAgent {
         // TODO: 스카이블록 생성 코드 작업
     }
 
-    public void teleportPlayerToSkyblock(Player player, String destinationUUID) {
+    private void giveDefaultSkyblockItem(PlayerData playerData) {
+        for (Tuple<Integer, Integer, Integer> item: this.defaultItemList)
+            playerData.getPlayer().getInventory().addItem(new Item(item.a, item.b, item.c));
+    }
+
+    public void teleportPlayerToSkyblock(Player player, String destinationName, String destinationUUID) {
         int section = this.getSkyblockSectionByUUID(destinationUUID);
         Optional<SkyblockData> skyblockData = this.getSkyblockData(section);
         if (!skyblockData.isPresent()) {
@@ -83,6 +101,8 @@ public class SkyBlockAgent {
         }
 
         player.teleport(this.getSkyblockSpawnPosition(section));
+        this.messageAgent.sendMessage(player, "message.skyblock.teleport-succeed",
+                new String[]{"%player"}, new String[]{destinationName});
     }
 
     public ProtectionType getSkyblockProtectionType(int section) {
@@ -115,27 +135,26 @@ public class SkyBlockAgent {
         this.databaseAgent.updatePlayerData(playerData);
     }
 
-    public void loadSkyblockChunk(int section) {
-        // TODO: 청크 수동 관리
-    }
-
-    public void unloadSkyblockChunk(int section) {
-        // TODO: 청크 수동 관리
-    }
-
     public boolean canPlayerLoadChunk(Player player, int chunkX, int chunkZ) {
         // TODO: 청크 로딩 관리
         return true;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean canPlayerModifyBlock(Player player, double blockX, double blockZ) {
         // TODO: 블록 보호 수준 관리
         return false;
     }
 
     public Position getSkyblockSpawnPosition(int section) {
-        return new Position(this.config.skyblockDistance * section * 16.0, 65, 0);
+        return new Position(this.sectionDistance * 16 * section, 65, 0);
+    }
+
+    void setMainLevel(Level level) {
+        this.mainLevel = level;
+    }
+
+    Level getMainLevel() {
+        return this.mainLevel;
     }
 
 }

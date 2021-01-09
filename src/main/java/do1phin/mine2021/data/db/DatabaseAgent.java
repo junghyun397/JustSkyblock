@@ -37,7 +37,7 @@ public class DatabaseAgent {
             if (rs.next())
                 return Optional.of(new PlayerData(player, uuid, rs.getString("name"), rs.getString("ip"),
                         rs.getInt("category"),
-                        rs.getInt("section"), SkyblockData.fromJSON(rs.getInt("section"), rs.getString("island_setting")),
+                        SkyblockData.fromJSON(rs.getInt("section"), rs.getString("island_setting")),
                         rs.getTimestamp("ban_date")));
         } catch (SQLException e) {
             this.serverAgent.loggerCritical(e.getMessage());

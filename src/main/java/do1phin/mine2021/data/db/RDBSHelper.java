@@ -8,11 +8,6 @@ import java.sql.SQLException;
 public abstract class RDBSHelper {
 
     protected Connection connection;
-    protected Config config;
-
-    public RDBSHelper(Config config) {
-        this.config = config;
-    }
 
     public boolean connect() {
         return false;

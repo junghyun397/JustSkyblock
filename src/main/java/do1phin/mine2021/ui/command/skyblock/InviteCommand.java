@@ -46,9 +46,9 @@ public class InviteCommand extends SkyblockCommand {
         }
         this.skyBlockAgent.addCollaborator((Player) commandSender, targetPlayer.getUniqueId().toString());
 
-        this.messageAgent.sendMessage(targetPlayer, "command.skyblock.invite-command.invite-received",
+        this.messageAgent.sendMessage(targetPlayer, "message.skyblock.invite-command.invite-received",
                 new String[]{"%owner"}, new String[]{commandSender.getName()});
-        this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.invite-command.invite-succeed",
+        this.messageAgent.sendMessage((Player) commandSender, "message.skyblock.invite-command.invite-succeed",
                 new String[]{"%player"}, new String[]{targetPlayer.getName()});
 
         return true;
