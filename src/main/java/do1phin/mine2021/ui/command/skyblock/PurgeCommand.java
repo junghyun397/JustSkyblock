@@ -41,7 +41,7 @@ public class PurgeCommand extends SkyblockCommand {
         Player targetPlayer = commandSender.getServer().getPlayer(args[0]);
         String targetUUID;
         if (targetPlayer == null) {
-            Optional<String> tTargetUUID = this.databaseAgent.getUUIDbyPlayerName(args[0]);
+            Optional<String> tTargetUUID = this.databaseAgent.getUUIDByPlayerName(args[0]);
             if (tTargetUUID.isPresent()) targetUUID = tTargetUUID.get();
             else {
                 this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.purge-command.purge-failed-playernotfound",
@@ -59,7 +59,7 @@ public class PurgeCommand extends SkyblockCommand {
 
         this.skyBlockAgent.purgeCollaborator((Player) commandSender, targetUUID);
 
-        this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.purge-command.purge-succeed",
+        this.messageAgent.sendMessage((Player) commandSender, "message.skyblock.purge-succeed",
                 new String[]{"%player"}, new String[]{args[0]});
 
         return true;

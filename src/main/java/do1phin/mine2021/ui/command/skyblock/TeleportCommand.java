@@ -33,16 +33,16 @@ public class TeleportCommand extends SkyblockCommand {
         if (!(commandSender instanceof Player) || !commandSender.hasPermission(this.getPermission())) return false;
 
         if (args.length == 0) {
-            this.skyBlockAgent.teleportPlayerToSkyblock((Player) commandSender, commandSender.getName(), ((Player) commandSender).getUniqueId().toString());
+            this.skyBlockAgent.teleportPlayerToIsland((Player) commandSender, ((Player) commandSender).getUniqueId().toString(), commandSender.getName());
         } else {
-            Optional<String> targetUUID = this.databaseAgent.getUUIDbyPlayerName(args[0]);
+            Optional<String> targetUUID = this.databaseAgent.getUUIDByPlayerName(args[0]);
             if (!targetUUID.isPresent()) {
                 this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.teleport-command.teleport-failed-playernotfound",
                         new String[]{"%player"}, new String[]{args[0]});
                 return false;
             }
 
-            this.skyBlockAgent.teleportPlayerToSkyblock((Player) commandSender, args[0], targetUUID.get());
+            this.skyBlockAgent.teleportPlayerToIsland((Player) commandSender, targetUUID.get(), args[0]);
         }
 
         return true;

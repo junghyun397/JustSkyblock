@@ -1,9 +1,13 @@
 package do1phin.mine2021;
 
 import cn.nukkit.Player;
+import cn.nukkit.command.CommandMap;
+import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemBookWritten;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.generator.Generator;
 import cn.nukkit.plugin.PluginBase;
+import do1phin.mine2021.blockgen.BlockGenAgent;
 import do1phin.mine2021.blockgen.BlockGenEventListener;
 import do1phin.mine2021.data.Config;
 import do1phin.mine2021.data.PlayerCategoryAgent;
@@ -13,7 +17,6 @@ import do1phin.mine2021.data.db.DatabaseAgent;
 import do1phin.mine2021.data.db.MysqlHelper;
 import do1phin.mine2021.data.db.RDBSHelper;
 import do1phin.mine2021.data.db.Sqlite3Helper;
-import do1phin.mine2021.blockgen.BlockGenAgent;
 import do1phin.mine2021.skyblock.SkyBlockAgent;
 import do1phin.mine2021.skyblock.SkyBlockEventListener;
 import do1phin.mine2021.skyblock.data.SkyblockData;
@@ -23,11 +26,11 @@ import do1phin.mine2021.ui.command.management.CategoryCommand;
 import do1phin.mine2021.ui.command.management.KickCommand;
 import do1phin.mine2021.ui.command.skyblock.*;
 import do1phin.mine2021.utils.EmptyGenerator;
+import do1phin.mine2021.utils.Tuple;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class ServerAgent extends PluginBase {
 
     private static ServerAgent instance;
@@ -42,6 +45,11 @@ public class ServerAgent extends PluginBase {
     private BlockGenAgent blockGenAgent;
 
     private final Map<String, PlayerData> playerDataMap = new HashMap<>();
+
+    private Level mainLevel = null;
+
+    private List<Tuple<Integer, Integer, Integer>> defaultItemList;
+    private String[] guideBookPages = null;
 
     public void loggerInfo(String message) {
         this.getLogger().info(message);
@@ -95,8 +103,8 @@ public class ServerAgent extends PluginBase {
         this.playerCategoryAgent = new PlayerCategoryAgent(this, config);
 
         this.getServer().getPluginManager().registerEvents(new ServerEventListener(this), this);
-        this.getServer().getPluginManager().registerEvents(new SkyBlockEventListener(this.skyBlockAgent), this);
         this.getServer().getPluginManager().registerEvents(new BlockGenEventListener(this.blockGenAgent), this);
+        this.getServer().getPluginManager().registerEvents(new SkyBlockEventListener(this.skyBlockAgent), this);
         this.getServer().getPluginManager().registerEvents(new PlayerCategoryEventListener(this.playerCategoryAgent), this);
 
         this.getServer().getCommandMap().register("mine2021", new TeleportCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
@@ -109,10 +117,13 @@ public class ServerAgent extends PluginBase {
         this.getServer().getCommandMap().register("mine2021", new KickCommand(this, this.messageAgent, config));
         this.getServer().getCommandMap().register("mine2021", new CategoryCommand(this, this.messageAgent, config));
 
+        this.defaultItemList = config.parseSkyblockDefaultItemList();
+        this.guideBookPages = config.parseGuideBookPages();
+
         this.loggerInfo("§eloading succeed.");
     }
 
-    public void registerPlayerData(Player player) {
+    public void registerPlayer(Player player) {
         String uuid = player.getUniqueId().toString();
         String name = player.getName();
         String ip = player.getAddress();
@@ -123,16 +134,19 @@ public class ServerAgent extends PluginBase {
                 this.databaseAgent.updatePlayerData(playerData.get());
         } else {
             int section = this.databaseAgent.getCurrentSection()+1;
-            playerData = Optional.of(new PlayerData(player, uuid, name, ip, 0, SkyblockData.getDefault(section), null));
+            playerData = Optional.of(new PlayerData(player, uuid, name, ip, 0, SkyblockData.getDefault(uuid, section), null));
             this.registerNewPlayer(playerData.get());
         }
 
         this.playerDataMap.put(uuid, playerData.get());
 
-        this.skyBlockAgent.registerSkyblockData(playerData.get());
+        this.skyBlockAgent.registerSkyblockData(playerData.get().getSkyblockData());
         this.playerCategoryAgent.setPlayerNameTag(playerData.get());
 
-        this.messageAgent.sendBroadcast("message.general.on-player-join", new String[]{"%player"}, new String[]{player.getName()});
+        this.messageAgent.sendBroadcast("message.general.on-player-join",
+                new String[]{"%player"}, new String[]{player.getName()});
+        this.messageAgent.sendBroadcastPopup("popup.general.on-player-join",
+                new String[]{"%player"}, new String[]{player.getName()});
     }
 
     public PlayerData getPlayerData(Player player) {
@@ -145,19 +159,43 @@ public class ServerAgent extends PluginBase {
         else return Optional.empty();
     }
 
-    public void purgePlayerData(Player player) {
-        this.messageAgent.sendBroadcast("message.general.on-player-quit", new String[]{"%player"}, new String[]{player.getName()});
+    public void purgePlayer(Player player) {
+        if (!this.getPlayerData(player.getUniqueId().toString()).isPresent()) return;
+
+        this.messageAgent.sendBroadcast("message.general.on-player-quit",
+                new String[]{"%player"}, new String[]{player.getName()});
+        this.messageAgent.sendBroadcastPopup("popup.general.on-player-quit",
+                new String[]{"%player"}, new String[]{player.getName()});
 
         this.playerDataMap.remove(player.getUniqueId().toString());
     }
 
     private void registerNewPlayer(PlayerData playerData) {
         this.databaseAgent.registerPlayerData(playerData);
-
-        this.messageAgent.sendPlayerFirstJoinBroadcast(playerData);
-        this.messageAgent.sendPlayerFirstJoinMessage(playerData);
-
         this.skyBlockAgent.registerNewSkyblock(playerData);
+        this.giveDefaultItems(playerData.getPlayer());
+
+        this.messageAgent.sendBroadcast("message.general.on-player-first-join", new String[]{"%player"}, new String[]{playerData.getName()});
+    }
+
+    private void giveDefaultItems(Player player) {
+        for (Tuple<Integer, Integer, Integer> item: this.defaultItemList)
+            player.getInventory().addItem(Item.get(item.a, item.b, item.c).clone());
+
+        ItemBookWritten book = (ItemBookWritten) Item.get(387, 0, 1);
+        final String bookName = this.messageAgent.getText("general.guidebook");
+        book.writeBook("§e§lMine24 2021", bookName, this.guideBookPages);
+        book.setCustomName(bookName);
+
+        player.getInventory().addItem(book);
+    }
+
+    void setMainLevel(Level level) {
+        this.mainLevel = level;
+    }
+
+    public Level getMainLevel() {
+        return this.mainLevel;
     }
 
 }

@@ -3,7 +3,6 @@ package do1phin.mine2021.ui;
 import cn.nukkit.Player;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
-import do1phin.mine2021.data.PlayerData;
 
 public class MessageAgent {
 
@@ -46,24 +45,34 @@ public class MessageAgent {
         this.serverAgent.getServer().broadcastMessage(this.prefixNotice + message);
     }
 
-    public void sendPlayerFirstJoinBroadcast(PlayerData playerData) {
-        this.serverAgent.getServer().broadcastMessage(this.prefixNotice + playerData.getName() + "님이 서버에 처음 접속하셨습니다.");
+    public void sendPopup(Player player, String key) {
+        this.sendMessage(player, key, null, null);
     }
 
-    public void sendPlayerFirstJoinMessage(PlayerData playerData) {
-
+    public void sendPopup(Player player, String key, String[] params, String[] values) {
+        String message = this.config.getString(key);
+        if (params != null && values != null && params.length == values.length)
+            for (int i = 0; i < params.length; i++)
+                message = message.replaceAll(params[i], values[i]);
+        player.sendPopup(message);
     }
 
-    public void sendTeleportSucceedMessage(PlayerData playerData) {
-
+    public void sendBroadcastPopup(String key) {
+        this.sendBroadcast(key, null, null);
     }
 
-    public void sendTeleportFailedMessage(PlayerData playerData) {
+    public void sendBroadcastPopup(String key, String[] params, String[] values) {
+        String message = this.config.getString(key);
+        if (params != null && values != null && params.length == values.length)
+            for (int i = 0; i < params.length; i++)
+                message = message.replaceAll(params[i], values[i]);
 
+        for (Player player: this.serverAgent.getServer().getOnlinePlayers().values())
+            player.sendPopup(message);
     }
 
-    public void sendOregenUpgradeSucceedMessage(PlayerData playerData) {
-
+    public String getText(String key) {
+        return this.config.getString("text." + key);
     }
 
 }

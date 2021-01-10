@@ -51,19 +51,16 @@ public class Config {
         shapeY = dim1.size();
 
         int[][][] islandShape = new int[shapeY][shapeZ][shapeX];
-        for (int y = 0; y < shapeY; y++) {
-            for (int z = 0; z < shapeZ; z++) {
-                for (int x = 0; x < shapeX; x++) {
+        for (int y = 0; y < shapeY; y++)
+            for (int z = 0; z < shapeZ; z++)
+                for (int x = 0; x < shapeX; x++)
                     islandShape[y][z][x] = dist1.get(y).get(z).get(x);
-                }
-            }
-        }
 
         return islandShape;
     }
 
     public List<Tuple<Integer, Integer, Integer>> parseSkyblockDefaultItemList() {
-        ConfigSection configSection = this.pluginConfig.getSection("skyblock.default-item-list");
+        ConfigSection configSection = this.pluginConfig.getSection("default-item-list");
         List<Tuple<Integer, Integer, Integer>> defaultItemList = new ArrayList<>();
         for (Map.Entry<String, Object> entry: configSection.getAllMap().entrySet())
             defaultItemList.add(new Tuple<>(
@@ -79,7 +76,7 @@ public class Config {
         List<Integer> blockGenSource = new ArrayList<>();
         List<List<Pair<Double, Integer>>> blockGenDict = new ArrayList<>();
         for (int i = 0; i < configSection.getInt("levels"); i++) {
-            ConfigSection dist = configSection.getSection("l" + i);
+            ConfigSection dist = configSection.getSection("l" + (i + 1));
             blockGenSource.add(Block.get(dist.getInt("id"), dist.getInt("meta")).getFullId());
             ConfigSection blocks = dist.getSection("blocks");
             List<Pair<Double, Integer>> lBlockGenDict = new ArrayList<>();
@@ -94,6 +91,10 @@ public class Config {
             }
         }
         return new Pair<>(blockGenSource, blockGenDict);
+    }
+
+    public String[] parseGuideBookPages() {
+        return this.pluginConfig.getStringList("guidebook").toArray(new String[0]);
     }
 
 }

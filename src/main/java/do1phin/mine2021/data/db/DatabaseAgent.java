@@ -37,7 +37,7 @@ public class DatabaseAgent {
             if (rs.next())
                 return Optional.of(new PlayerData(player, uuid, rs.getString("name"), rs.getString("ip"),
                         rs.getInt("category"),
-                        SkyblockData.fromJSON(rs.getInt("section"), rs.getString("island_setting")),
+                        SkyblockData.fromJSON(uuid, rs.getInt("section"), rs.getString("island_setting")),
                         rs.getTimestamp("ban_date")));
         } catch (SQLException e) {
             this.serverAgent.loggerCritical(e.getMessage());
@@ -86,7 +86,24 @@ public class DatabaseAgent {
         }
     }
 
-    public Optional<String> getUUIDbyPlayerName(String name) {
+    public Optional<SkyblockData> getSkyblockDataBySection(int section) {
+        try {
+            final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
+                    "SELECT island_setting, uuid FROM user_info WHERE section=?;");
+            pstmt.setInt(1, section);
+
+            ResultSet rs = pstmt.executeQuery();
+            pstmt.clearParameters();
+
+            if (rs.next()) return Optional.of(SkyblockData.fromJSON(rs.getString("uuid"), section, rs.getString("island_setting")));
+        } catch (SQLException e) {
+            this.serverAgent.loggerCritical(e.getMessage());
+        }
+
+        return Optional.empty();
+    }
+
+    public Optional<String> getUUIDByPlayerName(String name) {
         try {
             final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
                     "SELECT uuid FROM user_info WHERE name=?;");
@@ -123,9 +140,9 @@ public class DatabaseAgent {
     public int getCurrentSection() {
         try {
             final Statement stmt = this.RDBSHelper.getConnection().createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT MAX(section) FROM user_info");
+            ResultSet resultSet = stmt.executeQuery("SHOW TABLE STATUS LIKE 'user_info'");
 
-            if (resultSet.next()) return resultSet.getInt("MAX(section)");
+            if (resultSet.next()) return resultSet.getInt("Auto_increment");
         } catch (SQLException e) {
             this.serverAgent.loggerCritical(e.getMessage());
         }

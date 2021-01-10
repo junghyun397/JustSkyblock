@@ -1,8 +1,9 @@
 package do1phin.mine2021.skyblock;
 
 import cn.nukkit.Player;
-import cn.nukkit.item.Item;
+import cn.nukkit.event.player.PlayerTeleportEvent;
 import cn.nukkit.level.Level;
+import cn.nukkit.level.Location;
 import cn.nukkit.level.Position;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
@@ -11,7 +12,6 @@ import do1phin.mine2021.data.db.DatabaseAgent;
 import do1phin.mine2021.skyblock.data.ProtectionType;
 import do1phin.mine2021.skyblock.data.SkyblockData;
 import do1phin.mine2021.ui.MessageAgent;
-import do1phin.mine2021.utils.Tuple;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,14 +24,10 @@ public class SkyBlockAgent {
     private final MessageAgent messageAgent;
     private final DatabaseAgent databaseAgent;
 
-    private final int sectionDistance;
-
-    private final int[][][] defaultIslandShape;
-    private final List<Tuple<Integer, Integer, Integer>> defaultItemList;
-
     private final Map<Integer, SkyblockData> skyblockDataMap = new HashMap<>();
 
-    private Level mainLevel = null;
+    private final int sectionDistance;
+    private final int[][][] defaultIslandShape;
 
     public SkyBlockAgent(ServerAgent serverAgent, DatabaseAgent databaseAgent, MessageAgent messageAgent, Config config) {
         this.serverAgent = serverAgent;
@@ -41,7 +37,6 @@ public class SkyBlockAgent {
         this.sectionDistance = config.getPluginConfig().getInt("skyblock.distance");
 
         this.defaultIslandShape = config.parseSkyblockDefaultIslandShape();
-        this.defaultItemList = config.parseSkyblockDefaultItemList();
     }
 
     public int getSkyblockSectionByUUID(String uuid) {
@@ -52,12 +47,17 @@ public class SkyBlockAgent {
         return playerData.map(data -> data.getSkyblockData().getSection()).orElse(0);
     }
 
-    public int getSkyblockSectionByPosition(Position position) {
-        return 0;
+    public int getSkyblockSectionByX(int x) {
+        return (int) Math.floor((x + 0.001) / (this.sectionDistance * 16)) + 1;
     }
 
-    public void registerSkyblockData(PlayerData playerData) {
-        this.skyblockDataMap.put(playerData.getSkyblockData().getSection(), playerData.getSkyblockData());
+    public Position getSkyblockSpawn(int section) {
+        return new Position((this.sectionDistance * 16 * section) - (this.sectionDistance * 8), 65,
+                (double) this.sectionDistance * 8);
+    }
+
+    public void registerSkyblockData(SkyblockData skyblockData) {
+        this.skyblockDataMap.put(skyblockData.getSection(), skyblockData);
     }
 
     public SkyblockData getSkyblockData(Player player) {
@@ -75,33 +75,40 @@ public class SkyBlockAgent {
     }
 
     public void registerNewSkyblock(PlayerData playerData) {
-        Position islandSpawnPosition = this.getSkyblockSpawnPosition(playerData.getSkyblockData().getSection());
+        Position islandSpawnPosition = this.getSkyblockSpawn(playerData.getSkyblockData().getSection());
 
+        this.loadIslandDefaultChunk(playerData.getSkyblockData().getSection());
+        this.generateDefaultIsland(islandSpawnPosition);
         playerData.getPlayer().setSpawn(islandSpawnPosition);
-        this.generateNewSkyblock(playerData);
-        this.giveDefaultSkyblockItem(playerData);
-        playerData.getPlayer().teleport(islandSpawnPosition);
+        playerData.getPlayer().teleport(new Location(islandSpawnPosition.x, islandSpawnPosition.y, islandSpawnPosition.z,
+                90, 90, this.getMainLevel()), PlayerTeleportEvent.TeleportCause.PLUGIN);
     }
 
-    private void generateNewSkyblock(PlayerData playerData) {
-        // TODO: 스카이블록 생성 코드 작업
+    private void generateDefaultIsland(Position islandSpawnPosition) {
+        for (int y = 0; y < this.defaultIslandShape.length; y++)
+            for (int z = 0; z < this.defaultIslandShape[0].length; z++)
+                for (int x = 0; x < this.defaultIslandShape[0][0].length; x++)
+                    this.getMainLevel().setBlockIdAt(
+                            (int) islandSpawnPosition.x + x - 3,
+                            (int) islandSpawnPosition.y - y,
+                            (int) islandSpawnPosition.z + z - 3,
+                            this.defaultIslandShape[y][z][x]
+                    );
     }
 
-    private void giveDefaultSkyblockItem(PlayerData playerData) {
-        for (Tuple<Integer, Integer, Integer> item: this.defaultItemList)
-            playerData.getPlayer().getInventory().addItem(new Item(item.a, item.b, item.c));
-    }
-
-    public void teleportPlayerToSkyblock(Player player, String destinationName, String destinationUUID) {
+    public void teleportPlayerToIsland(Player player, String destinationUUID, String destinationName) {
         int section = this.getSkyblockSectionByUUID(destinationUUID);
         Optional<SkyblockData> skyblockData = this.getSkyblockData(section);
         if (!skyblockData.isPresent()) {
             Optional<PlayerData> playerData = this.databaseAgent.getPlayerData(destinationUUID);
-            playerData.ifPresent(this::registerSkyblockData);
+            playerData.ifPresent(playerData1 -> this.registerSkyblockData(playerData1.getSkyblockData()));
         }
 
-        player.teleport(this.getSkyblockSpawnPosition(section));
-        this.messageAgent.sendMessage(player, "message.skyblock.teleport-succeed",
+        this.loadIslandDefaultChunk(section);
+        player.teleport(this.getSkyblockSpawn(section));
+        if (player.getUniqueId().toString().equals(destinationUUID))
+            this.messageAgent.sendMessage(player, "message.skyblock.teleport-succeed-self");
+        else this.messageAgent.sendMessage(player, "message.skyblock.teleport-succeed",
                 new String[]{"%player"}, new String[]{destinationName});
     }
 
@@ -140,21 +147,45 @@ public class SkyBlockAgent {
         return true;
     }
 
-    public boolean canPlayerModifyBlock(Player player, double blockX, double blockZ) {
-        // TODO: 블록 보호 수준 관리
-        return false;
+    private void loadIslandDefaultChunk(int section) {
+        int chunkX = (section * this.sectionDistance) - (this.sectionDistance / 2);
+        int chunkY = this.sectionDistance / 2;
+        this.getMainLevel().loadChunk(chunkX, chunkY);
+        this.getMainLevel().loadChunk(chunkX - 1, chunkY);
+        this.getMainLevel().loadChunk(chunkX, chunkY - 1);
+        this.getMainLevel().loadChunk(chunkX - 1, chunkY + 1);
     }
 
-    public Position getSkyblockSpawnPosition(int section) {
-        return new Position(this.sectionDistance * 16 * section, 65, 0);
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean onPlayerModifyBlock(Player player, int blockX) {
+        int section = this.getSkyblockSectionByX(blockX);
+        Optional<SkyblockData> skyblockData = this.getSkyblockData(section);
+        if (!skyblockData.isPresent()) {
+            skyblockData = this.databaseAgent.getSkyblockDataBySection(section);
+            if (!skyblockData.isPresent()) return false;
+            this.registerSkyblockData(skyblockData.get());
+        }
+
+        if (player.getUniqueId().toString().equals(skyblockData.get().getOwner())) return true;
+
+        if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_ALL) return true;
+        else if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_INVITED) {
+            if (skyblockData.get().getCollaborators().contains(player.getUniqueId().toString())) return true;
+            this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
+                    new String[]{"%protection-type"},
+                    new String[]{this.messageAgent.getText("skyblock.protection-type.allow-invited")});
+            return false;
+        }
+        else {
+            this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
+                    new String[]{"%protection-type"},
+                    new String[]{this.messageAgent.getText("skyblock.protection-type.allow-only-owner")});
+            return false;
+        }
     }
 
-    void setMainLevel(Level level) {
-        this.mainLevel = level;
-    }
-
-    Level getMainLevel() {
-        return this.mainLevel;
+    private Level getMainLevel() {
+        return this.serverAgent.getMainLevel();
     }
 
 }

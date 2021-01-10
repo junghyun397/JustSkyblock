@@ -47,7 +47,7 @@ public class ProtectionTypeCommand extends SkyblockCommand {
 
         this.skyBlockAgent.updateProtectionType((Player) commandSender, protectionType);
 
-        this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.protection-type-command.protection-type-updated",
+        this.messageAgent.sendMessage((Player) commandSender, "message.skyblock.protection-type-updated",
                 new String[]{"%protection-type"}, new String[]{args[0]});
 
         return true;
