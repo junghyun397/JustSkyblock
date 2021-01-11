@@ -9,9 +9,8 @@ import cn.nukkit.event.block.BlockFromToEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.item.Item;
-
-import java.util.Timer;
-import java.util.TimerTask;
+import do1phin.mine2021.utils.NukkitUtility;
+import do1phin.mine2021.utils.TimerWrapper;
 
 public class BlockGenEventListener implements Listener {
 
@@ -25,7 +24,7 @@ public class BlockGenEventListener implements Listener {
     public void onBlockPlace(final BlockPlaceEvent event) {
         if (this.blockGenAgent.isBlockGenSource(event.getBlock().getFullId())
                 && this.blockGenAgent.registerBlockGenSource(event.getPlayer(), event.getBlock())) {
-            Item heldItem = event.getPlayer().getInventory().getItemInHand();
+            final Item heldItem = event.getPlayer().getInventory().getItemInHand();
             heldItem.setCount(heldItem.getCount() - 1);
             event.setCancelled();
         }
@@ -39,19 +38,17 @@ public class BlockGenEventListener implements Listener {
                 (int) event.getBlock().z).getFullId();
 
         if (this.blockGenAgent.isBlockGenSource(sourceBlockID)) {
-            int x = (int) event.getBlock().x;
-            int y = (int) event.getBlock().y;
-            int z = (int) event.getBlock().z;
+            final int x = (int) event.getBlock().x;
+            final int y = (int) event.getBlock().y;
+            final int z = (int) event.getBlock().z;
 
-            final Timer genTimer = new Timer();
-            TimerTask genTask = new TimerTask() {
-                @Override
-                public void run() {
-                    blockGenAgent.getMainLevel().setBlockFullIdAt(x, y, z,
-                            blockGenAgent.getReGenBlock(blockGenAgent.getBlockGenSourceLevel(sourceBlockID)));
-                }
-            };
-            genTimer.schedule(genTask, 250);
+            final int sourceLevel = this.blockGenAgent.getBlockGenSourceLevel(sourceBlockID);
+
+            TimerWrapper.schedule(() -> blockGenAgent.getMainLevel().setBlockFullIdAt(
+                    x, y, z,
+                    blockGenAgent.getReGenBlock(sourceLevel)),
+                    blockGenAgent.getBlockGenDelay(sourceLevel)
+            );
         }
     }
 
@@ -59,7 +56,7 @@ public class BlockGenEventListener implements Listener {
     public void onEntityInventoryChange(final EntityInventoryChangeEvent event) {
         if (!(event.getEntity() instanceof Player) || event.getNewItem() == null) return;
 
-        int fullID = (event.getNewItem().getId() << 4) + event.getNewItem().getDamage();
+        final int fullID = NukkitUtility.getFullID(event.getNewItem().getId(), event.getNewItem().getDamage());
         if (this.blockGenAgent.isBlockGenSource(fullID))
             event.getNewItem().setCustomName(this.blockGenAgent.getBlockGenSourceTag(fullID));
     }

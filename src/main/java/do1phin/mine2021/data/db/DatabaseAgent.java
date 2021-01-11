@@ -37,7 +37,9 @@ public class DatabaseAgent {
             if (rs.next())
                 return Optional.of(new PlayerData(player, uuid, rs.getString("name"), rs.getString("ip"),
                         rs.getInt("category"),
-                        SkyblockData.fromJSON(uuid, rs.getInt("section"), rs.getString("island_setting")),
+                        SkyblockData.fromJSON(rs.getInt("section"),
+                                rs.getString("island_setting"),
+                                uuid, rs.getString("name")),
                         rs.getTimestamp("ban_date")));
         } catch (SQLException e) {
             this.serverAgent.loggerCritical(e.getMessage());
@@ -95,7 +97,11 @@ public class DatabaseAgent {
             ResultSet rs = pstmt.executeQuery();
             pstmt.clearParameters();
 
-            if (rs.next()) return Optional.of(SkyblockData.fromJSON(rs.getString("uuid"), section, rs.getString("island_setting")));
+            if (rs.next()) return Optional.of(SkyblockData.fromJSON(section,
+                    rs.getString("island_setting"),
+                    rs.getString("uuid"),
+                    rs.getString("name"))
+            );
         } catch (SQLException e) {
             this.serverAgent.loggerCritical(e.getMessage());
         }
@@ -137,7 +143,7 @@ public class DatabaseAgent {
         return Optional.empty();
     }
 
-    public int getCurrentSection() {
+    public int getNextSection() {
         try {
             final Statement stmt = this.RDBSHelper.getConnection().createStatement();
             ResultSet resultSet = stmt.executeQuery("SHOW TABLE STATUS LIKE 'user_info'");

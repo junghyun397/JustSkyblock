@@ -1,13 +1,12 @@
 package do1phin.mine2021.data;
 
-import cn.nukkit.block.Block;
 import cn.nukkit.utils.ConfigSection;
+import do1phin.mine2021.utils.NukkitUtility;
 import do1phin.mine2021.utils.Pair;
 import do1phin.mine2021.utils.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Config {
 
@@ -30,9 +29,9 @@ public class Config {
     }
 
     public int[][][] parseSkyblockDefaultIslandShape() {
-        List<?> dim1 = this.pluginConfig.getList("skyblock.default-island-shape");
-        List<List<List<Integer>>> dist1 = new ArrayList<>();
-        int shapeY;
+        final List<?> dim1 = this.pluginConfig.getList("skyblock.default-island-shape");
+        final List<List<List<Integer>>> dist1 = new ArrayList<>();
+        final int shapeY = dim1.size();
         int shapeX = 0;
         int shapeZ = 0;
         for (Object dim2 : dim1) {
@@ -48,9 +47,8 @@ public class Config {
             dist1.add(dist2);
             shapeZ = ((List<?>) dim2).size();
         }
-        shapeY = dim1.size();
 
-        int[][][] islandShape = new int[shapeY][shapeZ][shapeX];
+        final int[][][] islandShape = new int[shapeY][shapeZ][shapeX];
         for (int y = 0; y < shapeY; y++)
             for (int z = 0; z < shapeZ; z++)
                 for (int x = 0; x < shapeX; x++)
@@ -59,38 +57,46 @@ public class Config {
         return islandShape;
     }
 
-    public List<Tuple<Integer, Integer, Integer>> parseSkyblockDefaultItemList() {
-        ConfigSection configSection = this.pluginConfig.getSection("default-item-list");
-        List<Tuple<Integer, Integer, Integer>> defaultItemList = new ArrayList<>();
-        for (Map.Entry<String, Object> entry: configSection.getAllMap().entrySet())
-            defaultItemList.add(new Tuple<>(
-                    Integer.parseInt(entry.getKey().split("-")[0]),
-                    Integer.parseInt(entry.getKey().split("-")[1]),
-                    (int) entry.getValue())
-            );
+    public List<Tuple<Integer, Integer, Integer>> parseDefaultItemList() {
+        final List<?> defaultItemSection = this.pluginConfig.getList("default-item-list");
+
+        final List<Tuple<Integer, Integer, Integer>> defaultItemList = new ArrayList<>();
+        defaultItemSection.forEach(o -> {
+            final ConfigSection section = (ConfigSection) o;
+            defaultItemList.add(new Tuple<>(section.getInt("id"), section.getInt("meta"), section.getInt("count")));
+        });
+
         return defaultItemList;
     }
 
-    public Pair<List<Integer>, List<List<Pair<Double, Integer>>>> parseBlockGenData() {
-        ConfigSection configSection = this.pluginConfig.getSection("blockgen");
-        List<Integer> blockGenSource = new ArrayList<>();
-        List<List<Pair<Double, Integer>>> blockGenDict = new ArrayList<>();
-        for (int i = 0; i < configSection.getInt("levels"); i++) {
-            ConfigSection dist = configSection.getSection("l" + (i + 1));
-            blockGenSource.add(Block.get(dist.getInt("id"), dist.getInt("meta")).getFullId());
-            ConfigSection blocks = dist.getSection("blocks");
-            List<Pair<Double, Integer>> lBlockGenDict = new ArrayList<>();
-            blockGenDict.add(lBlockGenDict);
-            double acc = 0;
-            for (Map.Entry<String, Object> entry: blocks.getAllMap().entrySet()) {
-                acc = acc + (Double) entry.getValue();
-                lBlockGenDict.add(new Pair<>(
-                        acc, Block.get(Integer.parseInt(entry.getKey().split("-")[0]),
-                        Integer.parseInt(entry.getKey().split("-")[1])).getFullId())
-                );
-            }
-        }
-        return new Pair<>(blockGenSource, blockGenDict);
+    public Tuple<List<Integer>, List<Integer>, List<List<Pair<Double, Integer>>>> parseBlockGenData() {
+        final List<?> blockGenSection = this.pluginConfig.getList("blockgen");
+
+        final List<Integer> blockGenSource = new ArrayList<>();
+        final List<Integer> blockGenDelay = new ArrayList<>();
+        final List<List<Pair<Double, Integer>>> blockGenDict = new ArrayList<>();
+        blockGenSection.forEach(o -> {
+            ConfigSection section = (ConfigSection) o;
+            blockGenSource.add(NukkitUtility.getFullID(section.getInt("id"), section.getInt("meta")));
+            blockGenDelay.add(section.getInt("delay"));
+
+            final List<Pair<Double, Integer>> blockGenCell = new ArrayList<>();
+            final List<?> blocksList = section.getList("blocks");
+            final double[] total = {0};
+            final double[] acc = {0};
+            blocksList.forEach(o1 -> total[0] = total[0] + ((ConfigSection) o1).getDouble("percentage"));
+            blocksList.forEach(o1 -> {
+                ConfigSection blockSection  = (ConfigSection) o1;
+                acc[0] = acc[0] + blockSection.getDouble("percentage") / total[0];
+                blockGenCell.add(new Pair<>(
+                        acc[0],
+                        NukkitUtility.getFullID(blockSection.getInt("id"), blockSection.getInt("meta"))
+                ));
+            });
+            blockGenDict.add(blockGenCell);
+        });
+
+        return new Tuple<>(blockGenSource, blockGenDelay, blockGenDict);
     }
 
     public String[] parseGuideBookPages() {

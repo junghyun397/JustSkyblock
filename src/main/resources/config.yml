@@ -47,53 +47,71 @@ skyblock:
                          [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 0, 0], [0, 0, 1, 1, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]]
 
 blockgen:
-  levels: 5
-  l1:
-    id: 19
+  - id: 19
     meta: 0
+    delay: 500
     blocks:
-      1-0: 0.4
-      2-0: 0.4
-      17-0: 0.2
-  l2:
-    id: 168
+      - id: 1
+        meta: 0
+        percentage: 100
+  - id: 168
     meta: 0
+    delay: 1000
     blocks:
-      1-0: 0.4
-      2-0: 0.4
-      17-0: 0.2
-  l3:
-    id: 168
+      - id: 1
+        meta: 0
+        percentage: 100
+
+  - id: 168
     meta: 1
+    delay: 2000
     blocks:
-      1-0: 0.4
-      2-0: 0.4
-      17-0: 0.2
-  l4:
-    id: 168
+      - id: 1
+        meta: 0
+        percentage: 100
+
+  - id: 168
     meta: 2
+    delay: 4000
     blocks:
-      1-0: 0.4
-      2-0: 0.4
-      17-0: 0.2
-  l5:
-    id: 201
+      - id: 1
+        meta: 0
+        percentage: 100
+
+  - id: 201
     meta: 0
+    delay: 8000
     blocks:
-      1-0: 0.4
-      2-0: 0.4
-      17-0: 0.2
+      - id: 1
+        meta: 0
+        percentage: 100
 
 
 default-item-list:
-  270-0: 1
-  271-0: 1
-  269-0: 1
-  79-0: 2
-  325-10: 1
-  351-15: 10
-  19-0: 1
-  297-0: 64
+  - id: 270
+    meta: 0
+    count: 1
+  - id: 271
+    meta: 0
+    count: 1
+  - id: 269
+    meta: 0
+    count: 1
+  - id: 79
+    meta: 0
+    count: 2
+  - id: 325
+    meta: 10
+    count: 1
+  - id: 351
+    meta: 15
+    count: 10
+  - id: 297
+    meta: 0
+    count: 64
+  - id: 19
+    meta: 0
+    count: 1
 
 
 # =================
@@ -129,14 +147,14 @@ message:
     purge-succeed: "§e%player§f 님을 내 구역에서 추방했습니다."
     protection-type-updated: "내 구역의 보호 수준이 §e%protection-type§f 으로 설정 되었습니다."
   blockgen:
-    blockgen-upgrade-succeed: "생성 블록이 §e%level§f 단계로 업그레이드 되었습니다."
+    blockgen-upgrade-succeed: "생성 블록이 §e%level단계§f로 업그레이드 되었습니다."
 
 popup:
   general:
     on-player-join: "+%player"
     on-player-quit: "-%player"
   skyblock:
-    protection-type-warning: "§7이 구역은 §e%protection-type§7 수준으로 보호되고 있습니다."
+    protection-type-warning: "§e%player§7 님의 구역은 §e%protection-type§7 수준으로 보호되고 있습니다."
 
 command:
   management:
@@ -194,8 +212,13 @@ command:
       usage: "/보호 <나만|초대된|모두>"
       format-error: "/보호 <나만|초대된|모두> 형식으로 입력해 주시기 바랍니다."
 
+form:
+  welcome-form:
+    title: "§6§l환영합니다!"
+    content: "Mine24 2021에 처음 접속하셨습니다.\n- 가이드북을 확인 해주세요.\n- 공식 카페 cafe.mine24.net 을 방문 해보세요.\n언제 어디서나 즐기는 나만의 세상, Mine24."
+
 guidebook:
-  - "§6§lMine24 2021\n§7서버 이용 안내"
+  - "§6§lMine24 2021\n§7언제 어디서나 즐기는 나만의 세상\n가이드북"
   - "p1"
   - "p2"
   - "p3"

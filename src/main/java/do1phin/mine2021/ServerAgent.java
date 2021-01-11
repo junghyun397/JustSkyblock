@@ -1,7 +1,6 @@
 package do1phin.mine2021;
 
 import cn.nukkit.Player;
-import cn.nukkit.command.CommandMap;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBookWritten;
 import cn.nukkit.level.Level;
@@ -45,6 +44,8 @@ public class ServerAgent extends PluginBase {
     private BlockGenAgent blockGenAgent;
 
     private final Map<String, PlayerData> playerDataMap = new HashMap<>();
+
+    private final List<String> pendingResisterNewPlayerList = new ArrayList<>();
 
     private Level mainLevel = null;
 
@@ -117,7 +118,7 @@ public class ServerAgent extends PluginBase {
         this.getServer().getCommandMap().register("mine2021", new KickCommand(this, this.messageAgent, config));
         this.getServer().getCommandMap().register("mine2021", new CategoryCommand(this, this.messageAgent, config));
 
-        this.defaultItemList = config.parseSkyblockDefaultItemList();
+        this.defaultItemList = config.parseDefaultItemList();
         this.guideBookPages = config.parseGuideBookPages();
 
         this.loggerInfo("§eloading succeed.");
@@ -132,9 +133,12 @@ public class ServerAgent extends PluginBase {
         if (playerData.isPresent()) {
             if (!playerData.get().getName().equals(name) | !playerData.get().getIp().equals(ip))
                 this.databaseAgent.updatePlayerData(playerData.get());
+
+            this.messageAgent.sendBroadcast("message.general.on-player-join",
+                    new String[]{"%player"}, new String[]{player.getName()});
         } else {
-            int section = this.databaseAgent.getCurrentSection()+1;
-            playerData = Optional.of(new PlayerData(player, uuid, name, ip, 0, SkyblockData.getDefault(uuid, section), null));
+            int section = this.databaseAgent.getNextSection();
+            playerData = Optional.of(new PlayerData(player, uuid, name, ip, 0, SkyblockData.getDefault(section, name, uuid), null));
             this.registerNewPlayer(playerData.get());
         }
 
@@ -142,11 +146,6 @@ public class ServerAgent extends PluginBase {
 
         this.skyBlockAgent.registerSkyblockData(playerData.get().getSkyblockData());
         this.playerCategoryAgent.setPlayerNameTag(playerData.get());
-
-        this.messageAgent.sendBroadcast("message.general.on-player-join",
-                new String[]{"%player"}, new String[]{player.getName()});
-        this.messageAgent.sendBroadcastPopup("popup.general.on-player-join",
-                new String[]{"%player"}, new String[]{player.getName()});
     }
 
     public PlayerData getPlayerData(Player player) {
@@ -175,6 +174,8 @@ public class ServerAgent extends PluginBase {
         this.skyBlockAgent.registerNewSkyblock(playerData);
         this.giveDefaultItems(playerData.getPlayer());
 
+        this.addPendingRegisterNewPlayer(playerData.getUuid());
+
         this.messageAgent.sendBroadcast("message.general.on-player-first-join", new String[]{"%player"}, new String[]{playerData.getName()});
     }
 
@@ -182,12 +183,26 @@ public class ServerAgent extends PluginBase {
         for (Tuple<Integer, Integer, Integer> item: this.defaultItemList)
             player.getInventory().addItem(Item.get(item.a, item.b, item.c).clone());
 
-        ItemBookWritten book = (ItemBookWritten) Item.get(387, 0, 1);
+        final ItemBookWritten book = (ItemBookWritten) Item.get(387, 0, 1);
         final String bookName = this.messageAgent.getText("general.guidebook");
         book.writeBook("§e§lMine24 2021", bookName, this.guideBookPages);
         book.setCustomName(bookName);
 
         player.getInventory().addItem(book);
+    }
+
+    private void addPendingRegisterNewPlayer(String uuid) {
+        this.pendingResisterNewPlayerList.add(uuid);
+    }
+
+    boolean isPendingRegisterNewPlayer(String uuid) {
+        return this.pendingResisterNewPlayerList.contains(uuid);
+    }
+
+    void continueRegisterNewPlayer(Player player) {
+        this.pendingResisterNewPlayerList.remove(player.getUniqueId().toString());
+
+        this.messageAgent.sendSimpleForm(player, "form.welcome-form.title", "form.welcome-form.content");
     }
 
     void setMainLevel(Level level) {

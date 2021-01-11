@@ -10,6 +10,7 @@ import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
 import do1phin.mine2021.ui.MessageAgent;
 import do1phin.mine2021.utils.Pair;
+import do1phin.mine2021.utils.Tuple;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,15 +21,17 @@ public class BlockGenAgent {
     private final MessageAgent messageAgent;
 
     private final List<Integer> blockGenSource;
+    private final List<Integer> blockGenDelay;
     private final List<List<Pair<Double, Integer>>> blockGenDict;
 
     public BlockGenAgent(ServerAgent serverAgent, MessageAgent messageAgent, Config config) {
         this.serverAgent = serverAgent;
         this.messageAgent = messageAgent;
 
-        Pair<List<Integer>, List<List<Pair<Double, Integer>>>> blockGenData = config.parseBlockGenData();
+        Tuple<List<Integer>, List<Integer>, List<List<Pair<Double, Integer>>>> blockGenData = config.parseBlockGenData();
         this.blockGenSource = blockGenData.a;
-        this.blockGenDict = blockGenData.b;
+        this.blockGenDelay = blockGenData.b;
+        this.blockGenDict = blockGenData.c;
     }
 
     public boolean isBlockGenSource(int fullID) {
@@ -37,6 +40,10 @@ public class BlockGenAgent {
 
     public int getBlockGenSourceLevel(int fullID) {
         return this.blockGenSource.indexOf(fullID);
+    }
+
+    public int getBlockGenDelay(int blockGenSourceLevel) {
+        return this.blockGenDelay.get(blockGenSourceLevel);
     }
 
     public int getReGenBlock(int blockGenSourceLevel) {
@@ -103,7 +110,7 @@ public class BlockGenAgent {
         for (int x = 0; x < 9; x++)
             for (int z = 0; z < 9; z++)
                 this.getMainLevel().addParticleEffect(new Position(core.x - (x - 5.5) / 3, core.y + 1, core.z - (z - 5.5) / 3),
-                        ParticleEffect.VILLAGER_HAPPY);
+                        ParticleEffect.BLUE_FLAME);
     }
 
     Level getMainLevel() {

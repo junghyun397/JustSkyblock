@@ -1,6 +1,7 @@
 package do1phin.mine2021.ui;
 
 import cn.nukkit.Player;
+import cn.nukkit.form.window.FormWindowSimple;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
 
@@ -26,11 +27,7 @@ public class MessageAgent {
     }
 
     public void sendMessage(Player player, String key, String[] params, String[] values) {
-        String message = this.config.getString(key);
-        if (params != null && values != null && params.length == values.length)
-            for (int i = 0; i < params.length; i++)
-                message = message.replaceAll(params[i], values[i]);
-        player.sendMessage(this.prefixInfo + message);
+        player.sendMessage(this.prefixInfo + this.getMessage(key, params, values));
     }
 
     public void sendBroadcast(String key) {
@@ -38,11 +35,7 @@ public class MessageAgent {
     }
 
     public void sendBroadcast(String key, String[] params, String[] values) {
-        String message = this.config.getString(key);
-        if (params != null && values != null && params.length == values.length)
-            for (int i = 0; i < params.length; i++)
-                message = message.replaceAll(params[i], values[i]);
-        this.serverAgent.getServer().broadcastMessage(this.prefixNotice + message);
+        this.serverAgent.getServer().broadcastMessage(this.prefixNotice + this.getMessage(key, params, values));
     }
 
     public void sendPopup(Player player, String key) {
@@ -50,11 +43,7 @@ public class MessageAgent {
     }
 
     public void sendPopup(Player player, String key, String[] params, String[] values) {
-        String message = this.config.getString(key);
-        if (params != null && values != null && params.length == values.length)
-            for (int i = 0; i < params.length; i++)
-                message = message.replaceAll(params[i], values[i]);
-        player.sendPopup(message);
+        player.sendPopup(this.getMessage(key, params, values));
     }
 
     public void sendBroadcastPopup(String key) {
@@ -62,13 +51,23 @@ public class MessageAgent {
     }
 
     public void sendBroadcastPopup(String key, String[] params, String[] values) {
+        String message = this.getMessage(key, params, values);
+        for (Player player: this.serverAgent.getServer().getOnlinePlayers().values())
+            player.sendPopup(message);
+    }
+
+    private String getMessage(String key, String[] params, String[] values) {
         String message = this.config.getString(key);
         if (params != null && values != null && params.length == values.length)
             for (int i = 0; i < params.length; i++)
                 message = message.replaceAll(params[i], values[i]);
 
-        for (Player player: this.serverAgent.getServer().getOnlinePlayers().values())
-            player.sendPopup(message);
+        return message;
+    }
+
+    public void sendSimpleForm(Player player, String titleKey, String contentKey) {
+        final FormWindowSimple form = new FormWindowSimple(this.config.getString(titleKey), this.config.getString(contentKey));
+        player.showFormWindow(form);
     }
 
     public String getText(String key) {

@@ -4,9 +4,7 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
-import cn.nukkit.event.player.PlayerChunkRequestEvent;
-import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.player.PlayerRespawnEvent;
+import cn.nukkit.event.player.*;
 
 public class SkyBlockEventListener implements Listener {
 
@@ -23,11 +21,9 @@ public class SkyBlockEventListener implements Listener {
 
     @EventHandler
     public void onPlayerRespawn(final PlayerRespawnEvent event) {
-        if (!event.isFirstSpawn()) {
-            event.getPlayer().setSpawn(this.skyBlockAgent.getSkyblockSpawn(
-                    this.skyBlockAgent.getSkyblockSectionByX((int) Math.round(event.getPlayer().getPosition().x)))
-            );
-        }
+        event.setRespawnPosition(this.skyBlockAgent.getSkyblockSpawn(
+                this.skyBlockAgent.getSkyblockSectionByX((int) Math.round(event.getPlayer().getPosition().getX()))
+         ));
     }
 
     @EventHandler

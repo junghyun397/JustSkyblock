@@ -25,6 +25,12 @@ public class ServerEventListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerLocallyInitialized(final PlayerLocallyInitializedEvent event) {
+        if (this.serverAgent.isPendingRegisterNewPlayer(event.getPlayer().getUniqueId().toString()))
+            this.serverAgent.continueRegisterNewPlayer(event.getPlayer());
+    }
+
+    @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent event) {
         this.serverAgent.purgePlayer(event.getPlayer());
         event.setQuitMessage("");

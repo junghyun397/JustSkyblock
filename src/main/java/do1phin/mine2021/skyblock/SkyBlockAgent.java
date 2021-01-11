@@ -1,9 +1,7 @@
 package do1phin.mine2021.skyblock;
 
 import cn.nukkit.Player;
-import cn.nukkit.event.player.PlayerTeleportEvent;
 import cn.nukkit.level.Level;
-import cn.nukkit.level.Location;
 import cn.nukkit.level.Position;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
@@ -12,6 +10,7 @@ import do1phin.mine2021.data.db.DatabaseAgent;
 import do1phin.mine2021.skyblock.data.ProtectionType;
 import do1phin.mine2021.skyblock.data.SkyblockData;
 import do1phin.mine2021.ui.MessageAgent;
+import do1phin.mine2021.utils.TimerWrapper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -79,9 +78,8 @@ public class SkyBlockAgent {
 
         this.loadIslandDefaultChunk(playerData.getSkyblockData().getSection());
         this.generateDefaultIsland(islandSpawnPosition);
-        playerData.getPlayer().setSpawn(islandSpawnPosition);
-        playerData.getPlayer().teleport(new Location(islandSpawnPosition.x, islandSpawnPosition.y, islandSpawnPosition.z,
-                90, 90, this.getMainLevel()), PlayerTeleportEvent.TeleportCause.PLUGIN);
+
+        TimerWrapper.schedule(() -> playerData.getPlayer().teleport(islandSpawnPosition), 500);
     }
 
     private void generateDefaultIsland(Position islandSpawnPosition) {
@@ -166,20 +164,22 @@ public class SkyBlockAgent {
             this.registerSkyblockData(skyblockData.get());
         }
 
-        if (player.getUniqueId().toString().equals(skyblockData.get().getOwner())) return true;
+        if (player.getUniqueId().toString().equals(skyblockData.get().getUuid())) return true;
 
         if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_ALL) return true;
         else if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_INVITED) {
             if (skyblockData.get().getCollaborators().contains(player.getUniqueId().toString())) return true;
             this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
-                    new String[]{"%protection-type"},
-                    new String[]{this.messageAgent.getText("skyblock.protection-type.allow-invited")});
+                    new String[]{"%player", "%protection-type"},
+                    new String[]{skyblockData.get().getOwner(),
+                            this.messageAgent.getText("skyblock.protection-type.allow-invited")});
             return false;
         }
         else {
             this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
-                    new String[]{"%protection-type"},
-                    new String[]{this.messageAgent.getText("skyblock.protection-type.allow-only-owner")});
+                    new String[]{"%player", "%protection-type"},
+                    new String[]{skyblockData.get().getOwner(),
+                            this.messageAgent.getText("skyblock.protection-type.allow-only-owner")});
             return false;
         }
     }
