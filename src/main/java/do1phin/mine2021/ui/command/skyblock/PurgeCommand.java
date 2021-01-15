@@ -12,6 +12,7 @@ import do1phin.mine2021.skyblock.data.SkyblockData;
 import do1phin.mine2021.ui.MessageAgent;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class PurgeCommand extends SkyblockCommand {
 
@@ -38,19 +39,19 @@ public class PurgeCommand extends SkyblockCommand {
             return false;
         }
 
-        Player targetPlayer = commandSender.getServer().getPlayer(args[0]);
-        String targetUUID;
+        final Player targetPlayer = commandSender.getServer().getPlayer(args[0]);
+        final UUID targetUUID;
         if (targetPlayer == null) {
-            Optional<String> tTargetUUID = this.databaseAgent.getUUIDByPlayerName(args[0]);
+            Optional<UUID> tTargetUUID = this.databaseAgent.getUUIDByPlayerName(args[0]);
             if (tTargetUUID.isPresent()) targetUUID = tTargetUUID.get();
             else {
                 this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.purge-command.purge-failed-playernotfound",
                         new String[]{"%player"}, new String[]{args[0]});
                 return false;
             }
-        } else targetUUID = targetPlayer.getUniqueId().toString();
+        } else targetUUID = targetPlayer.getUniqueId();
 
-        SkyblockData skyblockData = this.skyBlockAgent.getSkyblockData((Player) commandSender);
+        final SkyblockData skyblockData = this.skyBlockAgent.getSkyblockData((Player) commandSender);
         if (!skyblockData.getCollaborators().contains(targetUUID)) {
             this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.purge-command.purge-failed-playernotinvited",
                     new String[]{"%player"}, new String[]{args[0]});

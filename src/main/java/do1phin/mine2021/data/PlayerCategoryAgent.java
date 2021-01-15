@@ -24,10 +24,9 @@ public class PlayerCategoryAgent {
         return this.playerCategoryMap;
     }
 
-    public String getPlayerChatFormat(Player player, String message) {
+    public String getFormattedChatMessage(Player player, String message) {
         return this.playerCategoryMap.get(
-                this.serverAgent.getPlayerData(player).getPlayerCategory()).b.replaceFirst("%name", player.getName())
-                + message;
+                this.serverAgent.getPlayerData(player).getPlayerCategory()).b.replaceFirst("%name", player.getName()) + message;
     }
 
     public void setPlayerNameTag(PlayerData playerData) {
@@ -36,7 +35,7 @@ public class PlayerCategoryAgent {
     }
 
     private Map<Integer, Tuple<String, String, String>> buildPlayerCategoryMap(ConfigSection configSection) {
-        Map<Integer, Tuple<String, String, String>> categoryMap = new HashMap<>();
+        final Map<Integer, Tuple<String, String, String>> categoryMap = new HashMap<>();
         configSection.forEach((s, o) -> {
             ConfigSection section = ((ConfigSection) o);
             categoryMap.put(section.getInt("id", 0),

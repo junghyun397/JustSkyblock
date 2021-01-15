@@ -1,7 +1,5 @@
 package do1phin.mine2021.data.db;
 
-import do1phin.mine2021.data.Config;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 

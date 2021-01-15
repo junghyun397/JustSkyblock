@@ -11,6 +11,7 @@ import do1phin.mine2021.skyblock.SkyBlockAgent;
 import do1phin.mine2021.ui.MessageAgent;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class TeleportCommand extends SkyblockCommand {
 
@@ -33,9 +34,9 @@ public class TeleportCommand extends SkyblockCommand {
         if (!(commandSender instanceof Player) || !commandSender.hasPermission(this.getPermission())) return false;
 
         if (args.length == 0) {
-            this.skyBlockAgent.teleportPlayerToIsland((Player) commandSender, ((Player) commandSender).getUniqueId().toString(), commandSender.getName());
+            this.skyBlockAgent.teleportPlayerToIsland((Player) commandSender, ((Player) commandSender).getUniqueId(), commandSender.getName());
         } else {
-            Optional<String> targetUUID = this.databaseAgent.getUUIDByPlayerName(args[0]);
+            final Optional<UUID> targetUUID = this.databaseAgent.getUUIDByPlayerName(args[0]);
             if (!targetUUID.isPresent()) {
                 this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.teleport-command.teleport-failed-playernotfound",
                         new String[]{"%player"}, new String[]{args[0]});

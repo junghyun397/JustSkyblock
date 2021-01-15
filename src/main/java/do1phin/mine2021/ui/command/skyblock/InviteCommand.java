@@ -25,26 +25,26 @@ public class InviteCommand extends SkyblockCommand {
 
     @Override
     public boolean execute(CommandSender commandSender, String ignored, String[] args) {
-        if (!(commandSender instanceof Player) || !commandSender.hasPermission(this.getPermission())) return false;
+        if (this.checkExecutable(commandSender)) return false;
 
         if (args.length == 0) {
             this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.invite-command.format-error");
             return false;
         }
 
-        Player targetPlayer = commandSender.getServer().getPlayer(args[0]);
+        final Player targetPlayer = commandSender.getServer().getPlayer(args[0]);
         if (targetPlayer == null) {
             this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.invite-command.invite-failed-playernotfound",
                     new String[]{"%player"}, new String[]{args[0]});
             return false;
         }
 
-        SkyblockData skyblockData = this.skyBlockAgent.getSkyblockData((Player) commandSender);
-        if (skyblockData.getCollaborators().contains(targetPlayer.getUniqueId().toString())) {
+        final SkyblockData skyblockData = this.skyBlockAgent.getSkyblockData((Player) commandSender);
+        if (skyblockData.getCollaborators().contains(targetPlayer.getUniqueId())) {
             this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.invite-command.invite-failed-playeralradyinvited");
             return false;
         }
-        this.skyBlockAgent.addCollaborator((Player) commandSender, targetPlayer.getUniqueId().toString());
+        this.skyBlockAgent.addCollaborator((Player) commandSender, targetPlayer.getUniqueId());
 
         this.messageAgent.sendMessage(targetPlayer, "message.skyblock.invite-received",
                 new String[]{"%owner"}, new String[]{commandSender.getName()});

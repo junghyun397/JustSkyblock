@@ -15,30 +15,33 @@ public class SkyBlockEventListener implements Listener {
     }
 
     @EventHandler
-    public void onChunkRequestEvent(final PlayerChunkRequestEvent event) {
+    public void onChunkRequestEvent(PlayerChunkRequestEvent event) {
         event.setCancelled(!this.skyBlockAgent.canPlayerLoadChunk(event.getPlayer(), event.getChunkX(), event.getChunkZ()));
     }
 
     @EventHandler
-    public void onPlayerRespawn(final PlayerRespawnEvent event) {
-        event.setRespawnPosition(this.skyBlockAgent.getSkyblockSpawn(
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        event.setRespawnPosition(this.skyBlockAgent.findSafeSpawn(this.skyBlockAgent.getSkyblockSpawn(
                 this.skyBlockAgent.getSkyblockSectionByX((int) Math.round(event.getPlayer().getPosition().getX()))
-         ));
+         )));
     }
 
     @EventHandler
-    public void onBlockPlace(final BlockPlaceEvent event) {
-        if (!this.skyBlockAgent.onPlayerModifyBlock(event.getPlayer(), (int) event.getBlock().getX())) event.setCancelled();
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (!event.getPlayer().isOp() && !this.skyBlockAgent.onPlayerModifyBlock(event.getPlayer(), (int) event.getBlock().getX()))
+            event.setCancelled();
     }
 
     @EventHandler
-    public void onBlockBreak(final BlockBreakEvent event) {
-        if (!this.skyBlockAgent.onPlayerModifyBlock(event.getPlayer(), (int) event.getBlock().getX())) event.setCancelled();
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (!event.getPlayer().isOp() && !this.skyBlockAgent.onPlayerModifyBlock(event.getPlayer(), (int) event.getBlock().getX()))
+            event.setCancelled();
     }
 
     @EventHandler
-    public void onPlayerInteract(final PlayerInteractEvent event) {
-        if (!this.skyBlockAgent.onPlayerModifyBlock(event.getPlayer(), (int) event.getBlock().getX())) event.setCancelled();
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (!event.getPlayer().isOp() && !this.skyBlockAgent.onPlayerModifyBlock(event.getPlayer(), (int) event.getBlock().getX()))
+            event.setCancelled();
     }
 
 }

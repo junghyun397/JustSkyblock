@@ -1,7 +1,8 @@
 package do1phin.mine2021.data;
 
+import cn.nukkit.block.Block;
+import cn.nukkit.blockstate.BlockState;
 import cn.nukkit.utils.ConfigSection;
-import do1phin.mine2021.utils.NukkitUtility;
 import do1phin.mine2021.utils.Pair;
 import do1phin.mine2021.utils.Tuple;
 
@@ -38,9 +39,8 @@ public class Config {
             List<List<Integer>> dist2 = new ArrayList<>();
             for (Object dim3 : (List<?>) dim2) {
                 List<Integer> dist3 = new ArrayList<>();
-                for (Object block : (List<?>) dim3) {
+                for (Object block : (List<?>) dim3)
                     dist3.add((int) block);
-                }
                 dist2.add(dist3);
                 shapeX = ((List<?>) dim3).size();
             }
@@ -69,18 +69,18 @@ public class Config {
         return defaultItemList;
     }
 
-    public Tuple<List<Integer>, List<Integer>, List<List<Pair<Double, Integer>>>> parseBlockGenData() {
+    public Tuple<List<Integer>, List<Integer>, List<List<Pair<Double, Block>>>> parseBlockGenData() {
         final List<?> blockGenSection = this.pluginConfig.getList("blockgen");
 
         final List<Integer> blockGenSource = new ArrayList<>();
         final List<Integer> blockGenDelay = new ArrayList<>();
-        final List<List<Pair<Double, Integer>>> blockGenDict = new ArrayList<>();
+        final List<List<Pair<Double, Block>>> blockGenDict = new ArrayList<>();
         blockGenSection.forEach(o -> {
             ConfigSection section = (ConfigSection) o;
-            blockGenSource.add(NukkitUtility.getFullID(section.getInt("id"), section.getInt("meta")));
+            blockGenSource.add(section.getInt("id"));
             blockGenDelay.add(section.getInt("delay"));
 
-            final List<Pair<Double, Integer>> blockGenCell = new ArrayList<>();
+            final List<Pair<Double, Block>> blockGenCell = new ArrayList<>();
             final List<?> blocksList = section.getList("blocks");
             final double[] total = {0};
             final double[] acc = {0};
@@ -90,7 +90,7 @@ public class Config {
                 acc[0] = acc[0] + blockSection.getDouble("percentage") / total[0];
                 blockGenCell.add(new Pair<>(
                         acc[0],
-                        NukkitUtility.getFullID(blockSection.getInt("id"), blockSection.getInt("meta"))
+                        BlockState.of(blockSection.getInt("id"), blockSection.getInt("meta")).getBlock()
                 ));
             });
             blockGenDict.add(blockGenCell);
@@ -100,7 +100,7 @@ public class Config {
     }
 
     public String[] parseGuideBookPages() {
-        return this.pluginConfig.getStringList("guidebook").toArray(new String[0]);
+        return this.pluginConfig.getStringList("guidebook.content").toArray(new String[0]);
     }
 
 }

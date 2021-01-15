@@ -11,7 +11,7 @@ public class EmptyGenerator extends Generator {
 
     private ChunkManager chunkManager;
 
-    public EmptyGenerator(Map ignored) {}
+    public EmptyGenerator(Map<?, ?> ignored) {}
 
     @Override
     public int getId() {
@@ -19,15 +19,15 @@ public class EmptyGenerator extends Generator {
     }
 
     @Override
-    public void init(ChunkManager chunkManager, NukkitRandom nukkitRandom) {
+    public void init(ChunkManager chunkManager, NukkitRandom ignored) {
         this.chunkManager = chunkManager;
     }
 
     @Override
-    public void generateChunk(int i, int i1) { }
+    public void generateChunk(int ignored, int ignored_) { }
 
     @Override
-    public void populateChunk(int i, int i1) { }
+    public void populateChunk(int ignored, int ignored_) { }
 
     @Override
     public Map<String, Object> getSettings() {
@@ -46,6 +46,6 @@ public class EmptyGenerator extends Generator {
 
     @Override
     public ChunkManager getChunkManager() {
-        return chunkManager;
+        return this.chunkManager;
     }
 }

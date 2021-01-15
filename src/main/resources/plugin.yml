@@ -8,6 +8,9 @@ website: htttp://Mine24.net
 load: STARTUP
 
 permissions:
+  mine2021.general:
+    description: "서버 이용 권한"
+    default: true
   mine2021.skyblock:
     description: "스카이블록 이용 권한"
     default: true

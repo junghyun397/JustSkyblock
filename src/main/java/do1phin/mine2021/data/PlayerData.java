@@ -4,13 +4,14 @@ import cn.nukkit.Player;
 import do1phin.mine2021.skyblock.data.SkyblockData;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 public class PlayerData {
 
     private final Player player;
     private final boolean online;
 
-    private final String uuid;
+    private final UUID uuid;
     private final String name;
     private final String ip;
 
@@ -19,9 +20,7 @@ public class PlayerData {
 
     private final Timestamp banDate;
 
-    private int currentSection = 0;
-
-    public PlayerData(Player player, String uuid, String name, String ip, int playerCategory, SkyblockData skyblockData, Timestamp banDate) {
+    public PlayerData(Player player, UUID uuid, String name, String ip, int playerCategory, SkyblockData skyblockData, Timestamp banDate) {
         this.player = player;
         this.online = player != null;
 
@@ -43,7 +42,7 @@ public class PlayerData {
         return this.online;
     }
 
-    public String getUuid() {
+    public UUID getUuid() {
         return this.uuid;
     }
 
@@ -65,10 +64,6 @@ public class PlayerData {
 
     public Timestamp getBanDate() {
         return this.banDate;
-    }
-
-    public int getCurrentSection() {
-        return this.currentSection;
     }
 
 }

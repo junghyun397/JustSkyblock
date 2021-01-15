@@ -32,24 +32,21 @@ import java.util.*;
 @SuppressWarnings("FieldCanBeLocal")
 public class ServerAgent extends PluginBase {
 
-    private static ServerAgent instance;
-    public static ServerAgent getInstance() {
-        return instance;
-    }
-
     private DatabaseAgent databaseAgent;
     private PlayerCategoryAgent playerCategoryAgent;
     private MessageAgent messageAgent;
     private SkyBlockAgent skyBlockAgent;
     private BlockGenAgent blockGenAgent;
 
-    private final Map<String, PlayerData> playerDataMap = new HashMap<>();
-
-    private final List<String> pendingResisterNewPlayerList = new ArrayList<>();
+    private final Map<UUID, PlayerData> playerDataMap = new HashMap<>();
 
     private Level mainLevel = null;
 
+    private final List<UUID> pendingResisterNewPlayerList = new ArrayList<>();
+
+    private boolean disableDefaultCommands;
     private List<Tuple<Integer, Integer, Integer>> defaultItemList;
+    private int guideBookVersion = 0;
     private String[] guideBookPages = null;
 
     public void loggerInfo(String message) {
@@ -70,7 +67,6 @@ public class ServerAgent extends PluginBase {
 
     @Override
     public void onLoad() {
-        instance = this;
         Generator.addGenerator(EmptyGenerator.class, "EMPTY", Generator.TYPE_INFINITE);
     }
 
@@ -80,11 +76,11 @@ public class ServerAgent extends PluginBase {
         this.loggerInfo("loading config...");
 
         this.saveDefaultConfig();
-        Config config = new Config(this.getConfig());
+        final Config config = new Config(this.getConfig());
 
         this.loggerInfo("loading rdbms...");
 
-        RDBSHelper rdbsHelper;
+        final RDBSHelper rdbsHelper;
 
         if (config.getString("db.type").equalsIgnoreCase("mysql")) rdbsHelper = new MysqlHelper(config);
         else rdbsHelper = new Sqlite3Helper(config);
@@ -118,16 +114,18 @@ public class ServerAgent extends PluginBase {
         this.getServer().getCommandMap().register("mine2021", new KickCommand(this, this.messageAgent, config));
         this.getServer().getCommandMap().register("mine2021", new CategoryCommand(this, this.messageAgent, config));
 
+        this.disableDefaultCommands = config.getPluginConfig().getBoolean("server.disable-nukkit-commands");
         this.defaultItemList = config.parseDefaultItemList();
+        this.guideBookVersion = config.getPluginConfig().getInt("guidebook.version");
         this.guideBookPages = config.parseGuideBookPages();
 
         this.loggerInfo("§eloading succeed.");
     }
 
     public void registerPlayer(Player player) {
-        String uuid = player.getUniqueId().toString();
-        String name = player.getName();
-        String ip = player.getAddress();
+        final UUID uuid = player.getUniqueId();
+        final String name = player.getName();
+        final String ip = player.getAddress();
 
         Optional<PlayerData> playerData = this.databaseAgent.getPlayerData(player, uuid);
         if (playerData.isPresent()) {
@@ -138,35 +136,36 @@ public class ServerAgent extends PluginBase {
                     new String[]{"%player"}, new String[]{player.getName()});
         } else {
             int section = this.databaseAgent.getNextSection();
-            playerData = Optional.of(new PlayerData(player, uuid, name, ip, 0, SkyblockData.getDefault(section, name, uuid), null));
+            playerData = Optional.of(new PlayerData(player, uuid, name, ip, 0, SkyblockData.getDefault(section, uuid, name), null));
             this.registerNewPlayer(playerData.get());
         }
 
         this.playerDataMap.put(uuid, playerData.get());
-
         this.skyBlockAgent.registerSkyblockData(playerData.get().getSkyblockData());
+
         this.playerCategoryAgent.setPlayerNameTag(playerData.get());
+        if (this.disableDefaultCommands && !player.isOp()) this.removeDefaultCommandPermission(player);
     }
 
     public PlayerData getPlayerData(Player player) {
-        return this.playerDataMap.get(player.getUniqueId().toString());
+        return this.playerDataMap.get(player.getUniqueId());
     }
 
-    public Optional<PlayerData> getPlayerData(String uuid) {
-        PlayerData playerData = this.playerDataMap.get(uuid);
+    public Optional<PlayerData> getPlayerData(UUID uuid) {
+        final PlayerData playerData = this.playerDataMap.get(uuid);
         if (playerData != null) return Optional.of(playerData);
         else return Optional.empty();
     }
 
     public void purgePlayer(Player player) {
-        if (!this.getPlayerData(player.getUniqueId().toString()).isPresent()) return;
+        if (!this.getPlayerData(player.getUniqueId()).isPresent()) return;
 
         this.messageAgent.sendBroadcast("message.general.on-player-quit",
                 new String[]{"%player"}, new String[]{player.getName()});
         this.messageAgent.sendBroadcastPopup("popup.general.on-player-quit",
                 new String[]{"%player"}, new String[]{player.getName()});
 
-        this.playerDataMap.remove(player.getUniqueId().toString());
+        this.playerDataMap.remove(player.getUniqueId());
     }
 
     private void registerNewPlayer(PlayerData playerData) {
@@ -176,7 +175,8 @@ public class ServerAgent extends PluginBase {
 
         this.addPendingRegisterNewPlayer(playerData.getUuid());
 
-        this.messageAgent.sendBroadcast("message.general.on-player-first-join", new String[]{"%player"}, new String[]{playerData.getName()});
+        this.messageAgent.sendBroadcast("message.general.on-player-first-join",
+                new String[]{"%player"}, new String[]{playerData.getName()});
     }
 
     private void giveDefaultItems(Player player) {
@@ -184,23 +184,29 @@ public class ServerAgent extends PluginBase {
             player.getInventory().addItem(Item.get(item.a, item.b, item.c).clone());
 
         final ItemBookWritten book = (ItemBookWritten) Item.get(387, 0, 1);
-        final String bookName = this.messageAgent.getText("general.guidebook");
-        book.writeBook("§e§lMine24 2021", bookName, this.guideBookPages);
+        final String bookName = this.messageAgent.getText("general.guidebook") + " v" + this.guideBookVersion;
+        book.writeBook("§e§lMine24 2021", bookName, Arrays.stream(this.guideBookPages).map(s ->
+                s.replaceAll("%player", player.getName())).toArray(String[]::new));
         book.setCustomName(bookName);
 
         player.getInventory().addItem(book);
     }
 
-    private void addPendingRegisterNewPlayer(String uuid) {
+    private void removeDefaultCommandPermission(Player player) {
+        player.addAttachment(this, "nukkit.command", false);
+        player.recalculatePermissions();
+    }
+
+    private void addPendingRegisterNewPlayer(UUID uuid) {
         this.pendingResisterNewPlayerList.add(uuid);
     }
 
-    boolean isPendingRegisterNewPlayer(String uuid) {
+    boolean isPendingRegisterNewPlayer(UUID uuid) {
         return this.pendingResisterNewPlayerList.contains(uuid);
     }
 
     void continueRegisterNewPlayer(Player player) {
-        this.pendingResisterNewPlayerList.remove(player.getUniqueId().toString());
+        this.pendingResisterNewPlayerList.remove(player.getUniqueId());
 
         this.messageAgent.sendSimpleForm(player, "form.welcome-form.title", "form.welcome-form.content");
     }

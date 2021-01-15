@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Optional;
 import java.util.TimeZone;
+import java.util.UUID;
 
 public class DatabaseAgent {
 
@@ -21,15 +22,15 @@ public class DatabaseAgent {
         this.RDBSHelper = RDBSHelper;
     }
 
-    public Optional<PlayerData> getPlayerData(String uuid) {
+    public Optional<PlayerData> getPlayerData(UUID uuid) {
         return this.getPlayerData(null, uuid);
     }
 
-    public Optional<PlayerData> getPlayerData(Player player, String uuid) {
+    public Optional<PlayerData> getPlayerData(Player player, UUID uuid) {
         try {
             final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
                     "SELECT * FROM user_info WHERE uuid=?;");
-            pstmt.setString(1, uuid);
+            pstmt.setString(1, uuid.toString());
 
             ResultSet rs = pstmt.executeQuery();
             pstmt.clearParameters();
@@ -55,7 +56,7 @@ public class DatabaseAgent {
             final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
                     "INSERT INTO user_info(uuid, name, ip, register_date, island_setting) VALUES (?, ?, ?, ?, ?);");
 
-            pstmt.setString(1, playerData.getUuid());
+            pstmt.setString(1, playerData.getUuid().toString());
             pstmt.setString(2, playerData.getName());
             pstmt.setString(3, playerData.getIp());
             pstmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()), calendar);
@@ -79,7 +80,7 @@ public class DatabaseAgent {
             pstmt.setString(4, playerData.getSkyblockData().toJSON());
             pstmt.setTimestamp(5, playerData.getBanDate());
 
-            pstmt.setString(6, playerData.getUuid());
+            pstmt.setString(6, playerData.getUuid().toString());
 
             pstmt.executeUpdate();
             pstmt.clearParameters();
@@ -91,7 +92,7 @@ public class DatabaseAgent {
     public Optional<SkyblockData> getSkyblockDataBySection(int section) {
         try {
             final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
-                    "SELECT island_setting, uuid FROM user_info WHERE section=?;");
+                    "SELECT island_setting, name, uuid FROM user_info WHERE section=?;");
             pstmt.setInt(1, section);
 
             ResultSet rs = pstmt.executeQuery();
@@ -99,7 +100,7 @@ public class DatabaseAgent {
 
             if (rs.next()) return Optional.of(SkyblockData.fromJSON(section,
                     rs.getString("island_setting"),
-                    rs.getString("uuid"),
+                    UUID.fromString(rs.getString("uuid")),
                     rs.getString("name"))
             );
         } catch (SQLException e) {
@@ -109,7 +110,7 @@ public class DatabaseAgent {
         return Optional.empty();
     }
 
-    public Optional<String> getUUIDByPlayerName(String name) {
+    public Optional<UUID> getUUIDByPlayerName(String name) {
         try {
             final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
                     "SELECT uuid FROM user_info WHERE name=?;");
@@ -118,7 +119,7 @@ public class DatabaseAgent {
             ResultSet rs = pstmt.executeQuery();
             pstmt.clearParameters();
 
-            if (rs.next()) return Optional.of(rs.getString("uuid"));
+            if (rs.next()) return Optional.of(UUID.fromString(rs.getString("uuid")));
         } catch (SQLException e) {
             this.serverAgent.loggerCritical(e.getMessage());
         }
@@ -126,11 +127,11 @@ public class DatabaseAgent {
         return Optional.empty();
     }
 
-    public Optional<String> getPlayerNameByUUID(String uuid) {
+    public Optional<String> getPlayerNameByUUID(UUID uuid) {
         try {
             final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
                     "SELECT name FROM user_info WHERE uuid=?;");
-            pstmt.setString(1, uuid);
+            pstmt.setString(1, uuid.toString());
 
             ResultSet rs = pstmt.executeQuery();
             pstmt.clearParameters();

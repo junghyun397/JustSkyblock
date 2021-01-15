@@ -1,6 +1,10 @@
 Provider: Yaml
 
 
+server:
+  disable-nukkit-commands: true
+
+
 # =================
 # Database settings
 # =================
@@ -14,7 +18,7 @@ db:
     host: "localhost"
     port: 3306
     user: "root"
-    password: "your-password-here"
+    password: "ikg20210102"
 
 
 # =================
@@ -47,41 +51,47 @@ skyblock:
                          [[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 0, 0], [0, 0, 1, 1, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]]]
 
 blockgen:
+  # LV1 SPONGE
   - id: 19
-    meta: 0
     delay: 500
     blocks:
+      # stone
       - id: 1
         meta: 0
         percentage: 100
-  - id: 168
-    meta: 0
+
+  # LV2 NETHER RACK
+  - id: 87
     delay: 1000
     blocks:
+      # stone
       - id: 1
         meta: 0
         percentage: 100
 
-  - id: 168
-    meta: 1
+  # LV3 SOUL SAND
+  - id: 88
     delay: 2000
     blocks:
+      # stone
       - id: 1
         meta: 0
         percentage: 100
 
-  - id: 168
-    meta: 2
+  # LV4 NETHER WART BLOCK
+  - id: 214
     delay: 4000
     blocks:
+      # stone
       - id: 1
         meta: 0
         percentage: 100
 
-  - id: 201
-    meta: 0
+  # LV5 END STONE BRICKS
+  - id: 206
     delay: 8000
     blocks:
+      # stone
       - id: 1
         meta: 0
         percentage: 100
@@ -132,7 +142,7 @@ text:
       allow-invited: "초대된"
       allow-all: "모두"
   blockgen:
-    item-tag: "§e생성 블록 §aLV."
+    item-tag: "§e생성 블럭 §aLV."
 
 message:
   general:
@@ -141,13 +151,14 @@ message:
     on-player-first-join: "§e%player§f 님이 서버에 처음 접속하셨습니다."
   skyblock:
     teleport-succeed: "§e%player§f 의 구역으로 이동했습니다."
+    teleport-incoming: "§e%player§f 님이 내 구역에 도착 했습니다."
     teleport-succeed-self: "내 구역으로 이동했습니다."
     invite-succeed: "§e%player§f 님을 내 구역으로 초대했습니다."
     invite-received: "§e%owner§f 님의 구역으로 초대되었습니다."
     purge-succeed: "§e%player§f 님을 내 구역에서 추방했습니다."
     protection-type-updated: "내 구역의 보호 수준이 §e%protection-type§f 으로 설정 되었습니다."
   blockgen:
-    blockgen-upgrade-succeed: "생성 블록이 §e%level단계§f로 업그레이드 되었습니다."
+    blockgen-upgrade-succeed: "생성 블럭이 §e%level단계§f로 강화 되었습니다."
 
 popup:
   general:
@@ -214,11 +225,11 @@ command:
 
 form:
   welcome-form:
-    title: "§6§l환영합니다!"
-    content: "Mine24 2021에 처음 접속하셨습니다.\n- 가이드북을 확인 해주세요.\n- 공식 카페 cafe.mine24.net 을 방문 해보세요.\n언제 어디서나 즐기는 나만의 세상, Mine24."
+    title: "title"
+    content: "content"
 
 guidebook:
-  - "§6§lMine24 2021\n§7언제 어디서나 즐기는 나만의 세상\n가이드북"
-  - "p1"
-  - "p2"
-  - "p3"
+  version: 1
+  content:
+    - "page 1 content"
+    - "page 2 content"

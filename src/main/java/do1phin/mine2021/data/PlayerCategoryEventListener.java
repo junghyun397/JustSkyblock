@@ -13,9 +13,9 @@ public class PlayerCategoryEventListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerChat(final PlayerChatEvent event) {
+    public void onPlayerChat(PlayerChatEvent event) {
+        event.getPlayer().getServer().broadcastMessage(this.playerCategoryAgent.getFormattedChatMessage(event.getPlayer(), event.getMessage()));
         event.setCancelled();
-        event.getPlayer().getServer().broadcastMessage(this.playerCategoryAgent.getPlayerChatFormat(event.getPlayer(), event.getMessage()));
     }
 
 }

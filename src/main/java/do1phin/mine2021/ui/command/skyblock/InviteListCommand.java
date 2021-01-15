@@ -10,6 +10,7 @@ import do1phin.mine2021.skyblock.SkyBlockAgent;
 import do1phin.mine2021.ui.MessageAgent;
 
 import java.util.List;
+import java.util.UUID;
 
 public class InviteListCommand extends SkyblockCommand {
 
@@ -29,13 +30,13 @@ public class InviteListCommand extends SkyblockCommand {
     public boolean execute(CommandSender commandSender, String ignored, String[] ignored_) {
         if (!(commandSender instanceof Player) || !commandSender.hasPermission(this.getPermission())) return false;
 
-        List<String> collaborators = this.skyBlockAgent.getSkyblockData((Player) commandSender).getCollaborators();
+        final List<UUID> collaborators = this.skyBlockAgent.getSkyblockData((Player) commandSender).getCollaborators();
 
         if (collaborators.size() == 0)
             this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.invite-list-command.show-invited-list-empty");
         else {
-            StringBuffer invitedList = new StringBuffer();
-            collaborators.forEach(uuid -> invitedList.append(this.databaseAgent.getPlayerNameByUUID(uuid).orElse("ERROR")));
+            final StringBuffer invitedList = new StringBuffer();
+            collaborators.forEach(uuid -> invitedList.append(this.databaseAgent.getPlayerNameByUUID(uuid).orElse("ERROR")).append(" "));
             this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.invite-list-command.show-invited-list",
                     new String[]{"%invited-list"}, new String[]{invitedList.toString()});
         }

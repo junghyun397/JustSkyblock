@@ -33,7 +33,7 @@ public class ProtectionTypeCommand extends SkyblockCommand {
             return false;
         }
 
-        ProtectionType protectionType;
+        final ProtectionType protectionType;
         if (args[0].equals(this.config.getString("text.skyblock.protection-type.allow-only-owner")))
             protectionType = ProtectionType.ALLOW_ONLY_OWNER;
         else if (args[0].equals(this.config.getString("text.skyblock.protection-type.allow-invited")))

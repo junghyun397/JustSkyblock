@@ -12,10 +12,7 @@ import do1phin.mine2021.skyblock.data.SkyblockData;
 import do1phin.mine2021.ui.MessageAgent;
 import do1phin.mine2021.utils.TimerWrapper;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class SkyBlockAgent {
 
@@ -38,7 +35,7 @@ public class SkyBlockAgent {
         this.defaultIslandShape = config.parseSkyblockDefaultIslandShape();
     }
 
-    public int getSkyblockSectionByUUID(String uuid) {
+    public int getSkyblockSectionByUUID(UUID uuid) {
         Optional<PlayerData> playerData = this.serverAgent.getPlayerData(uuid);
         if (playerData.isPresent()) return playerData.get().getSkyblockData().getSection();
 
@@ -52,7 +49,7 @@ public class SkyBlockAgent {
 
     public Position getSkyblockSpawn(int section) {
         return new Position((this.sectionDistance * 16 * section) - (this.sectionDistance * 8), 65,
-                (double) this.sectionDistance * 8);
+                (double) this.sectionDistance * 8, this.getMainLevel());
     }
 
     public void registerSkyblockData(SkyblockData skyblockData) {
@@ -64,7 +61,7 @@ public class SkyBlockAgent {
     }
 
     public Optional<SkyblockData> getSkyblockData(int section) {
-        SkyblockData skyblockData = this.skyblockDataMap.get(section);
+        final SkyblockData skyblockData = this.skyblockDataMap.get(section);
         if (skyblockData != null) return Optional.of(skyblockData);
         else return Optional.empty();
     }
@@ -74,7 +71,7 @@ public class SkyBlockAgent {
     }
 
     public void registerNewSkyblock(PlayerData playerData) {
-        Position islandSpawnPosition = this.getSkyblockSpawn(playerData.getSkyblockData().getSection());
+        final Position islandSpawnPosition = this.getSkyblockSpawn(playerData.getSkyblockData().getSection());
 
         this.loadIslandDefaultChunk(playerData.getSkyblockData().getSection());
         this.generateDefaultIsland(islandSpawnPosition);
@@ -94,20 +91,40 @@ public class SkyBlockAgent {
                     );
     }
 
-    public void teleportPlayerToIsland(Player player, String destinationUUID, String destinationName) {
-        int section = this.getSkyblockSectionByUUID(destinationUUID);
-        Optional<SkyblockData> skyblockData = this.getSkyblockData(section);
+    public void teleportPlayerToIsland(Player player, UUID destinationUUID, String destinationName) {
+        final int section = this.getSkyblockSectionByUUID(destinationUUID);
+        final Optional<SkyblockData> skyblockData = this.getSkyblockData(section);
         if (!skyblockData.isPresent()) {
             Optional<PlayerData> playerData = this.databaseAgent.getPlayerData(destinationUUID);
             playerData.ifPresent(playerData1 -> this.registerSkyblockData(playerData1.getSkyblockData()));
         }
 
         this.loadIslandDefaultChunk(section);
-        player.teleport(this.getSkyblockSpawn(section));
-        if (player.getUniqueId().toString().equals(destinationUUID))
+        player.teleport(this.findSafeSpawn(this.getSkyblockSpawn(section)));
+        if (player.getUniqueId().equals(destinationUUID))
             this.messageAgent.sendMessage(player, "message.skyblock.teleport-succeed-self");
-        else this.messageAgent.sendMessage(player, "message.skyblock.teleport-succeed",
-                new String[]{"%player"}, new String[]{destinationName});
+        else {
+            this.messageAgent.sendMessage(player, "message.skyblock.teleport-succeed",
+                    new String[]{"%player"}, new String[]{destinationName});
+
+            this.serverAgent.getPlayerData(destinationUUID).ifPresent(playerData ->
+                    this.messageAgent.sendMessage(playerData.getPlayer(), "message.skyblock.teleport-incoming",
+                            new String[]{"%player"}, new String[]{player.getName()}));
+        }
+    }
+
+    public Position findSafeSpawn(Position position) {
+        final int x = (int) position.x;
+        final int y = (int) position.y;
+        final int z = (int) position.z;
+        if (this.getMainLevel().getBlock(x, y, z).getId() == 0 && this.getMainLevel().getBlock(x, y + 1, z).getId() == 0)
+            return position;
+
+        for (int dy = 255; dy > 0; dy--)
+            if (this.getMainLevel().getBlock(x, dy, (int) position.z).getId() != 0)
+                return new Position(x, dy + 1, z, this.getMainLevel());
+
+        return new Position(x, 256, z, this.getMainLevel());
     }
 
     public ProtectionType getSkyblockProtectionType(int section) {
@@ -116,25 +133,25 @@ public class SkyBlockAgent {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void updateProtectionType(Player player, ProtectionType protectionType) {
-        this.serverAgent.getPlayerData(player.getUniqueId().toString()).get().getSkyblockData().setProtectionType(protectionType);
-        this.databaseAgent.updatePlayerData(this.serverAgent.getPlayerData(player.getUniqueId().toString()).get());
+        this.serverAgent.getPlayerData(player.getUniqueId()).get().getSkyblockData().setProtectionType(protectionType);
+        this.databaseAgent.updatePlayerData(this.serverAgent.getPlayerData(player.getUniqueId()).get());
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public void addCollaborator(Player player, String collaborator) {
-        PlayerData playerData = this.serverAgent.getPlayerData(player.getUniqueId().toString()).get();
-        SkyblockData skyblockData = playerData.getSkyblockData();
-        List<String> collaborators = skyblockData.getCollaborators();
+    public void addCollaborator(Player player, UUID collaborator) {
+        final PlayerData playerData = this.serverAgent.getPlayerData(player.getUniqueId()).get();
+        final SkyblockData skyblockData = playerData.getSkyblockData();
+        final List<UUID> collaborators = skyblockData.getCollaborators();
         collaborators.add(collaborator);
         skyblockData.setCollaborators(collaborators);
         this.databaseAgent.updatePlayerData(playerData);
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public void purgeCollaborator(Player player, String collaborator) {
-        PlayerData playerData = this.serverAgent.getPlayerData(player.getUniqueId().toString()).get();
-        SkyblockData skyblockData = playerData.getSkyblockData();
-        List<String> collaborators = skyblockData.getCollaborators();
+    public void purgeCollaborator(Player player, UUID collaborator) {
+        final PlayerData playerData = this.serverAgent.getPlayerData(player.getUniqueId()).get();
+        final SkyblockData skyblockData = playerData.getSkyblockData();
+        final List<UUID> collaborators = skyblockData.getCollaborators();
         collaborators.remove(collaborator);
         skyblockData.setCollaborators(collaborators);
         this.databaseAgent.updatePlayerData(playerData);
@@ -146,17 +163,21 @@ public class SkyBlockAgent {
     }
 
     private void loadIslandDefaultChunk(int section) {
-        int chunkX = (section * this.sectionDistance) - (this.sectionDistance / 2);
-        int chunkY = this.sectionDistance / 2;
+        final int chunkX = (section * this.sectionDistance) - (this.sectionDistance / 2);
+        final int chunkY = this.sectionDistance / 2;
         this.getMainLevel().loadChunk(chunkX, chunkY);
         this.getMainLevel().loadChunk(chunkX - 1, chunkY);
         this.getMainLevel().loadChunk(chunkX, chunkY - 1);
         this.getMainLevel().loadChunk(chunkX - 1, chunkY + 1);
     }
 
+    private void unloadIslandChunk(int section) {
+        // TODO: 청크 로딩 관리
+    }
+
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean onPlayerModifyBlock(Player player, int blockX) {
-        int section = this.getSkyblockSectionByX(blockX);
+        final int section = this.getSkyblockSectionByX(blockX);
         Optional<SkyblockData> skyblockData = this.getSkyblockData(section);
         if (!skyblockData.isPresent()) {
             skyblockData = this.databaseAgent.getSkyblockDataBySection(section);
@@ -164,22 +185,20 @@ public class SkyBlockAgent {
             this.registerSkyblockData(skyblockData.get());
         }
 
-        if (player.getUniqueId().toString().equals(skyblockData.get().getUuid())) return true;
+        if (player.getUniqueId().equals(skyblockData.get().getUuid())) return true;
 
         if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_ALL) return true;
         else if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_INVITED) {
-            if (skyblockData.get().getCollaborators().contains(player.getUniqueId().toString())) return true;
+            if (skyblockData.get().getCollaborators().contains(player.getUniqueId())) return true;
             this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
                     new String[]{"%player", "%protection-type"},
-                    new String[]{skyblockData.get().getOwner(),
-                            this.messageAgent.getText("skyblock.protection-type.allow-invited")});
+                    new String[]{skyblockData.get().getOwner(), this.messageAgent.getText("skyblock.protection-type.allow-invited")});
             return false;
         }
         else {
             this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
                     new String[]{"%player", "%protection-type"},
-                    new String[]{skyblockData.get().getOwner(),
-                            this.messageAgent.getText("skyblock.protection-type.allow-only-owner")});
+                    new String[]{skyblockData.get().getOwner(), this.messageAgent.getText("skyblock.protection-type.allow-only-owner")});
             return false;
         }
     }

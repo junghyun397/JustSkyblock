@@ -1,6 +1,8 @@
 package do1phin.mine2021.ui.command;
 
+import cn.nukkit.Player;
 import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
@@ -20,6 +22,10 @@ public abstract class BaseCommand extends Command {
         this.serverAgent = serverAgent;
         this.messageAgent = messageAgent;
         this.config = config;
+    }
+
+    protected boolean checkExecutable(CommandSender commandSender) {
+        return commandSender instanceof Player && commandSender.hasPermission(this.getPermission());
     }
 
 }

@@ -14,36 +14,36 @@ public class ServerEventListener implements Listener {
     }
 
     @EventHandler
-    public void onLevelLoad(final LevelLoadEvent event) {
+    public void onLevelLoad(LevelLoadEvent event) {
         if (event.getLevel().getName().equals("world")) this.serverAgent.setMainLevel(event.getLevel());
     }
 
     @EventHandler
-    public void onPlayerJoin(final PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) {
         this.serverAgent.registerPlayer(event.getPlayer());
         event.setJoinMessage("");
     }
 
     @EventHandler
-    public void onPlayerLocallyInitialized(final PlayerLocallyInitializedEvent event) {
-        if (this.serverAgent.isPendingRegisterNewPlayer(event.getPlayer().getUniqueId().toString()))
+    public void onPlayerLocallyInitialized(PlayerLocallyInitializedEvent event) {
+        if (this.serverAgent.isPendingRegisterNewPlayer(event.getPlayer().getUniqueId()))
             this.serverAgent.continueRegisterNewPlayer(event.getPlayer());
     }
 
     @EventHandler
-    public void onPlayerQuit(final PlayerQuitEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event) {
         this.serverAgent.purgePlayer(event.getPlayer());
         event.setQuitMessage("");
     }
 
     @EventHandler
-    public void onPlayerDeath(final PlayerDeathEvent event) {
+    public void onPlayerDeath(PlayerDeathEvent event) {
         event.setKeepInventory(true);
         event.setDeathMessage("");
     }
 
     @EventHandler
-    public void onPlayerAchievementAwarded(final PlayerAchievementAwardedEvent event) {
+    public void onPlayerAchievementAwarded(PlayerAchievementAwardedEvent event) {
         event.setCancelled();
     }
 
