@@ -1,0 +1,12 @@
+Provider: Yaml
+
+database:
+  type: "Mysql"
+  sqlite:
+    db-file: "user-info.sqlite3"
+  mysql:
+    host: "localhost"
+    database: "mine24"
+    port: 3306
+    user: "root"
+    password: "your-password-here"

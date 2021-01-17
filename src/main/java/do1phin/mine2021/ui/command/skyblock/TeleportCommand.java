@@ -18,20 +18,18 @@ public class TeleportCommand extends SkyblockCommand {
     private final DatabaseAgent databaseAgent;
 
     public TeleportCommand(ServerAgent serverAgent, MessageAgent messageAgent, Config config, SkyBlockAgent skyBlockAgent, DatabaseAgent databaseAgent) {
-        super(config.getString("command.skyblock.teleport-command.command"),
-                config.getString("command.skyblock.teleport-command.description"),
-                config.getString("command.skyblock.teleport-command.usage"),
-                new CommandParameter[]{
-                        CommandParameter.newType("player", false, CommandParamType.TARGET)
-                },
-                serverAgent, messageAgent, config, skyBlockAgent);
+        super(config.getUIString("command.skyblock.teleport-command.command"),
+                config.getUIString("command.skyblock.teleport-command.description"),
+                config.getUIString("command.skyblock.teleport-command.usage"),
+                new CommandParameter[]{CommandParameter.newType("player", true, CommandParamType.TARGET)},
+                serverAgent, messageAgent, skyBlockAgent);
 
         this.databaseAgent = databaseAgent;
     }
 
     @Override
     public boolean execute(CommandSender commandSender, String ignored, String[] args) {
-        if (!(commandSender instanceof Player) || !commandSender.hasPermission(this.getPermission())) return false;
+        if (!this.checkExecutable(commandSender)) return false;
 
         if (args.length == 0) {
             this.skyBlockAgent.teleportPlayerToIsland((Player) commandSender, ((Player) commandSender).getUniqueId(), commandSender.getName());

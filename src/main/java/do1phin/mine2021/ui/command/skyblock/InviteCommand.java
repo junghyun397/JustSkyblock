@@ -13,19 +13,17 @@ import do1phin.mine2021.ui.MessageAgent;
 public class InviteCommand extends SkyblockCommand {
 
     public InviteCommand(ServerAgent serverAgent, MessageAgent messageAgent, Config config, SkyBlockAgent skyBlockAgent) {
-        super(config.getString("command.skyblock.invite-command.command"),
-                config.getString("command.skyblock.invite-command.description"),
-                config.getString("command.skyblock.invite-command.usage"),
-                new CommandParameter[]{
-                        CommandParameter.newType("player", false, CommandParamType.TARGET)
-                },
-                serverAgent, messageAgent, config, skyBlockAgent);
+        super(config.getUIString("command.skyblock.invite-command.command"),
+                config.getUIString("command.skyblock.invite-command.description"),
+                config.getUIString("command.skyblock.invite-command.usage"),
+                new CommandParameter[]{CommandParameter.newType("player", false, CommandParamType.TARGET)},
+                serverAgent, messageAgent, skyBlockAgent);
 
     }
 
     @Override
     public boolean execute(CommandSender commandSender, String ignored, String[] args) {
-        if (this.checkExecutable(commandSender)) return false;
+        if (!this.checkExecutable(commandSender)) return false;
 
         if (args.length == 0) {
             this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.invite-command.format-error");

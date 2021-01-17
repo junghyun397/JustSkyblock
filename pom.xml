@@ -6,7 +6,7 @@
 
     <groupId>do1phin.mine2021</groupId>
     <artifactId>Mine2021</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -55,7 +55,12 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/</directory>
                 <includes>
-                    <include>config.yml</include>
+                    <include>server-config.yml</include>
+                    <include>database-config.yml</include>
+                    <include>skyblock-config.yml</include>
+                    <include>blockgen-config.yml</include>
+                    <include>user-interface-config.yml</include>
+                    <include>user-groups.yml</include>
                 </includes>
             </resource>
         </resources>

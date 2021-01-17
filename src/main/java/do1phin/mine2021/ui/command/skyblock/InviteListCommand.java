@@ -17,18 +17,18 @@ public class InviteListCommand extends SkyblockCommand {
     private final DatabaseAgent databaseAgent;
 
     public InviteListCommand(ServerAgent serverAgent, MessageAgent messageAgent, Config config, SkyBlockAgent skyBlockAgent, DatabaseAgent databaseAgent) {
-        super(config.getString("command.skyblock.invite-list-command.command"),
-                config.getString("command.skyblock.invite-list-command.description"),
-                config.getString("command.skyblock.invite-list-command.usage"),
+        super(config.getUIString("command.skyblock.invite-list-command.command"),
+                config.getUIString("command.skyblock.invite-list-command.description"),
+                config.getUIString("command.skyblock.invite-list-command.usage"),
                 new CommandParameter[]{},
-                serverAgent, messageAgent, config, skyBlockAgent);
+                serverAgent, messageAgent, skyBlockAgent);
 
         this.databaseAgent = databaseAgent;
     }
 
     @Override
     public boolean execute(CommandSender commandSender, String ignored, String[] ignored_) {
-        if (!(commandSender instanceof Player) || !commandSender.hasPermission(this.getPermission())) return false;
+        if (!this.checkExecutable(commandSender)) return false;
 
         final List<UUID> collaborators = this.skyBlockAgent.getSkyblockData((Player) commandSender).getCollaborators();
 

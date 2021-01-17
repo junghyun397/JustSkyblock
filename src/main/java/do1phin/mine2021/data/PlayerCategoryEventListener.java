@@ -6,15 +6,15 @@ import cn.nukkit.event.player.PlayerChatEvent;
 
 public class PlayerCategoryEventListener implements Listener {
 
-    private final PlayerCategoryAgent playerCategoryAgent;
+    private final PlayerGroupAgent playerGroupAgent;
 
-    public PlayerCategoryEventListener(PlayerCategoryAgent playerCategoryAgent) {
-        this.playerCategoryAgent = playerCategoryAgent;
+    public PlayerCategoryEventListener(PlayerGroupAgent playerGroupAgent) {
+        this.playerGroupAgent = playerGroupAgent;
     }
 
     @EventHandler
     public void onPlayerChat(PlayerChatEvent event) {
-        event.getPlayer().getServer().broadcastMessage(this.playerCategoryAgent.getFormattedChatMessage(event.getPlayer(), event.getMessage()));
+        event.getPlayer().getServer().broadcastMessage(this.playerGroupAgent.getFormattedChatMessage(event.getPlayer(), event.getMessage()));
         event.setCancelled();
     }
 

@@ -18,8 +18,8 @@ public class MessageAgent {
         this.serverAgent = serverAgent;
         this.config = config;
 
-        this.prefixInfo = config.getString("prefix.info") + " ";
-        this.prefixNotice = config.getString("prefix.notice") + " ";
+        this.prefixInfo = config.getUIString("prefix.info") + " ";
+        this.prefixNotice = config.getUIString("prefix.notice") + " ";
     }
 
     public void sendMessage(Player player, String key) {
@@ -57,7 +57,7 @@ public class MessageAgent {
     }
 
     private String getMessage(String key, String[] params, String[] values) {
-        String message = this.config.getString(key);
+        String message = this.config.getUIString(key);
         if (params != null && values != null && params.length == values.length)
             for (int i = 0; i < params.length; i++)
                 message = message.replaceAll(params[i], values[i]);
@@ -66,12 +66,12 @@ public class MessageAgent {
     }
 
     public void sendSimpleForm(Player player, String titleKey, String contentKey) {
-        final FormWindowSimple form = new FormWindowSimple(this.config.getString(titleKey), this.config.getString(contentKey));
+        final FormWindowSimple form = new FormWindowSimple(this.config.getUIString(titleKey), this.config.getUIString(contentKey));
         player.showFormWindow(form);
     }
 
     public String getText(String key) {
-        return this.config.getString("text." + key);
+        return this.config.getUIString("text." + key);
     }
 
 }

@@ -1,0 +1,248 @@
+Provider: Yaml
+
+prefix:
+  info: "<§e안내§f>"
+  notice: "<§e공지§f>"
+
+text:
+  general:
+    guidebook: "§e가이드북"
+  skyblock:
+    protection-type:
+      protection-type: "보호 수준"
+      allow-only-owner: "나만"
+      allow-invited: "초대된"
+      allow-all: "모두"
+  blockgen:
+    item-tag: "§e생성 블럭 §aLV."
+
+message:
+  general:
+    on-player-join: "§e%player§f 님이 접속했습니다."
+    on-player-quit: "§e%player§f 님이 나갔습니다."
+    on-player-first-join: "§e%player§f 님이 서버에 처음 접속하셨습니다."
+  skyblock:
+    teleport-succeed: "§e%player§f 의 구역으로 이동했습니다."
+    teleport-incoming: "§e%player§f 님이 내 구역에 도착 했습니다."
+    teleport-succeed-self: "내 구역으로 이동했습니다."
+    invite-succeed: "§e%player§f 님을 내 구역으로 초대했습니다."
+    invite-received: "§e%owner§f 님의 구역으로 초대되었습니다."
+    purge-succeed: "§e%player§f 님을 내 구역에서 추방했습니다."
+    protection-type-updated: "내 구역의 보호 수준이 §e%protection-type§f 으로 설정 되었습니다."
+  blockgen:
+    blockgen-upgrade-succeed: "생성 블럭이 §e%level단계§f로 강화 되었습니다."
+
+popup:
+  general:
+    on-player-join: "+%player"
+    on-player-quit: "-%player"
+  skyblock:
+    protection-type-warning: "§e%player§7 님의 구역은 §e%protection-type§7 수준으로 보호되고 있습니다."
+
+command:
+  management:
+    ban-command:
+      command: "ban"
+      description: "유저를 차단합니다."
+      usage: "/b <닉네임>"
+      format-error: "/ban <닉네임> <시간> 형식으로 입력해 주시기 바랍니다."
+      ban-succeed: "§e%player§f 를 %date 일 동안 차단했습니다."
+      ban-failed-playernotfound: "§4%player§f 를 찾을 수 없습니다."
+    kick-command:
+      command: "k"
+      description: "유저를 추방합니다."
+      usage: "/k <닉네임>"
+      format-error: "/k <닉네임> 형식으로 입력해 주시기 바랍니다."
+      kick-succeed: "§e%player§f 를 추방 했습니다."
+      kick-failed: "§4%player§f 를 찾을 수 없습니다."
+    category-command:
+      command: "c"
+      description: "유저의 칭호를 바꿉니다."
+      usage: "/c <닉네임> <ID>"
+      format-error: "/c <닉네임> <ID> 형식으로 입력해 주시기 바랍니다."
+      update-succeed: "§e%player 를 분류 ID §e%id:%category-name§f 으로 분류했습니다."
+      update-failed-idnotfound: "분류 ID §4%id§f 를 찾을 수 없습니다."
+      update-failed-playernotfound: "§4%player§f 를 찾을 수 없습니다."
+  skyblock:
+    teleport-command:
+      command: "이동"
+      description: "내 구역 또는 다른 유저의 구역으로 이동합니다."
+      usage: "/이동 또는 /이동 <닉네임>"
+      teleport-failed-playernotfound: "§4%player§f 님을 찾을 수 없습니다."
+    invite-command:
+      command: "초대"
+      description: "다른 유저를 내 구역으로 초대합니다."
+      usage: "/초대 <닉네임>"
+      format-error: "/초대 <닉네임> 형식으로 입력해 주시기 바랍니다."
+      invite-failed-playeralradyinvited: "§e%player§f 님은 이미 내 구역에 초대되어 있습니다."
+      invite-failed-playernotfound: "§4%player§f 님을 찾을 수 없습니다."
+    purge-command:
+      command: "추방"
+      description: "내 구역으로 초대된 유저를 추방합니다."
+      usage: "/추방 <닉네임>"
+      format-error: "/추방 <닉네임> 형식으로 입력해 주시기 바랍니다."
+      purge-failed-playernotfound: "§4%player§f 님을 찾을 수 없습니다."
+      purge-failed-playernotinvited: "§4%player§f 님은 초대 목록에 존재하지 않습니다."
+    invite-list-command:
+      command: "목록"
+      description: "내 구역에 초대된 유저 목록을 확인합니다."
+      usage: "/목록"
+      show-invited-list: "§e%invited-list§f 이 내 구역에 초대되어 있습니다."
+      show-invited-list-empty: "아무도 내 구역에 초대되어 있지 않습니다."
+    protection-type-command:
+      command: "보호"
+      description: "내 구역의 보호 수준을 설정합니다."
+      usage: "/보호 <나만|초대된|모두>"
+      format-error: "/보호 <나만|초대된|모두> 형식으로 입력해 주시기 바랍니다."
+
+form:
+  welcome-form:
+    title: "§l환영합니다!"
+    content: "
+    §eMine24 2021§f에 처음 접속하셨습니다.
+    \n
+    \n • §e가이드북§f을 확인 해주세요.
+    \n • 공식 카페 §ecafe.mine24.net§f을 방문 해보세요.
+    \n • §eMine24 2021§f은 2021년 §e1월부터 2월§f까지 운영됩니다.
+    \n • 불편하신 사항이 있다면 §b[Staff]§f 칭호를 달고 있는 §b운영자§f에게 문의 해주세요.
+    \n
+    \n§eMine24 2021§f 에서 즐거운 시간 보내시기를 바라겠습니다.
+    \n
+    \n§7언제 어디서나 즐기는 나만의 세상, Mine24.
+    "
+
+guidebook:
+  version: 1
+  content:
+    - "§6§lMine24 2021§r
+    \n가이드북
+    \n
+    \n
+    \n§6§lINDEX§r
+    \n§lSection 1. §r§8서버 안내§r
+    \n§lSection 2. §r§8생성블럭 안내§r
+    \n§lSection 3. §r§8스카이블럭 안내§r
+    \n§lSection 4. §r§8명령어 안내§r
+    \n§lSection 5. §r§8만든 이들§r
+    \n§lSection 6. §r§8부록§r
+    \n
+    \n§7언제 어디서나 즐기는 나만의 세상, Mine24. @2021
+    "
+    - "§lSection 1. 서버 안내§r
+    \n
+    \n§lMine24 2021, 스카이블럭 서버§r에 방문하신것을 환영합니다, %player님!
+    \n
+    \nMine24 2021서버는 2021년 1월부터 2월 말, 겨울방학 기간동안 열리는 스카이블럭서버입니다.
+    \n
+    \n서버 운영기간동안 %player님만의 멋진 섬을 만들어 내실 수 있기를 바라겠습니다.
+    "
+    - "§lSection 2. 생성블럭 안내§r
+    \n
+    \n§l생성블럭§r
+    \n
+    \n주위에 잔디와 돌밖에 없더다고 해도 걱정하지 마세요. Mine24 2021에는 여러가지 광석과 장식 블럭을 얻을 수 있는 생성블럭이 존재합니다!
+    \n
+    \n • 생성블럭은 다양한 블럭을 생성시켜주는 블럭입니다.
+    \n • 생성블럭을 설치하면 일정 시간이 지난 뒤 생성블럭 위에 무작위 블럭이 생성됩니다.
+    "
+    - "§lSection 2. 생성블럭 안내§r
+    \n
+    \n§l강화§r
+    \n
+    \n생성블럭은 낮은 확률로 같은 생성블럭을 생성시킵니다. 같은 생성블럭 9개를 3*3모양으로 배치해 한 단계 높은 생성블럭 1개로 강화 할 수 있습니다.
+    \n
+    \n □ □ □
+    \n □ □ □    →    ■
+    \n □ □ □
+    \n  LV.N        LV.N+1
+    "
+    - "§lSection 2. 생성블럭 안내§r
+    \n
+    \n생성블럭을 강화 하기 전에, 강화 특성을 기억해 주세요.
+    \n
+    \n • 생성블럭은 5단계까지 있습니다.
+    \n • 새로운 생성 블럭은 새로운 블럭들을 추가로 생성합니다.
+    \n • 이전에 생성되던 블럭들의 생성 확률은 줄어들게 됩니다.
+    \n • 다음 블럭을 생성하는 시간은 2배로 늘어나게 됩니다.
+    \n • 같은 생성블럭을 생성시킬 확률은 1/8씩 줄어들게 됩니다.
+    "
+    - "§lSection 3. 스카이블럭 안내§r
+    \n
+    \n§l스카이블럭§r
+    \n
+    \n%player님이 지금 서 계신 섬은 %player님에게 주어진 256*256크기의 구역입니다.
+    \n
+    \n이 구역에 자신만의 작은 마을을 만들수도, 멋진 도시를 지어 올릴수도 있습니다.
+    \n
+    \n스카이블럭을 이용해 나만의 세상를 만들고 공유해 보세요.
+    "
+    - "§lSection 3. 스카이블럭 안내§r
+    \n
+    \n%player님은 이 구역을 혼자 사용할수도, 친구들을 초대해 함께 사용할수도, 모든 방문자와 함께 사용할수도 있습니다.
+    \n
+    \n물론, 이동 기능을 이용해 다른 플레이어의 구역에 방문할수도 있습니다.
+    \n
+    \n스카이블럭 구역을 설정하는 방법에 대한 자세한 안내사항은 Section 4. 명령어 안내를 확인 해주세요.
+    "
+    - "§lSection 3. 스카이블럭 안내§r
+    \n
+    \n스카이블록을 이용하는 중 몇 가지의 예외 상황을 겪으실수도 있습니다. 다음과 같은 경우, 관리자를 호출해 해결해 주세요.
+    \n
+    \n • 기본 지급된 용암을 옵시디언으로 만들어 버림
+    \n • 기본 지급된 얼움(물)을 잃었음
+    \n • 스폰지점 아래의 기반암을 부수고 싶음
+    "
+    - "§lSection 4. 명령어 안내§r
+    \n
+    \n§l§6/이동§r §8- 내 구역으로 이동할 수 있습니다.
+    \n
+    \n§l§6/이동 <닉네임>§r §8- 다른 플레이어의 구역으로 이동할 수 있습니다.
+    \n
+    \n • §0§l/이동 %player§r§8 명령어로 다른 플레이어가 내 구역으로 이동할 수 있습니다.
+    \n • 다른 플레이어가 내 구역으로 이동해 왔을 때 이를 메시지로 안내해 드립니다.
+    "
+    - "§lSection 4. 명령어 안내§r
+    \n
+    \n§l§6/보호 <나만|초대된|모두>§r §8- 내 구역의 보호 수준을 설정합니다.
+    \n
+    \n • §0§l/보호 나만§r§8 명령어를 시용해 내 구역을 나만 사용하게 설정할 수 있습니다.
+    \n • §0§l/보호 초대된§r§8 명령어를 사용해 내 구역을 초대된 유저들과 사용하게 설정할 수 있습니다.
+    \n • §0§l/보호 모두§r§8 명령어를 사용해 내 구역을 모든 유저들이 사용하게 설정할 수 있습니다.
+    "
+    - "§lSection 4. 명령어 안내§r
+    \n
+    \n§l§6/초대 <닉네임>§r §8- 다른 플레이어를 내 구역으로 초대할 수 있습니다.
+    \n
+    \n§8 • 모든 플레이어를 초대하는 대신 §0§l/보호 모두§r§8 명령어를 사용할 수도 있습니다.
+    \n§8 • 온라인 상태의 플레이어만 초대할 수 있습니다.
+    \n§8 • 자기 자신은 초대하지 않아도 됩니다.
+    "
+    - "§lSection 4. 명령어 안내§r
+    \n
+    \n§l§6/추방 <닉네임>§r §8- 다른 플레이어를 내 구역에서 추방할 수 있습니다.
+    \n
+    \n§8 • 모든 플레이어를 추방하는 대신 §0§l/보호 나만§r§8 명령어를 사용할 수도 있습니다.
+    \n§8 • 오프라인 상태의 플레이어도 추방할 수 있습니다.
+    \n
+    \n§l§6/목록§r §8- 내 구역에 초대된 유저 목록을 확인합니다.
+    "
+    - "§lSection 5. 만든 이들§r
+    \n
+    \n§l개발자§r §8junghyun397(do1phin),§r
+    \n§l텍스쳐§r §8kmandu0526,§r
+    \n§l테스터§r §8S1RO CAT, Seoryak, liArizenil, SeohwaOwO,§r
+    \n
+    \n§8그리고 §0§l플레이어 %player.§r
+    \n
+    \n§6§lMine24 2021§r§8 에서 즐거운 시간 보내시기를 바라겠습니다.§r
+    \n
+    \n§7언제 어디서나 즐기는 나만의 세상, Mine24. @2021§r
+    "
+    - "§lSection 6. 부록§r
+    \n
+    \n§8 • 공식 커뮤니티 §1cafe.mine24.net§8에 방문 해보세요.
+    \n
+    \n§8 • 문의사항이 있다면 §b[Staff]§8 칭호를 달고 있는 관리자를 불러주세요.
+    \n
+    \n§8 • 이 서버의 소스코드는 §1github.com/junghyun397/mine2021project§8 에 공개되어 있습니다.
+    "

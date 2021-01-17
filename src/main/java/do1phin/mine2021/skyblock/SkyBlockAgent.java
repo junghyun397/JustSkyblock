@@ -30,7 +30,7 @@ public class SkyBlockAgent {
         this.messageAgent = messageAgent;
         this.databaseAgent = databaseAgent;
 
-        this.sectionDistance = config.getPluginConfig().getInt("skyblock.distance");
+        this.sectionDistance = config.getSkyblockConfig().getInt("skyblock.distance");
 
         this.defaultIslandShape = config.parseSkyblockDefaultIslandShape();
     }

@@ -1,0 +1,43 @@
+Provider: Yaml
+
+system:
+  disable-nukkit-commands: true
+  enable-inventory-save: true
+
+
+additional-recipes:
+  - id: 1
+    meta: 1
+    count: 1
+    shape: "1:0,1:0,1:0-1:0,1:0,1:0-1:0,1:0,1:0"
+  - id: 1
+    meta: 1
+    count: 1
+    shape: "1:0,1:0,1:0-1:0,1:0,1:0-1:0,1:0,1:0"
+
+
+default-item-list:
+  - id: 270
+    meta: 0
+    count: 1
+  - id: 271
+    meta: 0
+    count: 1
+  - id: 269
+    meta: 0
+    count: 1
+  - id: 79
+    meta: 0
+    count: 2
+  - id: 325
+    meta: 10
+    count: 1
+  - id: 351
+    meta: 15
+    count: 10
+  - id: 297
+    meta: 0
+    count: 64
+  - id: 19
+    meta: 0
+    count: 1

@@ -1,0 +1,11 @@
+Provider: Yaml
+
+groups:
+  user:
+    id: 0
+    display-name: "<§2[유저]§f %name>"
+    nametag: "§7<<§l§f%name§r§7>>"
+  staff:
+    id: 10
+    display-name: "<§b[Staff]§f %name>"
+    nametag: "§7<<§l§b%name§r§7>>"

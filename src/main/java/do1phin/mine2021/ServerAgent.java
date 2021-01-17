@@ -9,7 +9,7 @@ import cn.nukkit.plugin.PluginBase;
 import do1phin.mine2021.blockgen.BlockGenAgent;
 import do1phin.mine2021.blockgen.BlockGenEventListener;
 import do1phin.mine2021.data.Config;
-import do1phin.mine2021.data.PlayerCategoryAgent;
+import do1phin.mine2021.data.PlayerGroupAgent;
 import do1phin.mine2021.data.PlayerCategoryEventListener;
 import do1phin.mine2021.data.PlayerData;
 import do1phin.mine2021.data.db.DatabaseAgent;
@@ -21,7 +21,7 @@ import do1phin.mine2021.skyblock.SkyBlockEventListener;
 import do1phin.mine2021.skyblock.data.SkyblockData;
 import do1phin.mine2021.ui.MessageAgent;
 import do1phin.mine2021.ui.command.management.BanCommand;
-import do1phin.mine2021.ui.command.management.CategoryCommand;
+import do1phin.mine2021.ui.command.management.GroupCommand;
 import do1phin.mine2021.ui.command.management.KickCommand;
 import do1phin.mine2021.ui.command.skyblock.*;
 import do1phin.mine2021.utils.EmptyGenerator;
@@ -33,7 +33,7 @@ import java.util.*;
 public class ServerAgent extends PluginBase {
 
     private DatabaseAgent databaseAgent;
-    private PlayerCategoryAgent playerCategoryAgent;
+    private PlayerGroupAgent playerGroupAgent;
     private MessageAgent messageAgent;
     private SkyBlockAgent skyBlockAgent;
     private BlockGenAgent blockGenAgent;
@@ -45,7 +45,8 @@ public class ServerAgent extends PluginBase {
     private final List<UUID> pendingResisterNewPlayerList = new ArrayList<>();
 
     private boolean disableDefaultCommands;
-    private List<Tuple<Integer, Integer, Integer>> defaultItemList;
+    private boolean enableInventorySave;
+    private Collection<Tuple<Integer, Integer, Integer>> defaultItemCollection;
     private int guideBookVersion = 0;
     private String[] guideBookPages = null;
 
@@ -76,14 +77,16 @@ public class ServerAgent extends PluginBase {
         this.loggerInfo("loading config...");
 
         this.saveDefaultConfig();
-        final Config config = new Config(this.getConfig());
+        final Config config = new Config(this);
 
         this.loggerInfo("loading rdbms...");
 
         final RDBSHelper rdbsHelper;
 
-        if (config.getString("db.type").equalsIgnoreCase("mysql")) rdbsHelper = new MysqlHelper(config);
-        else rdbsHelper = new Sqlite3Helper(config);
+        if (config.getDatabaseConfig().getString("database.type").equalsIgnoreCase("mysql"))
+            rdbsHelper = new MysqlHelper(config);
+        else
+            rdbsHelper = new Sqlite3Helper(config);
 
         if (!rdbsHelper.connect()) {
             this.loggerCritical("loading rdbms failed.");
@@ -97,12 +100,12 @@ public class ServerAgent extends PluginBase {
         this.messageAgent = new MessageAgent(this, config);
         this.skyBlockAgent = new SkyBlockAgent(this, this.databaseAgent, this.messageAgent, config);
         this.blockGenAgent = new BlockGenAgent(this, this.messageAgent, config);
-        this.playerCategoryAgent = new PlayerCategoryAgent(this, config);
+        this.playerGroupAgent = new PlayerGroupAgent(this, config);
 
         this.getServer().getPluginManager().registerEvents(new ServerEventListener(this), this);
         this.getServer().getPluginManager().registerEvents(new BlockGenEventListener(this.blockGenAgent), this);
         this.getServer().getPluginManager().registerEvents(new SkyBlockEventListener(this.skyBlockAgent), this);
-        this.getServer().getPluginManager().registerEvents(new PlayerCategoryEventListener(this.playerCategoryAgent), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerCategoryEventListener(this.playerGroupAgent), this);
 
         this.getServer().getCommandMap().register("mine2021", new TeleportCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
         this.getServer().getCommandMap().register("mine2021", new InviteCommand(this, this.messageAgent, config, this.skyBlockAgent));
@@ -112,11 +115,14 @@ public class ServerAgent extends PluginBase {
 
         this.getServer().getCommandMap().register("mine2021", new BanCommand(this, this.messageAgent, config));
         this.getServer().getCommandMap().register("mine2021", new KickCommand(this, this.messageAgent, config));
-        this.getServer().getCommandMap().register("mine2021", new CategoryCommand(this, this.messageAgent, config));
+        this.getServer().getCommandMap().register("mine2021", new GroupCommand(this, this.messageAgent, config));
 
-        this.disableDefaultCommands = config.getPluginConfig().getBoolean("server.disable-nukkit-commands");
-        this.defaultItemList = config.parseDefaultItemList();
-        this.guideBookVersion = config.getPluginConfig().getInt("guidebook.version");
+        config.parseAdditionalRecipes().forEach(recipe -> getServer().getCraftingManager().registerRecipe(recipe));
+
+        this.disableDefaultCommands = config.getServerConfig().getBoolean("system.disable-nukkit-commands");
+        this.enableInventorySave = config.getServerConfig().getBoolean("system.enable-inventory-save");
+        this.defaultItemCollection = config.parseDefaultItemCollection();
+        this.guideBookVersion = config.getUserInterfaceConfig().getInt("guidebook.version");
         this.guideBookPages = config.parseGuideBookPages();
 
         this.loggerInfo("§eloading succeed.");
@@ -143,7 +149,7 @@ public class ServerAgent extends PluginBase {
         this.playerDataMap.put(uuid, playerData.get());
         this.skyBlockAgent.registerSkyblockData(playerData.get().getSkyblockData());
 
-        this.playerCategoryAgent.setPlayerNameTag(playerData.get());
+        this.playerGroupAgent.setPlayerNameTag(playerData.get());
         if (this.disableDefaultCommands && !player.isOp()) this.removeDefaultCommandPermission(player);
     }
 
@@ -180,7 +186,7 @@ public class ServerAgent extends PluginBase {
     }
 
     private void giveDefaultItems(Player player) {
-        for (Tuple<Integer, Integer, Integer> item: this.defaultItemList)
+        for (Tuple<Integer, Integer, Integer> item: this.defaultItemCollection)
             player.getInventory().addItem(Item.get(item.a, item.b, item.c).clone());
 
         final ItemBookWritten book = (ItemBookWritten) Item.get(387, 0, 1);
@@ -209,6 +215,10 @@ public class ServerAgent extends PluginBase {
         this.pendingResisterNewPlayerList.remove(player.getUniqueId());
 
         this.messageAgent.sendSimpleForm(player, "form.welcome-form.title", "form.welcome-form.content");
+    }
+
+    public boolean isEnableInventorySave() {
+        return this.enableInventorySave;
     }
 
     void setMainLevel(Level level) {

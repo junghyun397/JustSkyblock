@@ -1,23 +1,21 @@
 package do1phin.mine2021.data;
 
 import cn.nukkit.Player;
-import cn.nukkit.utils.ConfigSection;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.utils.Tuple;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerCategoryAgent {
+public class PlayerGroupAgent {
 
     private final ServerAgent serverAgent;
 
     private final Map<Integer, Tuple<String, String, String>> playerCategoryMap;
 
-    public PlayerCategoryAgent(ServerAgent serverAgent, Config config) {
+    public PlayerGroupAgent(ServerAgent serverAgent, Config config) {
         this.serverAgent = serverAgent;
 
-        this.playerCategoryMap = this.buildPlayerCategoryMap(config.getPluginConfig().getSection("category"));
+        this.playerCategoryMap = config.parsePlayerGroupMap();
     }
 
     public Map<Integer, Tuple<String, String, String>> getPlayerCategoryMap() {
@@ -32,16 +30,6 @@ public class PlayerCategoryAgent {
     public void setPlayerNameTag(PlayerData playerData) {
         playerData.getPlayer().setNameTag(this.playerCategoryMap.get(
                 playerData.getPlayerCategory()).c.replaceFirst("%name", playerData.getName()));
-    }
-
-    private Map<Integer, Tuple<String, String, String>> buildPlayerCategoryMap(ConfigSection configSection) {
-        final Map<Integer, Tuple<String, String, String>> categoryMap = new HashMap<>();
-        configSection.forEach((s, o) -> {
-            ConfigSection section = ((ConfigSection) o);
-            categoryMap.put(section.getInt("id", 0),
-                    new Tuple<>(s, section.getString("display-name") + " ", section.getString("nametag")));
-        });
-        return categoryMap;
     }
 
 }

@@ -12,21 +12,21 @@ import do1phin.mine2021.ui.MessageAgent;
 public class ProtectionTypeCommand extends SkyblockCommand {
 
     public ProtectionTypeCommand(ServerAgent serverAgent, MessageAgent messageAgent, Config config, SkyBlockAgent skyBlockAgent) {
-        super(config.getString("command.skyblock.protection-type-command.command"),
-                config.getString("command.skyblock.protection-type-command.description"),
-                config.getString("command.skyblock.protection-type-command.usage"),
+        super(config.getUIString("command.skyblock.protection-type-command.command"),
+                config.getUIString("command.skyblock.protection-type-command.description"),
+                config.getUIString("command.skyblock.protection-type-command.usage"),
                 new CommandParameter[]{
                         CommandParameter.newEnum("type", false,
-                                new String[]{config.getString("text.skyblock.protection-type.allow-only-owner"),
-                                        config.getString("text.skyblock.protection-type.allow-invited"),
-                                        config.getString("text.skyblock.protection-type.allow-all")})
+                                new String[]{messageAgent.getText("skyblock.protection-type.allow-only-owner"),
+                                        messageAgent.getText("skyblock.protection-type.allow-invited"),
+                                        messageAgent.getText("skyblock.protection-type.allow-all")})
                 },
-                serverAgent, messageAgent, config, skyBlockAgent);
+                serverAgent, messageAgent, skyBlockAgent);
     }
 
     @Override
     public boolean execute(CommandSender commandSender, String ignored, String[] args) {
-        if (!(commandSender instanceof Player) || !commandSender.hasPermission(this.getPermission())) return false;
+        if (!this.checkExecutable(commandSender)) return false;
 
         if (args.length == 0) {
             this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.protection-type-command.format-error");
@@ -34,11 +34,11 @@ public class ProtectionTypeCommand extends SkyblockCommand {
         }
 
         final ProtectionType protectionType;
-        if (args[0].equals(this.config.getString("text.skyblock.protection-type.allow-only-owner")))
+        if (args[0].equals(this.messageAgent.getText("skyblock.protection-type.allow-only-owner")))
             protectionType = ProtectionType.ALLOW_ONLY_OWNER;
-        else if (args[0].equals(this.config.getString("text.skyblock.protection-type.allow-invited")))
+        else if (args[0].equals(this.messageAgent.getText("skyblock.protection-type.allow-invited")))
             protectionType = ProtectionType.ALLOW_INVITED;
-        else if (args[0].equals(this.config.getString("text.skyblock.protection-type.allow-all")))
+        else if (args[0].equals(this.messageAgent.getText("skyblock.protection-type.allow-all")))
             protectionType = ProtectionType.ALLOW_ALL;
         else {
             this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.protection-type-command.format-error");

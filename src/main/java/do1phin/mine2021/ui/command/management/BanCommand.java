@@ -10,19 +10,20 @@ import do1phin.mine2021.ui.MessageAgent;
 public class BanCommand extends ManagementCommand {
 
     public BanCommand(ServerAgent serverAgent, MessageAgent messageAgent, Config config) {
-        super(config.getString("command.management.ban-command.command"),
-                config.getString("command.management.ban-command.description"),
-                config.getString("command.management.ban-command.usage"),
+        super(config.getUIString("command.management.ban-command.command"),
+                config.getUIString("command.management.ban-command.description"),
+                config.getUIString("command.management.ban-command.usage"),
                 new CommandParameter[]{
                         CommandParameter.newType("player", false, CommandParamType.TARGET),
                         CommandParameter.newType("reason", false, CommandParamType.TEXT),
                         CommandParameter.newType("duration", false, CommandParamType.INT)
                 },
-                serverAgent, messageAgent, config);
+                serverAgent, messageAgent);
     }
 
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
+        if (!this.checkExecutable(commandSender)) return false;
         return false;
     }
 

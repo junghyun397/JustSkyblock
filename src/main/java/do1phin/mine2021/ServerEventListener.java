@@ -38,7 +38,8 @@ public class ServerEventListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        event.setKeepInventory(true);
+        event.setKeepInventory(this.serverAgent.isEnableInventorySave());
+        event.setKeepExperience(this.serverAgent.isEnableInventorySave());
         event.setDeathMessage("");
     }
 

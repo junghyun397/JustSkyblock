@@ -13,6 +13,7 @@ public class MessageCommand extends GeneralCommand {
 
     @Override
     public boolean execute(CommandSender commandSender, String s, String[] strings) {
+        if (!this.checkExecutable(commandSender)) return false;
         return false;
     }
 

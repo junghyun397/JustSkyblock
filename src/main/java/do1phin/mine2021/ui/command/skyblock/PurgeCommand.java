@@ -19,20 +19,18 @@ public class PurgeCommand extends SkyblockCommand {
     private final DatabaseAgent databaseAgent;
 
     public PurgeCommand(ServerAgent serverAgent, MessageAgent messageAgent, Config config, SkyBlockAgent skyBlockAgent, DatabaseAgent databaseAgent) {
-        super(config.getString("command.skyblock.purge-command.command"),
-                config.getString("command.skyblock.purge-command.description"),
-                config.getString("command.skyblock.purge-command.usage"),
-                new CommandParameter[]{
-                        CommandParameter.newType("player", false, CommandParamType.TARGET)
-                },
-                serverAgent, messageAgent, config, skyBlockAgent);
+        super(config.getUIString("command.skyblock.purge-command.command"),
+                config.getUIString("command.skyblock.purge-command.description"),
+                config.getUIString("command.skyblock.purge-command.usage"),
+                new CommandParameter[]{CommandParameter.newType("player", false, CommandParamType.TARGET)},
+                serverAgent, messageAgent, skyBlockAgent);
 
         this.databaseAgent = databaseAgent;
     }
 
     @Override
     public boolean execute(CommandSender commandSender, String ignored, String[] args) {
-        if (!(commandSender instanceof Player) || !commandSender.hasPermission(this.getPermission())) return false;
+        if (!this.checkExecutable(commandSender)) return false;
 
         if (args.length == 0) {
             this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.purge-command.format-error");
