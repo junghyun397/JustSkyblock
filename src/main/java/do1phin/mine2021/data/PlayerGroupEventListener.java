@@ -4,11 +4,11 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerChatEvent;
 
-public class PlayerCategoryEventListener implements Listener {
+public class PlayerGroupEventListener implements Listener {
 
     private final PlayerGroupAgent playerGroupAgent;
 
-    public PlayerCategoryEventListener(PlayerGroupAgent playerGroupAgent) {
+    public PlayerGroupEventListener(PlayerGroupAgent playerGroupAgent) {
         this.playerGroupAgent = playerGroupAgent;
     }
 

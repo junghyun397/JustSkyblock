@@ -4,40 +4,54 @@ system:
   disable-nukkit-commands: true
   enable-inventory-save: true
 
+crafting:
+  additional-recipes:
+    - name: "wool2string"
+      id: 287
+      meta: 0
+      amount: 2
+      shape: "AAA,ABA,AAA"
+      ingredients: "A=0:0,B=35:0"
+    - name: "wool2leather"
+      id: 334
+      meta: 0
+      amount: 1
+      shape: "AAA,AAA,AAA"
+      ingredients: "A=35:0"
+  banned-recipes:
+    - id: 0
+      meta: 0
+      amount: 0
+      inputs:
+        - id: 0
+          meta: 0
+          amount: 0
+        - id: 0
+          meta: 0
+          amount: 0
 
-additional-recipes:
-  - id: 1
-    meta: 1
-    count: 1
-    shape: "1:0,1:0,1:0-1:0,1:0,1:0-1:0,1:0,1:0"
-  - id: 1
-    meta: 1
-    count: 1
-    shape: "1:0,1:0,1:0-1:0,1:0,1:0-1:0,1:0,1:0"
-
-
-default-item-list:
+default-items:
   - id: 270
     meta: 0
-    count: 1
+    amount: 1
   - id: 271
     meta: 0
-    count: 1
+    amount: 1
   - id: 269
     meta: 0
-    count: 1
+    amount: 1
   - id: 79
     meta: 0
-    count: 2
+    amount: 2
   - id: 325
     meta: 10
-    count: 1
+    amount: 1
   - id: 351
     meta: 15
-    count: 10
+    amount: 10
   - id: 297
     meta: 0
-    count: 64
+    amount: 64
   - id: 19
     meta: 0
-    count: 1
+    amount: 1

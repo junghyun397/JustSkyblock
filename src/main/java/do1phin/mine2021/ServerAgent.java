@@ -10,7 +10,7 @@ import do1phin.mine2021.blockgen.BlockGenAgent;
 import do1phin.mine2021.blockgen.BlockGenEventListener;
 import do1phin.mine2021.data.Config;
 import do1phin.mine2021.data.PlayerGroupAgent;
-import do1phin.mine2021.data.PlayerCategoryEventListener;
+import do1phin.mine2021.data.PlayerGroupEventListener;
 import do1phin.mine2021.data.PlayerData;
 import do1phin.mine2021.data.db.DatabaseAgent;
 import do1phin.mine2021.data.db.MysqlHelper;
@@ -100,12 +100,12 @@ public class ServerAgent extends PluginBase {
         this.messageAgent = new MessageAgent(this, config);
         this.skyBlockAgent = new SkyBlockAgent(this, this.databaseAgent, this.messageAgent, config);
         this.blockGenAgent = new BlockGenAgent(this, this.messageAgent, config);
-        this.playerGroupAgent = new PlayerGroupAgent(this, config);
+        this.playerGroupAgent = new PlayerGroupAgent(this, this.databaseAgent, config);
 
         this.getServer().getPluginManager().registerEvents(new ServerEventListener(this), this);
         this.getServer().getPluginManager().registerEvents(new BlockGenEventListener(this.blockGenAgent), this);
         this.getServer().getPluginManager().registerEvents(new SkyBlockEventListener(this.skyBlockAgent), this);
-        this.getServer().getPluginManager().registerEvents(new PlayerCategoryEventListener(this.playerGroupAgent), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerGroupEventListener(this.playerGroupAgent), this);
 
         this.getServer().getCommandMap().register("mine2021", new TeleportCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
         this.getServer().getCommandMap().register("mine2021", new InviteCommand(this, this.messageAgent, config, this.skyBlockAgent));
@@ -118,10 +118,13 @@ public class ServerAgent extends PluginBase {
         this.getServer().getCommandMap().register("mine2021", new GroupCommand(this, this.messageAgent, config));
 
         config.parseAdditionalRecipes().forEach(recipe -> getServer().getCraftingManager().registerRecipe(recipe));
+        this.getServer().getCraftingManager().rebuildPacket();
 
         this.disableDefaultCommands = config.getServerConfig().getBoolean("system.disable-nukkit-commands");
         this.enableInventorySave = config.getServerConfig().getBoolean("system.enable-inventory-save");
-        this.defaultItemCollection = config.parseDefaultItemCollection();
+
+        this.defaultItemCollection = config.parseDefaultItems();
+
         this.guideBookVersion = config.getUserInterfaceConfig().getInt("guidebook.version");
         this.guideBookPages = config.parseGuideBookPages();
 
@@ -186,8 +189,7 @@ public class ServerAgent extends PluginBase {
     }
 
     private void giveDefaultItems(Player player) {
-        for (Tuple<Integer, Integer, Integer> item: this.defaultItemCollection)
-            player.getInventory().addItem(Item.get(item.a, item.b, item.c).clone());
+        this.defaultItemCollection.forEach(item -> player.getInventory().addItem(Item.get(item.a, item.b, item.c).clone()));
 
         final ItemBookWritten book = (ItemBookWritten) Item.get(387, 0, 1);
         final String bookName = this.messageAgent.getText("general.guidebook") + " v" + this.guideBookVersion;

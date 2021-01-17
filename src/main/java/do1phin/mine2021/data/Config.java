@@ -2,13 +2,15 @@ package do1phin.mine2021.data;
 
 import cn.nukkit.block.Block;
 import cn.nukkit.blockstate.BlockState;
-import cn.nukkit.inventory.Recipe;
+import cn.nukkit.inventory.ShapedRecipe;
+import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.utils.Pair;
 import do1phin.mine2021.utils.Tuple;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Config {
 
@@ -59,20 +61,53 @@ public class Config {
 
     // SERVER CONFIG
 
-    public Collection<Recipe> parseAdditionalRecipes() {
-        return new ArrayList<>();
+    public Collection<ShapedRecipe> parseAdditionalRecipes() {
+        return ((List<?>) this.serverConfig.getList("crafting.additional-recipes")).stream().map(o -> {
+            final ConfigSection configSection = (ConfigSection) o;
+            return new ShapedRecipe(
+                    configSection.getString("name"), 1,
+                    Item.get(configSection.getInt("id"), configSection.getInt("meta"), configSection.getInt("amount")),
+                    configSection.getString("shape").split(","),
+                    Arrays.stream(configSection.getString("ingredients").split(","))
+                            .map(s -> s.split("="))
+                            .collect(Collectors.toMap(e -> e[0].toCharArray()[0], e -> {
+                                final String[] sliced = e[1].split(":");
+                                return Item.get(Integer.parseInt(sliced[0]), Integer.parseInt(sliced[0]));
+                            })),
+                    new ArrayList<>()
+            );
+        }).collect(Collectors.toList());
     }
 
-    public Collection<Tuple<Integer, Integer, Integer>> parseDefaultItemCollection() {
-        final List<?> defaultItemSection = this.serverConfig.getList("default-item-list");
+    public Collection<Pair<Item, List<Item>>> parseBannedRecipes() {
+        return ((List<?>) this.serverConfig.getList("crafting.banned-recipes")).stream().map(o -> {
+            final ConfigSection configSection = (ConfigSection) o;
+            return new Pair<>(
+                    Item.get(configSection.getInt("id"), configSection.getInt("meta"), configSection.getInt("amount")),
+                    ((List<?>) configSection.getList("inputs")).stream().map(o1 -> {
+                        final ConfigSection inputsSection = (ConfigSection) o1;
+                        return Item.get(inputsSection.getInt("id"), inputsSection.getInt("meta"), inputsSection.getInt("amount"));
+                    }).collect(Collectors.toList()));
+        }).collect(Collectors.toList());
+    }
 
-        final Collection<Tuple<Integer, Integer, Integer>> defaultItemList = new ArrayList<>();
-        defaultItemSection.forEach(o -> {
-            final ConfigSection section = (ConfigSection) o;
-            defaultItemList.add(new Tuple<>(section.getInt("id"), section.getInt("meta"), section.getInt("count")));
-        });
+    public Collection<Tuple<Integer, Integer, Integer>> parseDefaultItems() {
+        return ((List<?>) this.serverConfig.getList("default-items")).stream().map(o -> {
+            final ConfigSection configSection = (ConfigSection) o;
+            return new Tuple<>(configSection.getInt("id"), configSection.getInt("meta"), configSection.getInt("amount"));
+        }).collect(Collectors.toList());
+    }
 
-        return defaultItemList;
+    // USER GROUPS CONFIG
+
+    public Map<Integer, Tuple<String, String, String>> parsePlayerGroupMap() {
+        return this.userGroupsConfig.getSection("groups").getAllMap().entrySet().stream().map(stringObjectEntry -> {
+            ConfigSection section = ((ConfigSection) stringObjectEntry.getValue());
+            return new Pair<>(
+                    section.getInt("id", 0),
+                    new Tuple<>(stringObjectEntry.getKey(), section.getString("display-name") + " ", section.getString("nametag"))
+            );
+        }).collect(Collectors.toMap(e -> e.a, e -> e.b));
     }
 
     // DATABASE CONFIG
@@ -110,12 +145,10 @@ public class Config {
     // BLOCKGEN CONFIG
 
     public Tuple<List<Integer>, List<Integer>, List<List<Pair<Double, Block>>>> parseBlockGenData() {
-        final List<?> blockGenSection = this.blockGenConfig.getList("dictionary");
-
         final List<Integer> blockGenSource = new ArrayList<>();
         final List<Integer> blockGenDelay = new ArrayList<>();
         final List<List<Pair<Double, Block>>> blockGenDict = new ArrayList<>();
-        blockGenSection.forEach(o -> {
+        ((List<?>) this.blockGenConfig.getList("dictionary")).forEach(o -> {
             ConfigSection section = (ConfigSection) o;
             blockGenSource.add(section.getInt("id"));
             blockGenDelay.add(section.getInt("delay"));
@@ -147,18 +180,6 @@ public class Config {
 
     public String[] parseGuideBookPages() {
         return this.userInterfaceConfig.getStringList("guidebook.content").toArray(new String[0]);
-    }
-
-    // USER GROUPS CONFIG
-
-    public Map<Integer, Tuple<String, String, String>> parsePlayerGroupMap() {
-        final Map<Integer, Tuple<String, String, String>> categoryMap = new HashMap<>();
-        this.userGroupsConfig.getSection("groups").forEach((s, o) -> {
-            ConfigSection section = ((ConfigSection) o);
-            categoryMap.put(section.getInt("id", 0),
-                    new Tuple<>(s, section.getString("display-name") + " ", section.getString("nametag")));
-        });
-        return categoryMap;
     }
 
 }

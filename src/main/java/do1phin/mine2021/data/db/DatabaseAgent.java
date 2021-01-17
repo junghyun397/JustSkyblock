@@ -75,7 +75,7 @@ public class DatabaseAgent {
                             "UPDATE user_info SET name=?, category=?, ip=?, island_setting=?, ban_date=? WHERE uuid=?;");
 
             pstmt.setString(1, playerData.getName());
-            pstmt.setInt(2, playerData.getPlayerCategory());
+            pstmt.setInt(2, playerData.getPlayerGroup());
             pstmt.setString(3, playerData.getIp());
             pstmt.setString(4, playerData.getSkyblockData().toJSON());
             pstmt.setTimestamp(5, playerData.getBanDate());
