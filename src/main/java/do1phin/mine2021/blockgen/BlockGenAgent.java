@@ -80,7 +80,7 @@ public class BlockGenAgent {
         TimerWrapper.schedule(() -> {
             if (this.getBlockGenSourceLevel(this.getMainLevel().getBlock(x, y - 1, z).getId()) == sourceLevel) {
                 final Block reGenBlock;
-                if (Math.random() < 1 / (float) ((sourceLevel + 1) * 8 * 8))
+                if (Math.random() < 1 / (float) ((Math.pow(8, sourceLevel + 1)) * 4))
                     reGenBlock = BlockState.of(this.blockGenSource.get(sourceLevel)).getBlock().clone();
                 else reGenBlock = this.getReGenBlock(sourceLevel);
                 this.getMainLevel().setBlock(new Vector3(x, y, z), reGenBlock);

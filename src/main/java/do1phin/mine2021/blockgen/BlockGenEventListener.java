@@ -2,11 +2,10 @@ package do1phin.mine2021.blockgen;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
-import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
-import cn.nukkit.event.block.BlockFromToEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
+import cn.nukkit.event.block.BlockUpdateEvent;
 import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.item.Item;
 
@@ -54,9 +53,9 @@ public class BlockGenEventListener implements Listener {
             event.getNewItem().setCustomName(this.blockGenAgent.getBlockGenSourceTag(event.getNewItem().getBlockId()));
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onBlockFromTo(BlockFromToEvent event) {
-        if (this.blockGenAgent.isBlockGenSource(event.getFrom().getId())) event.setCancelled();
+    @EventHandler
+    public void onBlockFromTo(BlockUpdateEvent event) {
+        if (this.blockGenAgent.isBlockGenSource(event.getBlock().getId())) event.setCancelled();
     }
 
 }
