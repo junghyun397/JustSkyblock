@@ -1,0 +1,27 @@
+{
+	"sponge" : { 
+		"isotropic" : false,
+		"textures" : "sponge", 
+		"sound": "stone"
+	},
+	"netherrack" : { 
+		"isotropic" : false,
+		"textures" : "netherrack",
+		"sound": "stone"
+	},
+	"nether_wart_block": {
+		"isotropic" : false,
+    "textures": "nether_wart_block",
+    "sound": "stone"
+  },
+  "soul_sand" : {
+  	"isotropic" : false,
+		"textures" : "soul_sand",
+		"sound": "stone"
+	},
+	"end_bricks" : {
+		"isotropic" : false,
+		"textures" : "end_bricks",
+		"sound": "stone"
+	}
+}
