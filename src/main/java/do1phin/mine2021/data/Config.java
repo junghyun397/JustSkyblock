@@ -72,7 +72,7 @@ public class Config {
                             .map(s -> s.split("="))
                             .collect(Collectors.toMap(e -> e[0].toCharArray()[0], e -> {
                                 final String[] sliced = e[1].split(":");
-                                return Item.get(Integer.parseInt(sliced[0]), Integer.parseInt(sliced[0]));
+                                return Item.get(Integer.parseInt(sliced[0]), Integer.parseInt(sliced[1]));
                             })),
                     new ArrayList<>()
             );

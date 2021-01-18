@@ -19,8 +19,9 @@ public class PlayerData {
     private final SkyblockData skyblockData;
 
     private Timestamp banDate;
+    private String banReason;
 
-    public PlayerData(Player player, UUID uuid, String name, String ip, int playerGroup, SkyblockData skyblockData, Timestamp banDate) {
+    public PlayerData(Player player, UUID uuid, String name, String ip, int playerGroup, SkyblockData skyblockData, Timestamp banDate, String banReason) {
         this.player = player;
         this.online = player != null;
 
@@ -32,6 +33,7 @@ public class PlayerData {
         this.skyblockData = skyblockData;
 
         this.banDate = banDate;
+        this.banReason = banReason;
     }
 
     public Player getPlayer() {
@@ -72,6 +74,14 @@ public class PlayerData {
 
     public void setBanDate(Timestamp banDate) {
         this.banDate = banDate;
+    }
+
+    public void setBanReason(String banReason) {
+        this.banReason = banReason;
+    }
+
+    public String getBanReason() {
+        return this.banReason;
     }
 
 }

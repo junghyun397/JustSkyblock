@@ -21,7 +21,9 @@ public class TeleportCommand extends SkyblockCommand {
         super(config.getUIString("command.skyblock.teleport-command.command"),
                 config.getUIString("command.skyblock.teleport-command.description"),
                 config.getUIString("command.skyblock.teleport-command.usage"),
-                new CommandParameter[]{CommandParameter.newType("player", true, CommandParamType.TARGET)},
+                new CommandParameter[]{CommandParameter.newType(config.getUIString("command.skyblock.teleport-command.parameter.player"),
+                        true, CommandParamType.TARGET)
+                },
                 serverAgent, messageAgent, skyBlockAgent);
 
         this.databaseAgent = databaseAgent;
@@ -36,7 +38,7 @@ public class TeleportCommand extends SkyblockCommand {
         } else {
             final Optional<UUID> targetUUID = this.databaseAgent.getUUIDByPlayerName(args[0]);
             if (!targetUUID.isPresent()) {
-                this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.teleport-command.teleport-failed-playernotfound",
+                this.messageAgent.sendMessage(commandSender, "command.skyblock.teleport-command.teleport-failed-playernotfound",
                         new String[]{"%player"}, new String[]{args[0]});
                 return false;
             }

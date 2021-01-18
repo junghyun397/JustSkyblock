@@ -1,6 +1,7 @@
 package do1phin.mine2021.ui;
 
 import cn.nukkit.Player;
+import cn.nukkit.command.CommandSender;
 import cn.nukkit.form.window.FormWindowSimple;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
@@ -22,11 +23,11 @@ public class MessageAgent {
         this.prefixNotice = config.getUIString("prefix.notice") + " ";
     }
 
-    public void sendMessage(Player player, String key) {
+    public void sendMessage(CommandSender player, String key) {
         this.sendMessage(player, key, null, null);
     }
 
-    public void sendMessage(Player player, String key, String[] params, String[] values) {
+    public void sendMessage(CommandSender player, String key, String[] params, String[] values) {
         player.sendMessage(this.prefixInfo + this.getMessage(key, params, values));
     }
 
@@ -56,7 +57,7 @@ public class MessageAgent {
             player.sendPopup(message);
     }
 
-    private String getMessage(String key, String[] params, String[] values) {
+    public String getMessage(String key, String[] params, String[] values) {
         String message = this.config.getUIString(key);
         if (params != null && values != null && params.length == values.length)
             for (int i = 0; i < params.length; i++)

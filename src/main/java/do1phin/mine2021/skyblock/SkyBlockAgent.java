@@ -127,6 +127,34 @@ public class SkyBlockAgent {
         return new Position(x, 256, z, this.getMainLevel());
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean onPlayerModifyBlock(Player player, int blockX) {
+        final int section = this.getSkyblockSectionByX(blockX);
+        Optional<SkyblockData> skyblockData = this.getSkyblockData(section);
+        if (!skyblockData.isPresent()) {
+            skyblockData = this.databaseAgent.getSkyblockDataBySection(section);
+            if (!skyblockData.isPresent()) return false;
+            this.registerSkyblockData(skyblockData.get());
+        }
+
+        if (player.getUniqueId().equals(skyblockData.get().getOwnerUUID())) return true;
+
+        if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_ALL) return true;
+        else if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_INVITED) {
+            if (skyblockData.get().getCollaborators().contains(player.getUniqueId())) return true;
+            this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
+                    new String[]{"%player", "%protection-type"},
+                    new String[]{skyblockData.get().getOwnerName(), this.messageAgent.getText("skyblock.protection-type.allow-invited")});
+            return false;
+        }
+        else {
+            this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
+                    new String[]{"%player", "%protection-type"},
+                    new String[]{skyblockData.get().getOwnerName(), this.messageAgent.getText("skyblock.protection-type.allow-only-owner")});
+            return false;
+        }
+    }
+
     public ProtectionType getSkyblockProtectionType(int section) {
         return this.skyblockDataMap.get(section).getProtectionType();
     }
@@ -173,34 +201,6 @@ public class SkyBlockAgent {
 
     private void unloadIslandChunk(int section) {
         // TODO: 청크 로딩 관리
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean onPlayerModifyBlock(Player player, int blockX) {
-        final int section = this.getSkyblockSectionByX(blockX);
-        Optional<SkyblockData> skyblockData = this.getSkyblockData(section);
-        if (!skyblockData.isPresent()) {
-            skyblockData = this.databaseAgent.getSkyblockDataBySection(section);
-            if (!skyblockData.isPresent()) return false;
-            this.registerSkyblockData(skyblockData.get());
-        }
-
-        if (player.getUniqueId().equals(skyblockData.get().getUuid())) return true;
-
-        if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_ALL) return true;
-        else if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_INVITED) {
-            if (skyblockData.get().getCollaborators().contains(player.getUniqueId())) return true;
-            this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
-                    new String[]{"%player", "%protection-type"},
-                    new String[]{skyblockData.get().getOwner(), this.messageAgent.getText("skyblock.protection-type.allow-invited")});
-            return false;
-        }
-        else {
-            this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
-                    new String[]{"%player", "%protection-type"},
-                    new String[]{skyblockData.get().getOwner(), this.messageAgent.getText("skyblock.protection-type.allow-only-owner")});
-            return false;
-        }
     }
 
     private Level getMainLevel() {

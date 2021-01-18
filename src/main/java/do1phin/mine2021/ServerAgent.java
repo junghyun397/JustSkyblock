@@ -9,9 +9,9 @@ import cn.nukkit.plugin.PluginBase;
 import do1phin.mine2021.blockgen.BlockGenAgent;
 import do1phin.mine2021.blockgen.BlockGenEventListener;
 import do1phin.mine2021.data.Config;
+import do1phin.mine2021.data.PlayerData;
 import do1phin.mine2021.data.PlayerGroupAgent;
 import do1phin.mine2021.data.PlayerGroupEventListener;
-import do1phin.mine2021.data.PlayerData;
 import do1phin.mine2021.data.db.DatabaseAgent;
 import do1phin.mine2021.data.db.MysqlHelper;
 import do1phin.mine2021.data.db.RDBSHelper;
@@ -25,6 +25,7 @@ import do1phin.mine2021.ui.command.management.GroupCommand;
 import do1phin.mine2021.ui.command.management.KickCommand;
 import do1phin.mine2021.ui.command.skyblock.*;
 import do1phin.mine2021.utils.EmptyGenerator;
+import do1phin.mine2021.utils.CalendarHelper;
 import do1phin.mine2021.utils.Tuple;
 
 import java.util.*;
@@ -113,9 +114,9 @@ public class ServerAgent extends PluginBase {
         this.getServer().getCommandMap().register("mine2021", new PurgeCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
         this.getServer().getCommandMap().register("mine2021", new ProtectionTypeCommand(this, this.messageAgent, config, this.skyBlockAgent));
 
-        this.getServer().getCommandMap().register("mine2021", new BanCommand(this, this.messageAgent, config));
+        this.getServer().getCommandMap().register("mine2021", new BanCommand(this, this.messageAgent, config, this.databaseAgent));
         this.getServer().getCommandMap().register("mine2021", new KickCommand(this, this.messageAgent, config));
-        this.getServer().getCommandMap().register("mine2021", new GroupCommand(this, this.messageAgent, config));
+        this.getServer().getCommandMap().register("mine2021", new GroupCommand(this, this.messageAgent, config, this.playerGroupAgent));
 
         config.parseAdditionalRecipes().forEach(recipe -> getServer().getCraftingManager().registerRecipe(recipe));
         this.getServer().getCraftingManager().rebuildPacket();
@@ -141,11 +142,13 @@ public class ServerAgent extends PluginBase {
             if (!playerData.get().getName().equals(name) | !playerData.get().getIp().equals(ip))
                 this.databaseAgent.updatePlayerData(playerData.get());
 
+            if (playerData.get().getBanDate() != null && !this.processBannedPlayer(playerData.get())) return;
+
             this.messageAgent.sendBroadcast("message.general.on-player-join",
                     new String[]{"%player"}, new String[]{player.getName()});
         } else {
             int section = this.databaseAgent.getNextSection();
-            playerData = Optional.of(new PlayerData(player, uuid, name, ip, 0, SkyblockData.getDefault(section, uuid, name), null));
+            playerData = Optional.of(new PlayerData(player, uuid, name, ip, 0, SkyblockData.getDefault(section, uuid, name), null, null));
             this.registerNewPlayer(playerData.get());
         }
 
@@ -186,6 +189,18 @@ public class ServerAgent extends PluginBase {
 
         this.messageAgent.sendBroadcast("message.general.on-player-first-join",
                 new String[]{"%player"}, new String[]{playerData.getName()});
+    }
+
+    private boolean processBannedPlayer(PlayerData playerData) {
+        if (playerData.getBanDate().getTime() < System.currentTimeMillis()) return true;
+
+        final String[] ymdhm = CalendarHelper.getYMDHMFromTimestamp(playerData.getBanDate());
+        playerData.getPlayer().kick(this.messageAgent.getMessage("message.management.player-banned",
+                new String[]{"%player", "%year", "%month", "%day", "%hour", "%minute", "%reason"},
+                new String[]{playerData.getName(), ymdhm[0], ymdhm[1], ymdhm[2], ymdhm[3], ymdhm[4], playerData.getBanReason()}
+        ), false);
+
+        return false;
     }
 
     private void giveDefaultItems(Player player) {

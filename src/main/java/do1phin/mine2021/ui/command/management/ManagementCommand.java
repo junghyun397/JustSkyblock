@@ -1,5 +1,6 @@
 package do1phin.mine2021.ui.command.management;
 
+import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParameter;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.ui.MessageAgent;
@@ -11,6 +12,11 @@ public abstract class ManagementCommand extends BaseCommand {
         super(name, description, usageMessage, commandParameters, serverAgent, messageAgent);
 
         this.setPermission("mine2021.management");
+    }
+
+    @Override
+    protected boolean checkExecutable(CommandSender commandSender) {
+        return commandSender.hasPermission(this.getPermission());
     }
 
 }

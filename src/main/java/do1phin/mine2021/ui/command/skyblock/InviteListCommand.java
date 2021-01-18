@@ -33,11 +33,11 @@ public class InviteListCommand extends SkyblockCommand {
         final List<UUID> collaborators = this.skyBlockAgent.getSkyblockData((Player) commandSender).getCollaborators();
 
         if (collaborators.size() == 0)
-            this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.invite-list-command.show-invited-list-empty");
+            this.messageAgent.sendMessage(commandSender, "command.skyblock.invite-list-command.show-invited-list-empty");
         else {
             final StringBuffer invitedList = new StringBuffer();
             collaborators.forEach(uuid -> invitedList.append(this.databaseAgent.getPlayerNameByUUID(uuid).orElse("ERROR")).append(" "));
-            this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.invite-list-command.show-invited-list",
+            this.messageAgent.sendMessage(commandSender, "command.skyblock.invite-list-command.show-invited-list",
                     new String[]{"%invited-list"}, new String[]{invitedList.toString()});
         }
 

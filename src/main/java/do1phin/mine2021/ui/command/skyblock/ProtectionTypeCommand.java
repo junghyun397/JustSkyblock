@@ -16,8 +16,8 @@ public class ProtectionTypeCommand extends SkyblockCommand {
                 config.getUIString("command.skyblock.protection-type-command.description"),
                 config.getUIString("command.skyblock.protection-type-command.usage"),
                 new CommandParameter[]{
-                        CommandParameter.newEnum("type", false,
-                                new String[]{messageAgent.getText("skyblock.protection-type.allow-only-owner"),
+                        CommandParameter.newEnum(config.getUIString("command.skyblock.protection-type-command.parameter.protection-type"),
+                                false, new String[]{messageAgent.getText("skyblock.protection-type.allow-only-owner"),
                                         messageAgent.getText("skyblock.protection-type.allow-invited"),
                                         messageAgent.getText("skyblock.protection-type.allow-all")})
                 },
@@ -29,7 +29,7 @@ public class ProtectionTypeCommand extends SkyblockCommand {
         if (!this.checkExecutable(commandSender)) return false;
 
         if (args.length == 0) {
-            this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.protection-type-command.format-error");
+            this.messageAgent.sendMessage(commandSender, "command.skyblock.protection-type-command.format-error");
             return false;
         }
 
@@ -41,13 +41,13 @@ public class ProtectionTypeCommand extends SkyblockCommand {
         else if (args[0].equals(this.messageAgent.getText("skyblock.protection-type.allow-all")))
             protectionType = ProtectionType.ALLOW_ALL;
         else {
-            this.messageAgent.sendMessage((Player) commandSender, "command.skyblock.protection-type-command.format-error");
+            this.messageAgent.sendMessage(commandSender, "command.skyblock.protection-type-command.format-error");
             return false;
         }
 
         this.skyBlockAgent.updateProtectionType((Player) commandSender, protectionType);
 
-        this.messageAgent.sendMessage((Player) commandSender, "message.skyblock.protection-type-updated",
+        this.messageAgent.sendMessage(commandSender, "message.skyblock.protection-type-updated",
                 new String[]{"%protection-type"}, new String[]{args[0]});
 
         return true;

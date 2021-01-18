@@ -41,7 +41,7 @@ public class DatabaseAgent {
                         SkyblockData.fromJSON(rs.getInt("section"),
                                 rs.getString("island_setting"),
                                 uuid, rs.getString("name")),
-                        rs.getTimestamp("ban_date")));
+                        rs.getTimestamp("ban_date"), rs.getString("ban_reason")));
         } catch (SQLException e) {
             this.serverAgent.loggerCritical(e.getMessage());
         }
@@ -72,15 +72,16 @@ public class DatabaseAgent {
     public void updatePlayerData(PlayerData playerData) {
         try {
             final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
-                            "UPDATE user_info SET name=?, category=?, ip=?, island_setting=?, ban_date=? WHERE uuid=?;");
+                            "UPDATE user_info SET name=?, category=?, ip=?, island_setting=?, ban_date=?, ban_reason=? WHERE uuid=?;");
 
             pstmt.setString(1, playerData.getName());
             pstmt.setInt(2, playerData.getPlayerGroup());
             pstmt.setString(3, playerData.getIp());
             pstmt.setString(4, playerData.getSkyblockData().toJSON());
             pstmt.setTimestamp(5, playerData.getBanDate());
+            pstmt.setString(6, playerData.getBanReason());
 
-            pstmt.setString(6, playerData.getUuid().toString());
+            pstmt.setString(7, playerData.getUuid().toString());
 
             pstmt.executeUpdate();
             pstmt.clearParameters();

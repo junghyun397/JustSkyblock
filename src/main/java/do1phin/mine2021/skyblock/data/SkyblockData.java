@@ -18,16 +18,16 @@ public class SkyblockData {
 
     private List<UUID> collaborators;
 
-    private final String owner;
-    private final UUID uuid;
+    private final String ownerName;
+    private final UUID ownerUUID;
 
-    public SkyblockData(int section, ProtectionType protectionType, List<UUID> collaborators, UUID uuid, String owner) {
+    public SkyblockData(int section, ProtectionType protectionType, List<UUID> collaborators, UUID ownerUUID, String ownerName) {
         this.section = section;
         this.protectionType = protectionType;
         this.collaborators = collaborators;
 
-        this.owner = owner;
-        this.uuid = uuid;
+        this.ownerName = ownerName;
+        this.ownerUUID = ownerUUID;
     }
 
     public ProtectionType getProtectionType() {
@@ -50,18 +50,18 @@ public class SkyblockData {
         this.collaborators = collaborators;
     }
 
-    public String getOwner() {
-        return this.owner;
+    public String getOwnerName() {
+        return this.ownerName;
     }
 
-    public UUID getUuid() {
-        return this.uuid;
+    public UUID getOwnerUUID() {
+        return this.ownerUUID;
     }
 
     public String toJSON() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("protection-type", this.protectionType.value);
-        jsonObject.put("collaborators", this.collaborators);
+        jsonObject.put("collaborators", this.collaborators.stream().map(UUID::toString).collect(Collectors.toList()));
         return jsonObject.toString();
     }
 

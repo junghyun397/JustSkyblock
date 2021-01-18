@@ -18,6 +18,50 @@ crafting:
       amount: 1
       shape: "AAA,AAA,AAA"
       ingredients: "A=35:0"
+    - name: "wheat2sugar-cane"
+      id: 338
+      meta: 0
+      amount: 1
+      shape: "AAA,ABA,AAA"
+      ingredients: "A=296:0,B=12:0"
+
+    - name: "log2sapling-1"
+      id: 6
+      meta: 0
+      amount: 1
+      shape: "ABA,BBB,ABA"
+      ingredients: "A=0:0,B=17:0"
+    - name: "log2sapling-2"
+      id: 6
+      meta: 1
+      amount: 1
+      shape: "ABA,BBB,ABA"
+      ingredients: "A=0:0,B=17:1"
+    - name: "log2sapling-3"
+      id: 6
+      meta: 2
+      amount: 1
+      shape: "ABA,BBB,ABA"
+      ingredients: "A=0:0,B=17:2"
+    - name: "log2sapling-4"
+      id: 6
+      meta: 3
+      amount: 1
+      shape: "ABA,BBB,ABA"
+      ingredients: "A=0:0,B=17:3"
+    - name: "log2sapling-5"
+      id: 6
+      meta: 4
+      amount: 1
+      shape: "ABA,BBB,ABA"
+      ingredients: "A=0:0,B=162:0"
+    - name: "log2sapling-6"
+      id: 6
+      meta: 5
+      amount: 1
+      shape: "ABA,BBB,ABA"
+      ingredients: "A=0:0,B=162:1"
+
   banned-recipes:
     - id: 0
       meta: 0

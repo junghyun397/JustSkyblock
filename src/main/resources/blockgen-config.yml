@@ -75,7 +75,7 @@ dictionary:
 
       # NATURAL ADVANCED
       # clay
-      - id: 21
+      - id: 82
         meta: 0
         percentage: 1
       # ice
@@ -161,7 +161,7 @@ dictionary:
 
       # NATURAL ADVANCED
       # clay
-      - id: 21
+      - id: 82
         meta: 0
         percentage: 1
       # glowstone
@@ -170,6 +170,10 @@ dictionary:
         percentage: 0.1
       # ice
       - id: 79
+        meta: 0
+        percentage: 0.1
+      # obsidian
+      - id: 49
         meta: 0
         percentage: 0.1
 
@@ -190,6 +194,14 @@ dictionary:
       - id: 17
         meta: 3
         percentage: 1
+      # wood-5
+      - id: 162
+        meta: 0
+        percentage: 0.5
+      # wood-6
+      - id: 162
+        meta: 1
+        percentage: 0.5
       # wool
       - id: 35
         meta: 0
@@ -277,7 +289,7 @@ dictionary:
 
       # NATURAL ADVANCED
       # clay
-      - id: 21
+      - id: 82
         meta: 0
         percentage: 1
       # glowstone
@@ -290,6 +302,10 @@ dictionary:
         percentage: 0.005
       # ice
       - id: 79
+        meta: 0
+        percentage: 0.1
+      # obsidian
+      - id: 49
         meta: 0
         percentage: 0.1
 
@@ -310,6 +326,14 @@ dictionary:
       - id: 17
         meta: 3
         percentage: 1
+      # wood-5
+      - id: 162
+        meta: 0
+        percentage: 0.5
+      # wood-6
+      - id: 162
+        meta: 1
+        percentage: 0.5
       # wool
       - id: 35
         meta: 0
@@ -405,7 +429,7 @@ dictionary:
 
       # NATURAL ADVANCED
       # clay
-      - id: 21
+      - id: 82
         meta: 0
         percentage: 1
       # glowstone
@@ -418,6 +442,10 @@ dictionary:
         percentage: 0.05
       # ice
       - id: 79
+        meta: 0
+        percentage: 0.1
+      # obsidian
+      - id: 49
         meta: 0
         percentage: 0.1
 
@@ -437,6 +465,14 @@ dictionary:
       # wood-4
       - id: 17
         meta: 3
+        percentage: 0.5
+      # wood-5
+      - id: 162
+        meta: 0
+        percentage: 0.5
+      # wood-6
+      - id: 162
+        meta: 1
         percentage: 0.5
       # wool
       - id: 35

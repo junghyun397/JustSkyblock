@@ -40,7 +40,9 @@ public class SkyBlockEventListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!event.getPlayer().isOp() && !this.skyBlockAgent.onPlayerModifyBlock(event.getPlayer(), (int) event.getBlock().getX()))
+        if (!(event.getAction() == PlayerInteractEvent.Action.LEFT_CLICK_AIR || event.getAction() == PlayerInteractEvent.Action.RIGHT_CLICK_AIR)
+                && !event.getPlayer().isOp()
+                && !this.skyBlockAgent.onPlayerModifyBlock(event.getPlayer(), (int) event.getBlock().getX()))
             event.setCancelled();
     }
 
