@@ -48,22 +48,31 @@ command:
     ban-command:
       command: "b"
       description: "유저를 차단합니다."
-      usage: "/b <닉네임>"
+      usage: "/b <닉네임> <사유> <기간(일)>"
       parameter:
         player: "유저"
         reason: "사유"
         duration: "기간"
-      format-error: "/b <닉네임> <시간> 형식으로 입력해 주시기 바랍니다."
+      format-error: "/b <닉네임> <사유> <기간(일)> 형식으로 입력해 주시기 바랍니다."
       ban-succeed: "§e%player§f 를 §e%reason§f 사유로 §e%duration일§f 동안 차단했습니다."
       ban-failed-playernotfound: "§4%player§f 를 찾을 수 없습니다."
+    unban-cmmand:
+      command: "ub"
+      description: "유저의 차단을 해제합니다."
+      usage: "/ub <닉네임>"
+      parameter:
+        player: "유저"
+      format-error: "/ub <닉네임> 형식으로 입력해 주시기 바랍니다."
+      unban-succeed: "§e%player§f님의 차단을 해제 했습니다."
+      unban-failed: "§4%player§f 님은 차단되어있지 않습니다."
     kick-command:
       command: "k"
       description: "유저를 추방합니다."
-      usage: "/k <닉네임>"
+      usage: "/k <닉네임> <사유>"
       parameter:
         player: "유저"
         reason: "사유"
-      format-error: "/k <닉네임> 형식으로 입력해 주시기 바랍니다."
+      format-error: "/k <닉네임> <사유> 형식으로 입력해 주시기 바랍니다."
       kick-succeed: "§e%player§f 를 §e%reason§f 사유로 추방 했습니다."
       kick-failed-playernotfound: "§4%player§f 를 찾을 수 없습니다."
     group-command:

@@ -23,6 +23,7 @@ import do1phin.mine2021.ui.MessageAgent;
 import do1phin.mine2021.ui.command.management.BanCommand;
 import do1phin.mine2021.ui.command.management.GroupCommand;
 import do1phin.mine2021.ui.command.management.KickCommand;
+import do1phin.mine2021.ui.command.management.UnBanCommand;
 import do1phin.mine2021.ui.command.skyblock.*;
 import do1phin.mine2021.utils.EmptyGenerator;
 import do1phin.mine2021.utils.CalendarHelper;
@@ -75,9 +76,7 @@ public class ServerAgent extends PluginBase {
     @Override
     public void onEnable() {
         this.loggerInfo("§estart loading...");
-        this.loggerInfo("loading config...");
 
-        this.saveDefaultConfig();
         final Config config = new Config(this);
 
         this.loggerInfo("loading rdbms...");
@@ -115,6 +114,7 @@ public class ServerAgent extends PluginBase {
         this.getServer().getCommandMap().register("mine2021", new ProtectionTypeCommand(this, this.messageAgent, config, this.skyBlockAgent));
 
         this.getServer().getCommandMap().register("mine2021", new BanCommand(this, this.messageAgent, config, this.databaseAgent));
+        this.getServer().getCommandMap().register("mine2021", new UnBanCommand(this, this.messageAgent, config, this.databaseAgent));
         this.getServer().getCommandMap().register("mine2021", new KickCommand(this, this.messageAgent, config));
         this.getServer().getCommandMap().register("mine2021", new GroupCommand(this, this.messageAgent, config, this.playerGroupAgent));
 
