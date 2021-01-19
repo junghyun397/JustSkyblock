@@ -3,19 +3,21 @@ package do1phin.mine2021.data.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public abstract class RDBSHelper {
+public abstract class DatabaseHelper {
 
     protected Connection connection;
 
-    public boolean connect() {
-        return false;
-    }
+    public abstract boolean connect();
 
     public void disconnect() {
         try {
             this.connection.close();
         } catch (SQLException ignored) {}
     }
+
+    public abstract void initDatabase();
+
+    public abstract int getNextAutoIncrement();
 
     public Connection getConnection() {
         return this.connection;

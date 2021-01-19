@@ -15,11 +15,11 @@ import java.util.UUID;
 public class DatabaseAgent {
 
     private final ServerAgent serverAgent;
-    private final RDBSHelper RDBSHelper;
+    private final DatabaseHelper databaseHelper;
 
-    public DatabaseAgent(ServerAgent serverAgent, RDBSHelper RDBSHelper) {
+    public DatabaseAgent(ServerAgent serverAgent, DatabaseHelper databaseHelper) {
         this.serverAgent = serverAgent;
-        this.RDBSHelper = RDBSHelper;
+        this.databaseHelper = databaseHelper;
     }
 
     public Optional<PlayerData> getPlayerData(UUID uuid) {
@@ -28,7 +28,7 @@ public class DatabaseAgent {
 
     public Optional<PlayerData> getPlayerData(Player player, UUID uuid) {
         try {
-            final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
+            final PreparedStatement pstmt = this.databaseHelper.getConnection().prepareStatement(
                     "SELECT * FROM user_info WHERE uuid=?;");
             pstmt.setString(1, uuid.toString());
 
@@ -53,7 +53,7 @@ public class DatabaseAgent {
         final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.systemDefault()));
 
         try {
-            final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
+            final PreparedStatement pstmt = this.databaseHelper.getConnection().prepareStatement(
                     "INSERT INTO user_info(uuid, name, ip, register_date, island_setting) VALUES (?, ?, ?, ?, ?);");
 
             pstmt.setString(1, playerData.getUuid().toString());
@@ -71,7 +71,7 @@ public class DatabaseAgent {
 
     public void updatePlayerData(PlayerData playerData) {
         try {
-            final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
+            final PreparedStatement pstmt = this.databaseHelper.getConnection().prepareStatement(
                             "UPDATE user_info SET name=?, category=?, ip=?, island_setting=?, ban_date=?, ban_reason=? WHERE uuid=?;");
 
             pstmt.setString(1, playerData.getName());
@@ -92,7 +92,7 @@ public class DatabaseAgent {
 
     public Optional<SkyblockData> getSkyblockDataBySection(int section) {
         try {
-            final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
+            final PreparedStatement pstmt = this.databaseHelper.getConnection().prepareStatement(
                     "SELECT island_setting, name, uuid FROM user_info WHERE section=?;");
             pstmt.setInt(1, section);
 
@@ -113,7 +113,7 @@ public class DatabaseAgent {
 
     public Optional<UUID> getUUIDByPlayerName(String name) {
         try {
-            final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
+            final PreparedStatement pstmt = this.databaseHelper.getConnection().prepareStatement(
                     "SELECT uuid FROM user_info WHERE name=?;");
             pstmt.setString(1, name);
 
@@ -130,7 +130,7 @@ public class DatabaseAgent {
 
     public Optional<String> getPlayerNameByUUID(UUID uuid) {
         try {
-            final PreparedStatement pstmt = this.RDBSHelper.getConnection().prepareStatement(
+            final PreparedStatement pstmt = this.databaseHelper.getConnection().prepareStatement(
                     "SELECT name FROM user_info WHERE uuid=?;");
             pstmt.setString(1, uuid.toString());
 
@@ -146,16 +146,7 @@ public class DatabaseAgent {
     }
 
     public int getNextSection() {
-        try {
-            final Statement stmt = this.RDBSHelper.getConnection().createStatement();
-            ResultSet resultSet = stmt.executeQuery("SHOW TABLE STATUS LIKE 'user_info'");
-
-            if (resultSet.next()) return resultSet.getInt("Auto_increment");
-        } catch (SQLException e) {
-            this.serverAgent.loggerCritical(e.getMessage());
-        }
-
-        return 0;
+        return this.databaseHelper.getNextAutoIncrement();
     }
 
 }

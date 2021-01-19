@@ -9,6 +9,7 @@ import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.utils.Pair;
 import do1phin.mine2021.utils.Tuple;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,11 @@ public class Config {
     private final cn.nukkit.utils.Config userInterfaceConfig;
     private final cn.nukkit.utils.Config userGroupsConfig;
 
+    private final File dataFolder;
+
     public Config(ServerAgent serverAgent) {
+        this.dataFolder = serverAgent.getDataFolder();
+
         this.serverConfig = this.initConfigFile(serverAgent, "server-config.yml");
         this.databaseConfig = this.initConfigFile(serverAgent, "database-config.yml");
         this.skyblockConfig = this.initConfigFile(serverAgent, "skyblock-config.yml");
@@ -32,7 +37,7 @@ public class Config {
 
     private cn.nukkit.utils.Config initConfigFile(ServerAgent serverAgent, String fileName) {
         serverAgent.saveResource(fileName);
-        return new cn.nukkit.utils.Config(serverAgent.getDataFolder() + "/" + fileName);
+        return new cn.nukkit.utils.Config(new File(this.dataFolder + "/" + fileName));
     }
 
     public cn.nukkit.utils.Config getServerConfig() {
@@ -57,6 +62,10 @@ public class Config {
 
     public cn.nukkit.utils.Config getUserGroupsConfig() {
         return this.userGroupsConfig;
+    }
+
+    public File getDataFolder() {
+        return this.dataFolder;
     }
 
     // SERVER CONFIG

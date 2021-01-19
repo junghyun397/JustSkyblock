@@ -1,9 +1,9 @@
 Provider: Yaml
 
 database:
-  type: "Mysql"
+  type: "sqlite"
   sqlite:
-    db-file: "user-info.sqlite3"
+    db-file: "user-info.db"
   mysql:
     host: "localhost"
     database: "mine24"

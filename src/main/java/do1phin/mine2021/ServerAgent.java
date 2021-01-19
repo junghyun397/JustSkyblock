@@ -13,9 +13,9 @@ import do1phin.mine2021.data.PlayerData;
 import do1phin.mine2021.data.PlayerGroupAgent;
 import do1phin.mine2021.data.PlayerGroupEventListener;
 import do1phin.mine2021.data.db.DatabaseAgent;
-import do1phin.mine2021.data.db.MysqlHelper;
-import do1phin.mine2021.data.db.RDBSHelper;
-import do1phin.mine2021.data.db.Sqlite3Helper;
+import do1phin.mine2021.data.db.MysqlDatabaseHelper;
+import do1phin.mine2021.data.db.DatabaseHelper;
+import do1phin.mine2021.data.db.SqliteDatabaseHelper;
 import do1phin.mine2021.skyblock.SkyBlockAgent;
 import do1phin.mine2021.skyblock.SkyBlockEventListener;
 import do1phin.mine2021.skyblock.data.SkyblockData;
@@ -25,8 +25,8 @@ import do1phin.mine2021.ui.command.management.GroupCommand;
 import do1phin.mine2021.ui.command.management.KickCommand;
 import do1phin.mine2021.ui.command.management.UnBanCommand;
 import do1phin.mine2021.ui.command.skyblock.*;
-import do1phin.mine2021.utils.EmptyGenerator;
 import do1phin.mine2021.utils.CalendarHelper;
+import do1phin.mine2021.utils.EmptyGenerator;
 import do1phin.mine2021.utils.Tuple;
 
 import java.util.*;
@@ -81,22 +81,24 @@ public class ServerAgent extends PluginBase {
 
         this.loggerInfo("loading rdbms...");
 
-        final RDBSHelper rdbsHelper;
+        final DatabaseHelper databaseHelper;
 
         if (config.getDatabaseConfig().getString("database.type").equalsIgnoreCase("mysql"))
-            rdbsHelper = new MysqlHelper(config);
+            databaseHelper = new MysqlDatabaseHelper(this, config);
         else
-            rdbsHelper = new Sqlite3Helper(config);
+            databaseHelper = new SqliteDatabaseHelper(this, config);
 
-        if (!rdbsHelper.connect()) {
+        if (!databaseHelper.connect()) {
             this.loggerCritical("loading rdbms failed.");
             this.getServer().shutdown();
             return;
         }
 
+        databaseHelper.initDatabase();
+
         this.loggerInfo("rdbms connected.");
 
-        this.databaseAgent = new DatabaseAgent(this, rdbsHelper);
+        this.databaseAgent = new DatabaseAgent(this, databaseHelper);
         this.messageAgent = new MessageAgent(this, config);
         this.skyBlockAgent = new SkyBlockAgent(this, this.databaseAgent, this.messageAgent, config);
         this.blockGenAgent = new BlockGenAgent(this, this.messageAgent, config);
