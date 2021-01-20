@@ -1,14 +1,14 @@
 {
-  "format_version":2,
+  "format_version": 2,
   "header": {
     "name": "Mine2021 Texture Pack",
     "description": "Mine2021 Texture Pack By Kmandu0526",
     "uuid": "7cc8d440-54aa-11eb-9fad-9bb38d89a8e6",
-    "version": [0,1,0],
+    "version": [0, 1, 0],
     "min_engine_version": [1, 16, 0]
   },
-  "modules":[
-  	{
+  "modules": [
+    {
       "description": "Mine2021 Texture Pack By Kmandu0526",
       "type": "resources",
       "uuid": "92be5e46-756d-47e5-a3ec-cc6afdfdc3dc",
