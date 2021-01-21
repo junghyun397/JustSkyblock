@@ -4,6 +4,8 @@ import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
 
 import java.sql.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class MysqlDatabaseHelper extends DatabaseHelper {
 
@@ -68,6 +70,9 @@ public class MysqlDatabaseHelper extends DatabaseHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        Executors.newSingleThreadScheduledExecutor()
+                .scheduleAtFixedRate(this::validateConnection, 1, 1, TimeUnit.MINUTES);
     }
 
     @SuppressWarnings("SqlResolve")
@@ -83,6 +88,14 @@ public class MysqlDatabaseHelper extends DatabaseHelper {
         }
 
         return 0;
+    }
+
+    private void validateConnection() {
+        try {
+            final PreparedStatement pstmt = this.connection.prepareStatement("SELECT 1");
+            if (pstmt.executeQuery().next()) return;
+        } catch (SQLException ignored) {}
+        this.connect();
     }
 
 }
