@@ -154,31 +154,54 @@ public class Config {
     // BLOCKGEN CONFIG
 
     public Tuple<List<Integer>, List<Integer>, List<List<Pair<Double, Block>>>> parseBlockGenData() {
-        final List<Integer> blockGenSource = new ArrayList<>();
+        final List<Integer> blockGenSources = new ArrayList<>();
         final List<Integer> blockGenDelay = new ArrayList<>();
-        final List<List<Pair<Double, Block>>> blockGenDict = new ArrayList<>();
-        ((List<?>) this.blockGenConfig.getList("dictionary")).forEach(o -> {
-            ConfigSection section = (ConfigSection) o;
-            blockGenSource.add(section.getInt("id"));
-            blockGenDelay.add(section.getInt("delay"));
+        final List<List<Tuple<Double, Double, Block>>> rawBlockGenDictionary = new ArrayList<>();
 
-            final List<Pair<Double, Block>> blockGenCell = new ArrayList<>();
-            final List<?> blocksList = section.getList("blocks");
-            final double[] total = {0};
-            final double[] acc = {0};
-            blocksList.forEach(o1 -> total[0] = total[0] + ((ConfigSection) o1).getDouble("percentage"));
+        ((List<?>) this.blockGenConfig.getList("dictionary")).forEach(o -> {
+            final ConfigSection blocksSection = (ConfigSection) o;
+            final List<Tuple<Double, Double, Block>> rawBlocks = new ArrayList<>();
+            final List<?> blocksList = blocksSection.getList("blocks");
+
             blocksList.forEach(o1 -> {
-                ConfigSection blockSection  = (ConfigSection) o1;
-                acc[0] = acc[0] + blockSection.getDouble("percentage") / total[0];
-                blockGenCell.add(new Pair<>(
-                        acc[0],
+                final ConfigSection blockSection = (ConfigSection) o1;
+                rawBlocks.add(new Tuple<>(
+                        blockSection.getDouble("percentage"),
+                        blockSection.getDouble("factor"),
                         BlockState.of(blockSection.getInt("id"), blockSection.getInt("meta")).getBlock()
                 ));
             });
-            blockGenDict.add(blockGenCell);
+
+            blockGenSources.add(blocksSection.getInt("id"));
+            blockGenDelay.add(blocksSection.getInt("delay"));
+            rawBlockGenDictionary.add(rawBlocks);
         });
 
-        return new Tuple<>(blockGenSource, blockGenDelay, blockGenDict);
+        final List<List<Pair<Double, Block>>> blockGenDictionary = new ArrayList<>();
+
+        for (int i = 0; i < rawBlockGenDictionary.size(); i++) {
+            final List<Pair<Double, Block>> blocks = new ArrayList<>();
+
+            final List<Pair<Double, Block>> reducedList = new ArrayList<>();
+            for (int j = 0; j < i + 1; j++) {
+                final int finalJ = i - j;
+                reducedList.addAll(rawBlockGenDictionary.get(j).stream().map(o ->
+                        new Pair<>(o.a * Math.pow(o.b, finalJ), o.c)).collect(Collectors.toList()));
+            }
+
+            final double[] total = {0};
+            final double[] acc = {0};
+
+            reducedList.forEach(o -> total[0] = total[0] + o.a);
+            reducedList.forEach(o -> {
+                acc[0] = acc[0] + o.a / total[0];
+                blocks.add(new Pair<>(acc[0], o.b));
+            });
+
+            blockGenDictionary.add(blocks);
+        }
+
+        return new Tuple<>(blockGenSources, blockGenDelay, blockGenDictionary);
     }
 
     // USER INTERFACE CONFIG

@@ -4,7 +4,9 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
-import cn.nukkit.event.player.*;
+import cn.nukkit.event.player.PlayerChunkRequestEvent;
+import cn.nukkit.event.player.PlayerInteractEvent;
+import cn.nukkit.event.player.PlayerRespawnEvent;
 
 public class SkyBlockEventListener implements Listener {
 
@@ -21,9 +23,14 @@ public class SkyBlockEventListener implements Listener {
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        event.setRespawnPosition(this.skyBlockAgent.findSafeSpawn(this.skyBlockAgent.getSkyblockSpawn(
-                this.skyBlockAgent.getSkyblockSectionByX((int) Math.round(event.getPlayer().getPosition().getX()))
-         )));
+        final int section;
+        if (event.isFirstSpawn())
+            section = this.skyBlockAgent.getSkyblockSectionByUUID(event.getPlayer().getUniqueId());
+        else
+            section = this.skyBlockAgent.getSkyblockSectionByX((int) Math.round(event.getPlayer().getPosition().getX()));
+
+        event.setRespawnPosition(this.skyBlockAgent.findSafeSpawn(this.skyBlockAgent.getSkyblockSpawn(section))
+                .orElseGet(() -> this.skyBlockAgent.generateSafeSpawn(section)));
     }
 
     @EventHandler
@@ -40,7 +47,8 @@ public class SkyBlockEventListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!(event.getAction() == PlayerInteractEvent.Action.LEFT_CLICK_AIR || event.getAction() == PlayerInteractEvent.Action.RIGHT_CLICK_AIR)
+        if (!(event.getAction() == PlayerInteractEvent.Action.LEFT_CLICK_AIR
+                || event.getAction() == PlayerInteractEvent.Action.RIGHT_CLICK_AIR)
                 && !event.getPlayer().isOp()
                 && !this.skyBlockAgent.onPlayerModifyBlock(event.getPlayer(), (int) event.getBlock().getX()))
             event.setCancelled();

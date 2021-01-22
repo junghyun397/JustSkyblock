@@ -14,7 +14,7 @@ public class CalendarHelper {
                 String.valueOf(calendar.get(Calendar.YEAR)),
                 String.valueOf(calendar.get(Calendar.MONTH) + 1),
                 String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)),
-                String.valueOf(calendar.get(Calendar.HOUR)),
+                String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)),
                 String.valueOf(calendar.get(Calendar.MINUTE))
         };
     }

@@ -56,14 +56,14 @@ command:
       format-error: "/b <닉네임> <사유> <기간(일)> 형식으로 입력해 주시기 바랍니다."
       ban-succeed: "§e%player§f 를 §e%reason§f 사유로 §e%duration일§f 동안 차단했습니다."
       ban-failed-playernotfound: "§4%player§f 를 찾을 수 없습니다."
-    unban-cmmand:
+    unban-command:
       command: "ub"
       description: "유저의 차단을 해제합니다."
       usage: "/ub <닉네임>"
       parameter:
         player: "유저"
       format-error: "/ub <닉네임> 형식으로 입력해 주시기 바랍니다."
-      unban-succeed: "§e%player§f님의 차단을 해제 했습니다."
+      unban-succeed: "§e%player§f 님의 차단을 해제 했습니다."
       unban-failed: "§4%player§f 님은 차단되어있지 않습니다."
     kick-command:
       command: "k"
@@ -195,7 +195,7 @@ guidebook:
     \n • 새로운 생성 블럭은 새로운 블럭들을 추가로 생성합니다.
     \n • 이전에 생성되던 블럭들의 생성 확률은 줄어들게 됩니다.
     \n • 다음 블럭을 생성하는 시간은 2배로 늘어나게 됩니다.
-    \n • 같은 생성블럭을 생성시킬 확률은 1/8씩 줄어들게 됩니다.
+    \n • 같은 생성블럭을 생성시킬 확률은 1/6씩 줄어들게 됩니다.
     "
     - "§lSection 3. 스카이블럭 안내§r
     \n
@@ -219,9 +219,9 @@ guidebook:
     \n
     \n스카이블록을 이용하는 중 몇 가지의 예외 상황을 겪으실수도 있습니다. 다음과 같은 경우, 관리자를 호출해 해결해 주세요.
     \n
+    \n • 기본 지급된 생성 블록을 잃었음
     \n • 기본 지급된 용암을 옵시디언으로 만들어 버림
     \n • 기본 지급된 얼움(물)을 잃었음
-    \n • 스폰지점 아래의 기반암을 부수고 싶음
     "
     - "§lSection 4. 명령어 안내§r
     \n

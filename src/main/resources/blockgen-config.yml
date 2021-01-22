@@ -9,522 +9,202 @@ dictionary:
       # stone-1
       - id: 1
         meta: 0
-        percentage: 50
+        percentage: 100
+        factor: 0.7
       # dirt
       - id: 3
         meta: 0
-        percentage: 10
-      # gravel
-      - id: 13
-        meta: 0
-        percentage: 2
+        percentage: 40
+        factor: 0.7
       # sand-1
       - id: 12
         meta: 0
-        percentage: 5
+        percentage: 10
+        factor: 0.7
 
       # NATURAL ENTITY
       # wood-1
       - id: 17
         meta: 0
-        percentage: 5
+        percentage: 20
+        factor: 0.7
 
       # ORE
-      # coal
-      - id: 16
-        meta: 0
-        percentage: 5
       # iron
       - id: 15
         meta: 0
-        percentage: 2
+        percentage: 3
+        factor: 1.2
 
   # LV2 NETHER RACK
   - id: 87
     delay: 1000
     blocks:
       # NATURAL DEFAULT
-      # stone-1
-      - id: 1
-        meta: 0
-        percentage: 10
       # stone-2
       - id: 1
         meta: 1
-        percentage: 2
+        percentage: 10
+        factor: 0.7
       # stone-3
       - id: 1
         meta: 3
-        percentage: 2
+        percentage: 10
+        factor: 0.7
       # stone-4
       - id: 1
         meta: 5
-        percentage: 2
-      # dirt
-      - id: 3
-        meta: 0
-        percentage: 5
+        percentage: 10
+        factor: 0.7
       # gravel
       - id: 13
         meta: 0
-        percentage: 1
-      # sand-1
+        percentage: 10
+        factor: 0.7
+      # sand-2
       - id: 12
-        meta: 0
-        percentage: 2
-
-      # NATURAL ADVANCED
-      # clay
-      - id: 82
-        meta: 0
-        percentage: 1
-      # ice
-      - id: 79
-        meta: 0
-        percentage: 0.1
-
-      # NATURAL ENTITY
-      # wood-1
-      - id: 17
+        meta: 1
+        percentage: 5
+        factor: 0.7
+      # sandstone
+      - id: 24
         meta: 0
         percentage: 5
+        factor: 0.7
+
+      # NATURAL ENTITY
       # wood-2
       - id: 17
         meta: 1
-        percentage: 2
-
-      # NATURAL ENTITY ADVANCED
-      # pumpkin
-      - id: 86
-        meta: 0
-        percentage: 0.05
+        percentage: 10
+        factor: 0.7
+      # wood-3
+      - id: 17
+        meta: 2
+        percentage: 10
+        factor: 0.7
+      # wood-4
+      - id: 17
+        meta: 3
+        percentage: 10
+        factor: 0.7
 
       # ORE
-      # coal
-      - id: 16
-        meta: 0
-        percentage: 5
-      # iron
-      - id: 15
-        meta: 0
-        percentage: 2
       # gold
       - id: 14
         meta: 0
         percentage: 1
-      # redstone
-      - id: 73
-        meta: 0
-        percentage: 1
+        factor: 1.5
 
   # LV3 SOUL SAND
   - id: 88
     delay: 2000
     blocks:
-      # NATURAL DEFAULT
-      # stone-1
-      - id: 1
-        meta: 0
-        percentage: 5
-      # stone-2
-      - id: 1
-        meta: 1
-        percentage: 2
-      # stone-3
-      - id: 1
-        meta: 3
-        percentage: 2
-      # stone-4
-      - id: 1
-        meta: 5
-        percentage: 2
-      # dirt
-      - id: 3
-        meta: 0
-        percentage: 2
-      # gravel
-      - id: 13
-        meta: 0
-        percentage: 1
-      # sand-1
-      - id: 12
-        meta: 0
-        percentage: 1
-      # sand-2
-      - id: 12
-        meta: 1
-        percentage: 1
-      # sandstone
-      - id: 24
-        meta: 0
-        percentage: 1
-
       # NATURAL ADVANCED
-      # clay
-      - id: 82
-        meta: 0
-        percentage: 1
-      # glowstone
-      - id: 89
-        meta: 0
-        percentage: 0.1
       # ice
       - id: 79
         meta: 0
         percentage: 0.1
+        factor: 1
       # obsidian
       - id: 49
         meta: 0
         percentage: 0.1
+        factor: 1
 
       # NATURAL ENTITY
-      # wood-1
-      - id: 17
-        meta: 0
-        percentage: 3
-      # wood-2
-      - id: 17
-        meta: 1
-        percentage: 1
-      # wood-3
-      - id: 17
-        meta: 2
-        percentage: 1
-      # wood-4
-      - id: 17
-        meta: 3
-        percentage: 1
       # wood-5
       - id: 162
         meta: 0
-        percentage: 0.5
+        percentage: 10
+        factor: 0.5
       # wood-6
       - id: 162
         meta: 1
-        percentage: 0.5
+        percentage: 10
+        factor: 0.5
       # wool
       - id: 35
         meta: 0
-        percentage: 0.5
+        percentage: 5
+        factor: 1.2
 
       # NATURAL ENTITY ADVANCED
       # pumpkin
       - id: 86
         meta: 0
-        percentage: 0.05
+        percentage: 1
+        factor: 1
       # water melon
       - id: 103
         meta: 0
-        percentage: 0.05
-
-      # NETHER
-      # quartz
-      - id: 153
-        meta: 0
         percentage: 1
+        factor: 1
 
       # ORE
-      # coal
-      - id: 16
-        meta: 0
-        percentage: 5
-      # iron
-      - id: 15
-        meta: 0
-        percentage: 2
-      # gold
-      - id: 14
-        meta: 0
-        percentage: 1
       # redstone
       - id: 73
         meta: 0
-        percentage: 1
+        percentage: 0.2
+        factor: 1.5
       # lazuli
       - id: 21
         meta: 0
         percentage: 0.2
+        factor: 1.5
+      # diamond
+      - id: 56
+        meta: 0
+        percentage: 0.2
+        factor: 2
 
   # LV4 NETHER WART BLOCK
   - id: 214
     delay: 4000
     blocks:
-      # NATURAL DEFAULT
-      # stone-1
-      - id: 1
-        meta: 0
-        percentage: 4
-      # stone-2
-      - id: 1
-        meta: 1
-        percentage: 1
-      # stone-3
-      - id: 1
-        meta: 3
-        percentage: 1
-      # stone-4
-      - id: 1
-        meta: 5
-        percentage: 1
-      # dirt
-      - id: 3
-        meta: 0
-        percentage: 1
-      # gravel
-      - id: 13
-        meta: 0
-        percentage: 1
-      # sand-1
-      - id: 12
-        meta: 0
-        percentage: 1
-      # sand-2
-      - id: 12
-        meta: 1
-        percentage: 1
-      # sandstone
-      - id: 24
-        meta: 0
-        percentage: 1
-
       # NATURAL ADVANCED
       # clay
       - id: 82
         meta: 0
-        percentage: 1
+        percentage: 5
+        factor: 1.2
       # glowstone
       - id: 89
         meta: 0
-        percentage: 0.1
+        percentage: 1
+        factor: 1.5
       # sea lantern
       - id: 169
         meta: 0
-        percentage: 0.005
-      # ice
-      - id: 79
-        meta: 0
         percentage: 0.1
-      # obsidian
-      - id: 49
-        meta: 0
-        percentage: 0.1
-
-      # NATURAL ENTITY
-      # wood-1
-      - id: 17
-        meta: 0
-        percentage: 2
-      # wood-2
-      - id: 17
-        meta: 1
-        percentage: 1
-      # wood-3
-      - id: 17
-        meta: 2
-        percentage: 1
-      # wood-4
-      - id: 17
-        meta: 3
-        percentage: 1
-      # wood-5
-      - id: 162
-        meta: 0
-        percentage: 0.5
-      # wood-6
-      - id: 162
-        meta: 1
-        percentage: 0.5
-      # wool
-      - id: 35
-        meta: 0
-        percentage: 1
-
-      # NATURAL ENTITY ADVANCED
-      # pumpkin
-      - id: 86
-        meta: 0
-        percentage: 0.05
-      # water melon
-      - id: 103
-        meta: 0
-        percentage: 0.05
-      # shullker chest
-      - id: 205
-        meta: 0
-        percentage: 0.01
-      # slim block
-      - id: 165
-        meta: 0
-        percentage: 0.001
+        factor: 1.5
 
       # NETHER
       # quartz
       - id: 153
         meta: 0
-        percentage: 1
-
-      # ORE
-      # iron
-      - id: 15
-        meta: 0
-        percentage: 2
-      # gold
-      - id: 14
-        meta: 0
-        percentage: 1
-      # redstone
-      - id: 73
-        meta: 0
-        percentage: 1
-      # lazuli
-      - id: 21
-        meta: 0
-        percentage: 0.2
-      # diamond
-      - id: 56
-        meta: 0
-        percentage: 0.1
+        percentage: 3
+        factor: 1.2
 
   # LV5 END STONE BRICKS
   - id: 206
     delay: 8000
     blocks:
-      # NATURAL DEFAULT
-      # stone-1
-      - id: 1
-        meta: 0
-        percentage: 2
-      # stone-2
-      - id: 1
-        meta: 1
-        percentage: 1
-      # stone-3
-      - id: 1
-        meta: 3
-        percentage: 1
-      # stone-4
-      - id: 1
-        meta: 5
-        percentage: 1
-      # dirt
-      - id: 3
-        meta: 0
-        percentage: 1
-      # gravel
-      - id: 13
-        meta: 0
-        percentage: 1
-      # sand-1
-      - id: 12
-        meta: 0
-        percentage: 1
-      # sand-2
-      - id: 12
-        meta: 1
-        percentage: 1
-      # sandstone
-      - id: 24
-        meta: 0
-        percentage: 1
-
       # NATURAL ADVANCED
-      # clay
-      - id: 82
-        meta: 0
-        percentage: 1
-      # glowstone
-      - id: 89
-        meta: 0
-        percentage: 0.1
-      # sea lantern
-      - id: 169
-        meta: 0
-        percentage: 0.05
-      # ice
-      - id: 79
-        meta: 0
-        percentage: 0.1
-      # obsidian
-      - id: 49
-        meta: 0
-        percentage: 0.1
-
-      # NATURAL ENTITY
-      # wood-1
-      - id: 17
-        meta: 0
-        percentage: 1
-      # wood-2
-      - id: 17
-        meta: 1
-        percentage: 0.5
-      # wood-3
-      - id: 17
-        meta: 2
-        percentage: 0.5
-      # wood-4
-      - id: 17
-        meta: 3
-        percentage: 0.5
-      # wood-5
-      - id: 162
-        meta: 0
-        percentage: 0.5
-      # wood-6
-      - id: 162
-        meta: 1
-        percentage: 0.5
-      # wool
-      - id: 35
-        meta: 0
-        percentage: 0.5
-
-      # NATURAL ENTITY ADVANCED
-      # pumpkin
-      - id: 86
-        meta: 0
-        percentage: 0.05
-      # water melon
-      - id: 103
-        meta: 0
-        percentage: 0.05
       # shullker chest
       - id: 205
         meta: 0
-        percentage: 0.01
+        percentage: 0.1
+        factor: 1
       # slim block
       - id: 165
         meta: 0
         percentage: 0.05
-
-      # NETHER
-      # quartz
-      - id: 153
-        meta: 0
-        percentage: 1
+        factor: 1
 
       # ORE
-      # iron
-      - id: 15
-        meta: 0
-        percentage: 2
-      # gold
-      - id: 14
-        meta: 0
-        percentage: 1
-      # redstone
-      - id: 73
-        meta: 0
-        percentage: 1
-      # lazuli
-      - id: 21
-        meta: 0
-        percentage: 0.2
-      # diamond
-      - id: 56
-        meta: 0
-        percentage: 0.1
       # emerald
       - id: 129
         meta: 0
-        percentage: 0.05
+        percentage: 0.1
+        factor: 1

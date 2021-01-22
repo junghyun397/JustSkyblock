@@ -93,14 +93,15 @@ public class SkyBlockAgent {
 
     public void teleportPlayerToIsland(Player player, UUID destinationUUID, String destinationName) {
         final int section = this.getSkyblockSectionByUUID(destinationUUID);
-        final Optional<SkyblockData> skyblockData = this.getSkyblockData(section);
-        if (!skyblockData.isPresent()) {
-            Optional<PlayerData> playerData = this.databaseAgent.getPlayerData(destinationUUID);
-            playerData.ifPresent(playerData1 -> this.registerSkyblockData(playerData1.getSkyblockData()));
+
+        if (!this.getSkyblockData(section).isPresent()) {
+            this.databaseAgent.getPlayerData(destinationUUID).ifPresent(playerData1 ->
+                    this.registerSkyblockData(playerData1.getSkyblockData()));
         }
 
         this.loadIslandDefaultChunk(section);
-        player.teleport(this.findSafeSpawn(this.getSkyblockSpawn(section)));
+        player.teleport(this.findSafeSpawn(this.getSkyblockSpawn(section)).orElseGet(() -> this.generateSafeSpawn(section)));
+
         if (player.getUniqueId().equals(destinationUUID))
             this.messageAgent.sendMessage(player, "message.skyblock.teleport-succeed-self");
         else {
@@ -113,18 +114,30 @@ public class SkyBlockAgent {
         }
     }
 
-    public Position findSafeSpawn(Position position) {
+    Optional<Position> findSafeSpawn(Position position) {
         final int x = (int) position.x;
         final int y = (int) position.y;
         final int z = (int) position.z;
-        if (this.getMainLevel().getBlock(x, y, z).getId() == 0 && this.getMainLevel().getBlock(x, y + 1, z).getId() == 0)
-            return position;
+
+        if (this.getMainLevel().getBlock(x, y - 1, z).getId() != 0)
+            return Optional.of(position);
 
         for (int dy = 255; dy > 0; dy--)
             if (this.getMainLevel().getBlock(x, dy, (int) position.z).getId() != 0)
-                return new Position(x, dy + 1, z, this.getMainLevel());
+                return Optional.of(new Position(x, dy + 1, z, this.getMainLevel()));
 
-        return new Position(x, 256, z, this.getMainLevel());
+        return Optional.empty();
+    }
+
+    Position generateSafeSpawn(int section) {
+        final Position safeSpawn = this.getSkyblockSpawn(section);
+
+        this.getMainLevel().setBlockIdAt((int) safeSpawn.x, (int) safeSpawn.y - 1, (int) safeSpawn.z, 1);
+        this.getMainLevel().setBlockIdAt((int) safeSpawn.x, (int) safeSpawn.y - 1, (int) safeSpawn.z - 1, 1);
+        this.getMainLevel().setBlockIdAt((int) safeSpawn.x - 1, (int) safeSpawn.y - 1, (int) safeSpawn.z - 1, 1);
+        this.getMainLevel().setBlockIdAt((int) safeSpawn.x - 1, (int) safeSpawn.y - 1, (int) safeSpawn.z, 1);
+
+        return safeSpawn;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -185,9 +198,10 @@ public class SkyBlockAgent {
         this.databaseAgent.updatePlayerData(playerData);
     }
 
-    public boolean canPlayerLoadChunk(Player player, int chunkX, int chunkZ) {
-        // TODO: 청크 로딩 관리
-        return true;
+    boolean canPlayerLoadChunk(Player player, int chunkX, int chunkZ) {
+        final int section = this.getSkyblockSectionByX((int) Math.round(player.getPosition().x));
+        return this.sectionDistance > chunkZ && chunkZ >= 0
+                && section * this.sectionDistance > chunkX && chunkX >= (section - 1) * this.sectionDistance;
     }
 
     private void loadIslandDefaultChunk(int section) {
@@ -199,8 +213,14 @@ public class SkyBlockAgent {
         this.getMainLevel().loadChunk(chunkX - 1, chunkY + 1);
     }
 
-    private void unloadIslandChunk(int section) {
-        // TODO: 청크 로딩 관리
+    private int unloadIslandChunk(int section) {
+        section = section - 1;
+        int unloadedChunks = 0;
+        for (int x = 0; x < this.sectionDistance; x++)
+            for (int z = 0; z < this.sectionDistance; z++)
+                if (this.getMainLevel().unloadChunk(section * this.sectionDistance +  x + x, z)) unloadedChunks++;
+
+        return unloadedChunks;
     }
 
     private Level getMainLevel() {
