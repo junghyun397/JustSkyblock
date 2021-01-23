@@ -48,9 +48,11 @@ public class ServerAgent extends PluginBase {
 
     private boolean disableDefaultCommands;
     private boolean enableInventorySave;
+
     private Collection<Tuple<Integer, Integer, Integer>> defaultItemCollection;
-    private int guideBookVersion = 0;
-    private String[] guideBookPages = null;
+    private int guideBookVersion;
+    private String guideBookAuthor;
+    private String[] guideBookPages;
 
     public void loggerInfo(String message) {
         this.getLogger().info(message);
@@ -123,13 +125,14 @@ public class ServerAgent extends PluginBase {
         config.parseAdditionalRecipes().forEach(recipe -> getServer().getCraftingManager().registerRecipe(recipe));
         this.getServer().getCraftingManager().rebuildPacket();
 
-        this.disableDefaultCommands = config.getServerConfig().getBoolean("system.disable-nukkit-commands");
-        this.enableInventorySave = config.getServerConfig().getBoolean("system.enable-inventory-save");
-
         this.defaultItemCollection = config.parseDefaultItems();
 
         this.guideBookVersion = config.getUserInterfaceConfig().getInt("guidebook.version");
+        this.guideBookAuthor = config.getUserInterfaceConfig().getString("guidebook.author");
         this.guideBookPages = config.parseGuideBookPages();
+
+        this.disableDefaultCommands = config.getServerConfig().getBoolean("system.rule.disable-nukkit-commands");
+        this.enableInventorySave = config.getServerConfig().getBoolean("system.rule.enable-inventory-save");
 
         this.loggerInfo("§eloading succeed.");
     }
@@ -144,7 +147,8 @@ public class ServerAgent extends PluginBase {
             if (!playerData.get().getName().equals(name) | !playerData.get().getIp().equals(ip))
                 this.databaseAgent.updatePlayerData(playerData.get());
 
-            if (playerData.get().getBanDate() != null && !this.processBannedPlayer(playerData.get())) return;
+            if (playerData.get().getBanDate() != null
+                    && !this.processBannedPlayer(playerData.get())) return;
 
             this.messageAgent.sendBroadcast("message.general.on-player-join",
                     new String[]{"%player"}, new String[]{player.getName()});

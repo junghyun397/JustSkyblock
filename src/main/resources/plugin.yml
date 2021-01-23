@@ -1,19 +1,19 @@
-name: Mine2021
+name: JustSkyblock
 main: do1phin.mine2021.ServerAgent
 version: "${pom.version}"
 api: ["1.0.0"]
 author: do1phin
 description: 언제 어디서나 즐기는 나만의 세상
-website: htttp://Mine24.net
+website: http://skyblock.do1ph.in
 load: STARTUP
 
 permissions:
-  mine2021.general:
+  justskyblock.general:
     description: "서버 이용 권한"
     default: true
-  mine2021.skyblock:
+  justskyblock.skyblock:
     description: "스카이블록 이용 권한"
     default: true
-  mine2021.management:
+  justskyblock.management:
     description: "관리 권한"
     default: op

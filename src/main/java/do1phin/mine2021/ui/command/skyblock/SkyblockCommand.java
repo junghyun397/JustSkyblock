@@ -14,7 +14,7 @@ public abstract class SkyblockCommand extends BaseCommand {
         super(name, description, usageMessage, commandParameters, serverAgent, messageAgent);
         this.skyBlockAgent = skyBlockAgent;
 
-        this.setPermission("mine2021.skyblock");
+        this.setPermission("justskyblock.skyblock");
     }
 
 }

@@ -144,6 +144,7 @@ form:
 
 guidebook:
   version: 1
+  author: "§e§lMine24 2021"
   content:
     - "§6§lMine24 2021§r
     \n가이드북
@@ -275,5 +276,5 @@ guidebook:
     \n
     \n§8 • 문의사항이 있다면 §b[Staff]§8 칭호를 달고 있는 관리자를 불러주세요.
     \n
-    \n§8 • 이 서버의 소스코드는 §1github.com/junghyun397/mine2021project§8 에 공개되어 있습니다.
+    \n§8 • 이 서버의 소스코드는 §1github.com/junghyun397/justskyblock§8 에 공개되어 있습니다.
     "

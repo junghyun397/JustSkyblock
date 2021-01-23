@@ -13,6 +13,6 @@ public abstract class GeneralCommand extends BaseCommand {
     public GeneralCommand(String name, String description, String usageMessage, CommandParameter[] commandParameters, ServerAgent serverAgent, MessageAgent messageAgent, Config config) {
         super(name, description, usageMessage, commandParameters, serverAgent, messageAgent);
 
-        this.setPermission("mine2021.general");
+        this.setPermission("justskyblock.general");
     }
 }

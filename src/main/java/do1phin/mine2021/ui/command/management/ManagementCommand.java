@@ -11,7 +11,7 @@ public abstract class ManagementCommand extends BaseCommand {
     public ManagementCommand(String name, String description, String usageMessage, CommandParameter[] commandParameters, ServerAgent serverAgent, MessageAgent messageAgent) {
         super(name, description, usageMessage, commandParameters, serverAgent, messageAgent);
 
-        this.setPermission("mine2021.management");
+        this.setPermission("justskyblock.management");
     }
 
     @Override

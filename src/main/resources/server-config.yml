@@ -1,8 +1,14 @@
 Provider: Yaml
 
 system:
-  disable-nukkit-commands: true
-  enable-inventory-save: true
+  rule:
+    disable-nukkit-commands: true
+    enable-inventory-save: true
+  ux:
+    enable-telepot2island: true
+    enable-welcom-form: true
+    enable-default-item: true
+    enable-guide-book: true
 
 crafting:
   additional-recipes:
