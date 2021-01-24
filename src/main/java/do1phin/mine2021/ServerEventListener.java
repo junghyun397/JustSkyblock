@@ -8,14 +8,16 @@ import cn.nukkit.event.player.*;
 public class ServerEventListener implements Listener {
 
     private final ServerAgent serverAgent;
+    private final String skyblockLevel;
 
-    ServerEventListener(ServerAgent serverAgent) {
+    ServerEventListener(ServerAgent serverAgent, String skyblockLevel) {
         this.serverAgent = serverAgent;
+        this.skyblockLevel = skyblockLevel;
     }
 
     @EventHandler
     public void onLevelLoad(LevelLoadEvent event) {
-        if (event.getLevel().getName().equals("world")) this.serverAgent.setMainLevel(event.getLevel());
+        if (event.getLevel().getName().equals(skyblockLevel)) this.serverAgent.setMainLevel(event.getLevel());
     }
 
     @EventHandler

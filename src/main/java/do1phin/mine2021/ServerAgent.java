@@ -13,8 +13,8 @@ import do1phin.mine2021.data.PlayerData;
 import do1phin.mine2021.data.PlayerGroupAgent;
 import do1phin.mine2021.data.PlayerGroupEventListener;
 import do1phin.mine2021.data.db.DatabaseAgent;
-import do1phin.mine2021.data.db.MysqlDatabaseHelper;
 import do1phin.mine2021.data.db.DatabaseHelper;
+import do1phin.mine2021.data.db.MysqlDatabaseHelper;
 import do1phin.mine2021.data.db.SqliteDatabaseHelper;
 import do1phin.mine2021.skyblock.SkyBlockAgent;
 import do1phin.mine2021.skyblock.SkyBlockEventListener;
@@ -27,7 +27,6 @@ import do1phin.mine2021.ui.command.management.UnBanCommand;
 import do1phin.mine2021.ui.command.skyblock.*;
 import do1phin.mine2021.utils.CalendarHelper;
 import do1phin.mine2021.utils.EmptyGenerator;
-import do1phin.mine2021.utils.Tuple;
 
 import java.util.*;
 
@@ -42,17 +41,11 @@ public class ServerAgent extends PluginBase {
 
     private final Map<UUID, PlayerData> playerDataMap = new HashMap<>();
 
-    private Level mainLevel = null;
+    private Level mainLevel;
 
-    private final List<UUID> pendingResisterNewPlayerList = new ArrayList<>();
+    private final List<UUID> pendingRegisterPlayerList = new ArrayList<>();
 
-    private boolean disableDefaultCommands;
-    private boolean enableInventorySave;
-
-    private Collection<Tuple<Integer, Integer, Integer>> defaultItemCollection;
-    private int guideBookVersion;
-    private String guideBookAuthor;
-    private String[] guideBookPages;
+    private Config.SystemConfig systemConfig;
 
     public void loggerInfo(String message) {
         this.getLogger().info(message);
@@ -80,6 +73,7 @@ public class ServerAgent extends PluginBase {
         this.loggerInfo("§estart loading...");
 
         final Config config = new Config(this);
+        this.systemConfig = config.parseSystemConfig();
 
         this.loggerInfo("loading rdbms...");
 
@@ -106,9 +100,9 @@ public class ServerAgent extends PluginBase {
         this.blockGenAgent = new BlockGenAgent(this, this.messageAgent, config);
         this.playerGroupAgent = new PlayerGroupAgent(this, this.databaseAgent, config);
 
-        this.getServer().getPluginManager().registerEvents(new ServerEventListener(this), this);
-        this.getServer().getPluginManager().registerEvents(new BlockGenEventListener(this.blockGenAgent), this);
+        this.getServer().getPluginManager().registerEvents(new ServerEventListener(this, config.getSkyblockConfig().getString("skyblock.main-level")), this);
         this.getServer().getPluginManager().registerEvents(new SkyBlockEventListener(this.skyBlockAgent), this);
+        this.getServer().getPluginManager().registerEvents(new BlockGenEventListener(this.blockGenAgent), this);
         this.getServer().getPluginManager().registerEvents(new PlayerGroupEventListener(this.playerGroupAgent), this);
 
         this.getServer().getCommandMap().register("mine2021", new TeleportCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
@@ -124,15 +118,6 @@ public class ServerAgent extends PluginBase {
 
         config.parseAdditionalRecipes().forEach(recipe -> getServer().getCraftingManager().registerRecipe(recipe));
         this.getServer().getCraftingManager().rebuildPacket();
-
-        this.defaultItemCollection = config.parseDefaultItems();
-
-        this.guideBookVersion = config.getUserInterfaceConfig().getInt("guidebook.version");
-        this.guideBookAuthor = config.getUserInterfaceConfig().getString("guidebook.author");
-        this.guideBookPages = config.parseGuideBookPages();
-
-        this.disableDefaultCommands = config.getServerConfig().getBoolean("system.rule.disable-nukkit-commands");
-        this.enableInventorySave = config.getServerConfig().getBoolean("system.rule.enable-inventory-save");
 
         this.loggerInfo("§eloading succeed.");
     }
@@ -162,7 +147,7 @@ public class ServerAgent extends PluginBase {
         this.skyBlockAgent.registerSkyblockData(playerData.get().getSkyblockData());
 
         this.playerGroupAgent.setPlayerNameTag(playerData.get());
-        if (this.disableDefaultCommands && !player.isOp()) this.removeDefaultCommandPermission(player);
+        if (this.systemConfig.disableDefaultCommands && !player.isOp()) this.removeDefaultCommandPermission(player);
     }
 
     public PlayerData getPlayerData(Player player) {
@@ -188,13 +173,28 @@ public class ServerAgent extends PluginBase {
 
     private void registerNewPlayer(PlayerData playerData) {
         this.databaseAgent.registerPlayerData(playerData);
-        this.skyBlockAgent.registerNewSkyblock(playerData);
-        this.giveDefaultItems(playerData.getPlayer());
+        this.skyBlockAgent.registerNewSkyblock(playerData, this.systemConfig.enableTeleportToIsland);
 
+        if (this.systemConfig.enableDefaultItems) this.giveDefaultItems(playerData.getPlayer());
         this.addPendingRegisterNewPlayer(playerData.getUuid());
 
         this.messageAgent.sendBroadcast("message.general.on-player-first-join",
                 new String[]{"%player"}, new String[]{playerData.getName()});
+    }
+
+    private void addPendingRegisterNewPlayer(UUID uuid) {
+        this.pendingRegisterPlayerList.add(uuid);
+    }
+
+    boolean isPendingRegisterNewPlayer(UUID uuid) {
+        return this.pendingRegisterPlayerList.contains(uuid);
+    }
+
+    void continueRegisterNewPlayer(Player player) {
+        this.pendingRegisterPlayerList.remove(player.getUniqueId());
+
+        if (this.systemConfig.enableWelcomeForm)
+            this.messageAgent.sendSimpleForm(player, "form.welcome-form.title", "form.welcome-form.content");
     }
 
     private boolean processBannedPlayer(PlayerData playerData) {
@@ -210,15 +210,18 @@ public class ServerAgent extends PluginBase {
     }
 
     private void giveDefaultItems(Player player) {
-        this.defaultItemCollection.forEach(item -> player.getInventory().addItem(Item.get(item.a, item.b, item.c).clone()));
+        this.systemConfig.defaultItemCollection.forEach(item ->
+                player.getInventory().addItem(Item.get(item.a, item.b, item.c).clone()));
 
-        final ItemBookWritten book = (ItemBookWritten) Item.get(387, 0, 1);
-        final String bookName = this.messageAgent.getText("general.guidebook") + " v" + this.guideBookVersion;
-        book.writeBook("§e§lMine24 2021", bookName, Arrays.stream(this.guideBookPages).map(s ->
-                s.replaceAll("%player", player.getName())).toArray(String[]::new));
-        book.setCustomName(bookName);
+        if (this.systemConfig.enableGuideBook) {
+            final ItemBookWritten book = (ItemBookWritten) Item.get(387, 0, 1);
+            final String bookName = this.messageAgent.getText("general.guidebook") + " v" + this.systemConfig.guideBookVersion;
+            book.writeBook(this.systemConfig.guideBookAuthor, bookName, Arrays.stream(this.systemConfig.guideBookPages).map(s ->
+                    s.replaceAll("%player", player.getName())).toArray(String[]::new));
+            book.setCustomName(bookName);
 
-        player.getInventory().addItem(book);
+            player.getInventory().addItem(book);
+        }
     }
 
     private void removeDefaultCommandPermission(Player player) {
@@ -226,22 +229,8 @@ public class ServerAgent extends PluginBase {
         player.recalculatePermissions();
     }
 
-    private void addPendingRegisterNewPlayer(UUID uuid) {
-        this.pendingResisterNewPlayerList.add(uuid);
-    }
-
-    boolean isPendingRegisterNewPlayer(UUID uuid) {
-        return this.pendingResisterNewPlayerList.contains(uuid);
-    }
-
-    void continueRegisterNewPlayer(Player player) {
-        this.pendingResisterNewPlayerList.remove(player.getUniqueId());
-
-        this.messageAgent.sendSimpleForm(player, "form.welcome-form.title", "form.welcome-form.content");
-    }
-
     public boolean isEnableInventorySave() {
-        return this.enableInventorySave;
+        return this.systemConfig.enableInventorySave;
     }
 
     void setMainLevel(Level level) {

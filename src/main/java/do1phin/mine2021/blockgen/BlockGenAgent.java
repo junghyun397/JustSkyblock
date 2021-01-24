@@ -78,11 +78,13 @@ public class BlockGenAgent {
 
     void spawnNextBlock(int x, int y, int z, int sourceLevel) {
         TimerWrapper.schedule(() -> {
-            if (this.getBlockGenSourceLevel(this.getMainLevel().getBlock(x, y - 1, z).getId()) == sourceLevel) {
+            if (this.getBlockGenSourceLevel(this.getMainLevel().getBlock(x, y - 1, z).getId()) == sourceLevel
+                    && this.getMainLevel().getBlock(x, y, z).getId() == 0) {
                 final Block reGenBlock;
                 if (Math.random() < 1 / (float) ((Math.pow(6, sourceLevel + 1)) * 4))
                     reGenBlock = BlockState.of(this.blockGenSource.get(sourceLevel)).getBlock().clone();
                 else reGenBlock = this.getReGenBlock(sourceLevel);
+
                 this.getMainLevel().setBlock(new Vector3(x, y, z), reGenBlock);
             }}, this.getBlockGenDelay(sourceLevel)
         );

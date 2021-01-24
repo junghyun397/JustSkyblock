@@ -2,6 +2,7 @@ package do1phin.mine2021.blockgen;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
+import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
@@ -17,8 +18,10 @@ public class BlockGenEventListener implements Listener {
         this.blockGenAgent = blockGenAgent;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.isCancelled()) return;
+
         if (!event.isCancelled() && this.blockGenAgent.isBlockGenSource(event.getBlock().getId())
                 && this.blockGenAgent.registerBlockGenSource(event.getPlayer(), event.getBlock())) {
             final Item heldItem = event.getPlayer().getInventory().getItemInHand();
@@ -27,7 +30,7 @@ public class BlockGenEventListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.isCancelled()) return;
 
@@ -45,7 +48,7 @@ public class BlockGenEventListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onEntityInventoryChange(EntityInventoryChangeEvent event) {
         if (!(event.getEntity() instanceof Player) || event.getNewItem() == null) return;
 
@@ -53,8 +56,8 @@ public class BlockGenEventListener implements Listener {
             event.getNewItem().setCustomName(this.blockGenAgent.getBlockGenSourceTag(event.getNewItem().getBlockId()));
     }
 
-    @EventHandler
-    public void onBlockFromTo(BlockUpdateEvent event) {
+    @EventHandler(priority = EventPriority.LOW)
+    public void onBlockUpdate(BlockUpdateEvent event) {
         if (this.blockGenAgent.isBlockGenSource(event.getBlock().getId())) event.setCancelled();
     }
 

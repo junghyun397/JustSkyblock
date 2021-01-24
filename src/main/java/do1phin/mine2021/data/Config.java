@@ -68,6 +68,24 @@ public class Config {
         return this.dataFolder;
     }
 
+    // SYSTEM CONFIG
+
+    public SystemConfig parseSystemConfig() {
+        return new SystemConfig(this.serverConfig.getBoolean("system.rule.disable-nukkit-commands"),
+                this.serverConfig.getBoolean("system.rule.enable-inventory-save"),
+
+                this.parseDefaultItems(),
+
+                this.userInterfaceConfig.getInt("guidebook.version"),
+                this.userInterfaceConfig.getString("guidebook.author"),
+                this.parseGuideBookPages(),
+
+                this.serverConfig.getBoolean("system.ux.enable-teleport-to-island"),
+                this.serverConfig.getBoolean("system.ux.enable-welcome-form"),
+                this.serverConfig.getBoolean("system.ux.enable-default-items"),
+                this.serverConfig.getBoolean("system.ux.enable-guidebook"));
+    }
+
     // SERVER CONFIG
 
     public Collection<ShapedRecipe> parseAdditionalRecipes() {
@@ -212,6 +230,50 @@ public class Config {
 
     public String[] parseGuideBookPages() {
         return this.userInterfaceConfig.getStringList("guidebook.content").toArray(new String[0]);
+    }
+
+    public static class SystemConfig {
+        public final boolean disableDefaultCommands;
+        public final boolean enableInventorySave;
+
+        public final Collection<Tuple<Integer, Integer, Integer>> defaultItemCollection;
+
+        public final int guideBookVersion;
+        public final String guideBookAuthor;
+        public final String[] guideBookPages;
+
+        public final boolean enableTeleportToIsland;
+        public final boolean enableWelcomeForm;
+        public final boolean enableDefaultItems;
+        public final boolean enableGuideBook;
+
+        public SystemConfig(boolean disableDefaultCommands,
+                            boolean enableInventorySave,
+
+                            Collection<Tuple<Integer, Integer, Integer>> defaultItemCollection,
+
+                            int guideBookVersion,
+                            String guideBookAuthor,
+                            String[] guideBookPages,
+
+                            boolean enableTeleportToIsland,
+                            boolean enableWelcomeForm,
+                            boolean enableDefaultItems,
+                            boolean enableGuideBook) {
+            this.disableDefaultCommands = disableDefaultCommands;
+            this.enableInventorySave = enableInventorySave;
+
+            this.defaultItemCollection = defaultItemCollection;
+
+            this.guideBookVersion = guideBookVersion;
+            this.guideBookAuthor = guideBookAuthor;
+            this.guideBookPages = guideBookPages;
+
+            this.enableTeleportToIsland = enableTeleportToIsland;
+            this.enableWelcomeForm = enableWelcomeForm;
+            this.enableDefaultItems = enableDefaultItems;
+            this.enableGuideBook = enableGuideBook;
+        }
     }
 
 }
