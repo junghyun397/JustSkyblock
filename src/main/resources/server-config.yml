@@ -8,7 +8,7 @@ system:
     enable-telepot-to-island: true
     enable-welcome-form: true
     enable-default-items: true
-    enable-guide-book: true
+    enable-guidebook: true
 
 crafting:
   additional-recipes:

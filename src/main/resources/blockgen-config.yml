@@ -14,7 +14,7 @@ dictionary:
       # dirt
       - id: 3
         meta: 0
-        percentage: 40
+        percentage: 60
         factor: 0.7
       # sand-1
       - id: 12
@@ -26,10 +26,15 @@ dictionary:
       # wood-1
       - id: 17
         meta: 0
-        percentage: 20
+        percentage: 15
         factor: 0.7
 
       # ORE
+      # coal
+      - id: 16
+        meta: 0
+        percentage: 15
+        factor: 0.9
       # iron
       - id: 15
         meta: 0
@@ -64,7 +69,7 @@ dictionary:
       # sand-2
       - id: 12
         meta: 1
-        percentage: 5
+        percentage: 2
         factor: 0.7
       # sandstone
       - id: 24
@@ -76,17 +81,17 @@ dictionary:
       # wood-2
       - id: 17
         meta: 1
-        percentage: 10
+        percentage: 8
         factor: 0.7
       # wood-3
       - id: 17
         meta: 2
-        percentage: 10
+        percentage: 8
         factor: 0.7
       # wood-4
       - id: 17
         meta: 3
-        percentage: 10
+        percentage: 8
         factor: 0.7
 
       # ORE
@@ -116,12 +121,12 @@ dictionary:
       # wood-5
       - id: 162
         meta: 0
-        percentage: 10
+        percentage: 8
         factor: 0.5
       # wood-6
       - id: 162
         meta: 1
-        percentage: 10
+        percentage: 8
         factor: 0.5
       # wool
       - id: 35
