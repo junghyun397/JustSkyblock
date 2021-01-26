@@ -127,27 +127,29 @@ public class ServerAgent extends PluginBase {
         final String name = player.getName();
         final String ip = player.getAddress();
 
-        Optional<PlayerData> playerData = this.databaseAgent.getPlayerData(player, uuid);
-        if (playerData.isPresent()) {
-            if (!playerData.get().getName().equals(name) | !playerData.get().getIp().equals(ip))
-                this.databaseAgent.updatePlayerData(playerData.get());
+        final PlayerData playerData;
+        if (this.databaseAgent.checkPlayerData(uuid)) {
+            playerData = this.databaseAgent.getPlayerData(player, uuid);
+            if (!playerData.getName().equals(name) || !playerData.getIp().equals(ip))
+                this.databaseAgent.updatePlayerData(playerData);
 
-            if (playerData.get().getBanDate() != null
-                    && !this.processBannedPlayer(playerData.get())) return;
+            if (playerData.getBanDate() != null
+                    && !this.processBannedPlayer(playerData)) return;
 
             this.messageAgent.sendBroadcast("message.general.on-player-join",
                     new String[]{"%player"}, new String[]{player.getName()});
         } else {
-            int section = this.databaseAgent.getNextSection();
-            playerData = Optional.of(new PlayerData(player, uuid, name, ip, 0, SkyblockData.getDefault(section, uuid, name), null, null));
-            this.registerNewPlayer(playerData.get());
+            final int section = this.databaseAgent.getNextSection();
+            playerData = new PlayerData(player, uuid, name, ip, 0, SkyblockData.getDefault(section, uuid, name), null, null);
+            this.registerNewPlayer(playerData);
         }
 
-        this.playerDataMap.put(uuid, playerData.get());
-        this.skyBlockAgent.registerSkyblockData(playerData.get().getSkyblockData());
+        this.playerDataMap.put(uuid, playerData);
+        this.skyBlockAgent.registerSkyblockData(playerData.getSkyblockData());
+        this.playerGroupAgent.setPlayerNameTag(playerData);
 
-        this.playerGroupAgent.setPlayerNameTag(playerData.get());
-        if (this.systemConfig.disableDefaultCommands && !player.isOp()) this.removeDefaultCommandPermission(player);
+        if (this.systemConfig.disableDefaultCommands && !player.isOp())
+            this.removeDefaultCommandPermission(player);
     }
 
     public PlayerData getPlayerData(Player player) {

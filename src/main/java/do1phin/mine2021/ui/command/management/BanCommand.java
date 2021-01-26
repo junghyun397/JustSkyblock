@@ -36,7 +36,6 @@ public class BanCommand extends ManagementCommand {
         this.databaseAgent = databaseAgent;
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public boolean execute(CommandSender commandSender, String ignored, String[] args) {
         if (!this.checkExecutable(commandSender)) return false;
@@ -58,7 +57,8 @@ public class BanCommand extends ManagementCommand {
         final Player targetPlayer = this.serverAgent.getServer().getPlayer(args[0]);
         if (targetPlayer == null) {
             Optional<UUID> uuidByName = this.databaseAgent.getUUIDByPlayerName(args[0]);
-            if (uuidByName.isPresent()) targetPlayerData = this.databaseAgent.getPlayerData(uuidByName.get()).get();
+            if (uuidByName.isPresent())
+                targetPlayerData = this.databaseAgent.getPlayerData(uuidByName.get());
             else {
                 this.messageAgent.sendMessage(commandSender, "command.management.ban-command.ban-failed-playernotfound",
                         new String[]{"%player"}, new String[]{args[0]});

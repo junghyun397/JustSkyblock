@@ -36,11 +36,8 @@ public class SkyBlockAgent {
     }
 
     public int getSkyblockSectionByUUID(UUID uuid) {
-        Optional<PlayerData> playerData = this.serverAgent.getPlayerData(uuid);
-        if (playerData.isPresent()) return playerData.get().getSkyblockData().getSection();
-
-        playerData = this.databaseAgent.getPlayerData(uuid);
-        return playerData.map(data -> data.getSkyblockData().getSection()).orElse(0);
+        return this.serverAgent.getPlayerData(uuid).map(data -> data.getSkyblockData().getSection())
+                .orElseGet(() -> this.databaseAgent.getPlayerData(uuid).getSkyblockData().getSection());
     }
 
     public int getSkyblockSectionByX(int x) {
@@ -95,10 +92,8 @@ public class SkyBlockAgent {
     public void teleportPlayerToIsland(Player player, UUID destinationUUID, String destinationName) {
         final int section = this.getSkyblockSectionByUUID(destinationUUID);
 
-        if (!this.getSkyblockData(section).isPresent()) {
-            this.databaseAgent.getPlayerData(destinationUUID).ifPresent(playerData1 ->
-                    this.registerSkyblockData(playerData1.getSkyblockData()));
-        }
+        if (!this.getSkyblockData(section).isPresent())
+            this.registerSkyblockData(this.databaseAgent.getPlayerData(destinationUUID).getSkyblockData());
 
         this.loadIslandDefaultChunk(section);
         player.teleport(this.findSafeSpawn(this.getSkyblockSpawn(section)).orElseGet(() -> this.generateSafeSpawn(section)));
