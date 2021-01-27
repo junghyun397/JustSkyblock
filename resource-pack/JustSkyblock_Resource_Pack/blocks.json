@@ -1,27 +1,27 @@
 {
-  "sponge": {
+  "blockgen_source_1": {
     "isotropic": false,
-    "textures": "sponge",
+    "textures": "blockgen_source_1",
     "sound": "wood"
   },
-  "netherrack": {
+  "blockgen_source_2": {
     "isotropic": false,
-    "textures": "netherrack",
+    "textures": "blockgen_source_2",
     "sound": "stone"
   },
-  "nether_wart_block": {
+  "blockgen_source_3": {
     "isotropic": false,
-    "textures": "nether_wart_block",
+    "textures": "blockgen_source_3",
     "sound": "metal"
   },
-  "soul_sand": {
+  "blockgen_source_4": {
     "isotropic": false,
-    "textures": "soul_sand",
+    "textures": "blockgen_source_4",
     "sound": "metal"
   },
-  "end_bricks": {
+  "blockgen_source_5": {
     "isotropic": false,
-    "textures": "end_bricks",
+    "textures": "blockgen_source_5",
     "sound": "metal"
   }
 }

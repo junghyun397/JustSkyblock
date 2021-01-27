@@ -1,13 +1,11 @@
 package do1phin.mine2021.blockgen;
 
-import cn.nukkit.Player;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.BlockPlaceEvent;
 import cn.nukkit.event.block.BlockUpdateEvent;
-import cn.nukkit.event.entity.EntityInventoryChangeEvent;
 import cn.nukkit.item.Item;
 
 public class BlockGenEventListener implements Listener {
@@ -46,14 +44,6 @@ public class BlockGenEventListener implements Listener {
 
             this.blockGenAgent.spawnNextBlock(x, y, z, blockGenAgent.getBlockGenSourceLevel(sourceBlockID));
         }
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onEntityInventoryChange(EntityInventoryChangeEvent event) {
-        if (!(event.getEntity() instanceof Player) || event.getNewItem() == null) return;
-
-        if (this.blockGenAgent.isBlockGenSource(event.getNewItem().getBlockId()))
-            event.getNewItem().setCustomName(this.blockGenAgent.getBlockGenSourceTag(event.getNewItem().getBlockId()));
     }
 
     @EventHandler(priority = EventPriority.LOW)

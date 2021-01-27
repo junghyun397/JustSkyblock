@@ -3,11 +3,13 @@ package do1phin.mine2021.blockgen;
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
 import cn.nukkit.blockstate.BlockState;
+import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.ParticleEffect;
 import cn.nukkit.level.Position;
 import cn.nukkit.math.Vector3;
 import do1phin.mine2021.ServerAgent;
+import do1phin.mine2021.blockgen.blocks.*;
 import do1phin.mine2021.data.Config;
 import do1phin.mine2021.ui.MessageAgent;
 import do1phin.mine2021.utils.Pair;
@@ -34,6 +36,42 @@ public class BlockGenAgent {
         this.blockGenSource = blockGenData.a;
         this.blockGenDelay = blockGenData.b;
         this.blockGenDict = blockGenData.c;
+
+        this.registerBlockGenSource();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void registerBlockGenSource() {
+        BlockGenSource.blockGenIds = new int[this.blockGenSource.size()];
+        BlockGenSource.blockGenNames = new String[this.blockGenSource.size()];
+        BlockGenSource.customNames = new String[this.blockGenSource.size()];
+
+        for (int i = 0; i < this.blockGenSource.size(); i++) {
+            final int id = this.blockGenSource.get(i);
+            final String blockName = "blockgen_source_" + (i + 1);
+            final String customName = this.messageAgent.getText("blockgen.item-tag") + (i + 1);
+
+            BlockGenSource.blockGenIds[i] = id;
+            BlockGenSource.blockGenNames[i] = blockName;
+            BlockGenSource.customNames[i] = customName;
+
+            final Class<? extends BlockGenSource> blockClass;
+            try {
+                blockClass = (Class<? extends BlockGenSource>) Class.forName("do1phin.mine2021.blockgen.blocks.BlockGenSource" + (i + 1));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                this.serverAgent.loggerWarning(e.getMessage());
+                return;
+            }
+
+            Block.registerBlockImplementation(id, blockClass, blockName, false);
+        }
+    }
+
+    public Item getBasicBlockGenSource() {
+        final Item item = Item.get(this.blockGenSource.get(0), 0, 1);
+        item.setCustomName(this.messageAgent.getText("blockgen.item-tag") + "1");
+        return item;
     }
 
     public boolean isBlockGenSource(int id) {
@@ -55,10 +93,6 @@ public class BlockGenAgent {
         }
 
         return BlockState.of(1, 0).getBlock().clone();
-    }
-
-    public String getBlockGenSourceTag(int id) {
-        return this.messageAgent.getText("blockgen.item-tag") + (this.getBlockGenSourceLevel(id) + 1);
     }
 
     public boolean registerBlockGenSource(Player player, Block block) {

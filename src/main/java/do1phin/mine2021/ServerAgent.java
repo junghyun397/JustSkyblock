@@ -78,7 +78,6 @@ public class ServerAgent extends PluginBase {
         this.loggerInfo("loading rdbms...");
 
         final DatabaseHelper databaseHelper;
-
         if (config.getDatabaseConfig().getString("database.type").equalsIgnoreCase("mysql"))
             databaseHelper = new MysqlDatabaseHelper(this, config);
         else
@@ -214,6 +213,8 @@ public class ServerAgent extends PluginBase {
     private void giveDefaultItems(Player player) {
         this.systemConfig.defaultItemCollection.forEach(item ->
                 player.getInventory().addItem(Item.get(item.a, item.b, item.c).clone()));
+
+        player.getInventory().addItem(this.blockGenAgent.getBasicBlockGenSource());
 
         if (this.systemConfig.enableGuideBook) {
             final ItemBookWritten book = (ItemBookWritten) Item.get(387, 0, 1);

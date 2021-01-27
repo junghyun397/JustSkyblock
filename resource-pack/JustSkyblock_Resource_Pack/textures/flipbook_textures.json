@@ -1,31 +1,31 @@
 [
   {
-    "flipbook_texture": "textures/blocks/sponge",
-    "atlas_tile": "sponge",
+    "flipbook_texture": "textures/blocks/blockgen_source_1",
+    "atlas_tile": "blockgen_source_1",
     "ticks_per_frame": 8,
     "frames": [0, 1, 2, 3]
   },
   {
-    "flipbook_texture": "textures/blocks/netherrack",
-    "atlas_tile": "netherrack",
+    "flipbook_texture": "textures/blocks/blockgen_source_2",
+    "atlas_tile": "blockgen_source_2",
     "ticks_per_frame": 8,
     "frames": [0, 1, 2, 3]
   },
   {
-    "flipbook_texture": "textures/blocks/soul_sand",
-    "atlas_tile": "soul_sand",
+    "flipbook_texture": "textures/blocks/blockgen_source_3",
+    "atlas_tile": "blockgen_source_3",
     "ticks_per_frame": 8,
     "frames": [0, 1, 2, 3]
   },
   {
-    "flipbook_texture": "textures/blocks/nether_wart_block",
-    "atlas_tile": "nether_wart_block",
+    "flipbook_texture": "textures/blocks/blockgen_source_4",
+    "atlas_tile": "blockgen_source_4",
     "ticks_per_frame": 8,
     "frames": [0, 1, 2, 3]
   },
   {
-    "flipbook_texture": "textures/blocks/end_bricks",
-    "atlas_tile": "end_bricks",
+    "flipbook_texture": "textures/blocks/blockgen_source_5",
+    "atlas_tile": "blockgen_source_5",
     "ticks_per_frame": 8,
     "frames": [0, 1, 2, 3]
   }
