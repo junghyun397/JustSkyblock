@@ -6,7 +6,7 @@ database:
     db-file: "user-info.db"
   mysql:
     host: "localhost"
-    database: "mine24"
+    database: "justskyblock"
     port: 3306
     user: "root"
     password: "your-password-here"

@@ -130,15 +130,15 @@ form:
   welcome-form:
     title: "§l환영합니다!"
     content: "
-    §eJustSkyblock§f에 처음 접속하셨습니다.
+    §eJustSkyblock§f 서버에 처음 접속하셨습니다.
     \n
     \n • §e가이드북§f을 확인 해주세요.
     \n • §e추가된 조합법들§f을 확인 해주세요.
     \n • 불편하신 사항이 있다면 §b[Staff]§f 칭호를 달고 있는 §b운영자§f에게 문의 해주세요.
     \n
-    \n§eJustSkyblock§f 에서 즐거운 시간 보내시기를 바라겠습니다.
+    \n§eJustSkyblock§f 서버에서 즐거운 시간 보내시기를 바라겠습니다.
     \n
-    \n§7언제 어디서나 즐기는 나만의 세상, JustSkyblock.
+    \n§7JustSkyblock @2021
     "
 
 guidebook:
@@ -157,13 +157,13 @@ guidebook:
     \n§lSection 5. §r§8만든 이들§r
     \n§lSection 6. §r§8부록§r
     \n
-    \n§7언제 어디서나 즐기는 나만의 세상, JustSkyblock. @2021
+    \n§7JustSkyblock @2021
     "
     - "§lSection 1. 서버 안내§r
     \n
-    \n§lJustSkyblock, 스카이블럭 서버§r에 방문하신것을 환영합니다, %player님!
+    \n§lJustSkyblock 스카이블럭 서버§r에 방문하신것을 환영합니다, %player님!
     \n
-    \nJustSkyblock서버는 2021년 1월부터 2월 말, 겨울방학 기간동안 열리는 스카이블럭서버입니다.
+    \nJustSkyblock서버는 JustSkyblock플러그인을 통해 서비스되는 스카이블럭 서버입니다.
     \n
     \n서버 운영기간동안 %player님만의 멋진 섬을 만들어 내실 수 있기를 바라겠습니다.
     "
@@ -267,7 +267,7 @@ guidebook:
     \n
     \n§6§lJustSkyblock§r§8 에서 즐거운 시간 보내시기를 바라겠습니다.§r
     \n
-    \n§7언제 어디서나 즐기는 나만의 세상, JustSkyblock. @2021§r
+    \n§7JustSkyblock @2021§r
     "
     - "§lSection 6. 부록§r
     \n
