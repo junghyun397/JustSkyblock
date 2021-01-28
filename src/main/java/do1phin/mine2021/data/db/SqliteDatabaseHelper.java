@@ -59,7 +59,7 @@ public class SqliteDatabaseHelper extends DatabaseHelper {
             final PreparedStatement pstmt = this.connection.prepareStatement("SELECT MAX(section) AS section FROM user_info");
             ResultSet resultSet = pstmt.executeQuery();
 
-            if (resultSet.next()) return resultSet.getInt("section");
+            if (resultSet.next()) return resultSet.getInt("section") + 1;
         } catch (SQLException e) {
             e.printStackTrace();
         }

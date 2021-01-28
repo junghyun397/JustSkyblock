@@ -32,7 +32,7 @@ public class SkyBlockEventListener implements Listener {
 
         final int section;
         if (event.isFirstSpawn())
-            section = this.skyBlockAgent.getSkyblockSectionByUUID(event.getPlayer().getUniqueId());
+            section = this.skyBlockAgent.findFirstRespawnSection(event.getPlayer());
         else
             section = this.skyBlockAgent.getSkyblockSectionByX((int) Math.round(event.getPlayer().getPosition().getX()));
 

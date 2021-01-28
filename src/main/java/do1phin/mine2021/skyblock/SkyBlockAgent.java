@@ -89,6 +89,13 @@ public class SkyBlockAgent {
                     );
     }
 
+    int findFirstRespawnSection(Player player) {
+        if (this.databaseAgent.checkPlayerData(player.getUniqueId()))
+            return this.getSkyblockSectionByUUID(player.getUniqueId());
+        else
+            return this.databaseAgent.getNextSection();
+    }
+
     public void teleportPlayerToIsland(Player player, UUID destinationUUID, String destinationName) {
         final int section = this.getSkyblockSectionByUUID(destinationUUID);
 
