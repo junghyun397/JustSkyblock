@@ -9,16 +9,20 @@ public abstract class BlockGenSource extends BlockSolid {
     public static String[] blockGenNames;
     public static String[] customNames;
 
-    public static int blockGenLevel;
+    private final int level;
+
+    public BlockGenSource(int level) {
+        this.level = level;
+    }
 
     @Override
     public int getId() {
-        return blockGenIds[blockGenLevel];
+        return blockGenIds[this.level];
     }
 
     @Override
     public String getName() {
-        return blockGenNames[blockGenLevel];
+        return blockGenNames[this.level];
     }
 
     @Override
@@ -29,7 +33,7 @@ public abstract class BlockGenSource extends BlockSolid {
     @Override
     public Item[] getDrops(Item item) {
         final Item[] dropItems = super.getDrops(item);
-        dropItems[0].setCustomName(customNames[blockGenLevel]);
+        dropItems[0].setCustomName(customNames[this.level]);
         return dropItems;
     }
 
