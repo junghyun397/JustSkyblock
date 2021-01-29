@@ -11,7 +11,7 @@ public abstract class BlockGenSource extends BlockSolid {
 
     private final int level;
 
-    public BlockGenSource(int level) {
+    protected BlockGenSource(int level) {
         this.level = level;
     }
 
@@ -34,12 +34,12 @@ public abstract class BlockGenSource extends BlockSolid {
     public Item[] getDrops(Item item) {
         final Item[] dropItems = super.getDrops(item);
         dropItems[0].setCustomName(customNames[this.level]);
-        return dropItems;
+        return new Item[]{dropItems[0]};
     }
 
     @Override
     public double getHardness() {
-        return 4;
+        return 3;
     }
 
     @Override
@@ -49,7 +49,7 @@ public abstract class BlockGenSource extends BlockSolid {
 
     @Override
     public boolean isBreakable(Item item) {
-        return true;
+        return !item.isNull();
     }
 
     @Override
