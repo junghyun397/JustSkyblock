@@ -1,0 +1,154 @@
+Provider: Yaml
+
+prefix:
+  info: "<§eInfo§f>"
+  notice: "<§eNotice§f>"
+
+text:
+  general:
+    guidebook: "§eGuide Book"
+  skyblock:
+    protection-type:
+      protection-type: "protection type"
+      allow-only-owner: "me"
+      allow-invited: "invited"
+      allow-all: "all"
+  blockgen:
+    item-tag: "§eResource Block §aLV."
+
+message:
+  general:
+    on-player-join: "§e%player§f has joined the server."
+    on-player-quit: "§e%player§f left the server"
+    on-player-first-join: "§e%player§f joined the server for the first time."
+  skyblock:
+    teleport-succeed: "Successfully teleported to §e%player§f's island."
+    teleport-incoming: "§e%player§f has arrived at my island."
+    teleport-succeed-self: "Successfully teleported to my island."
+    invite-succeed: "Successfully invited §e%player§f to my island."
+    invite-received: "You were invited to §eowner§f's island."
+    purge-succeed: "Successfully purged §e%owner§f from my island."
+    protection-type-updated: "Successfully update protection type to §e%protection-type§f."
+  blockgen:
+    blockgen-upgrade-succeed: "Resource Block has been upgraded to §e%level§flevels."
+  management:
+    on-player-kicked: "You §ekicked§f by §e%reason§f."
+    on-player-banned: "Successfully banned §e%player§f due to §e%reason§f reason until §e%year-%month-%day %hour:%minute§f."
+    player-banned: "§e%player§f is banned due to §e%reason§f reason until §e%year-%month-%day %hour:%minute§f."
+
+popup:
+  general:
+    on-player-join: "+%player"
+    on-player-quit: "-%player"
+  skyblock:
+    protection-type-warning: "§e%player§7's island is protected by §e%protection-type§7 type."
+
+command:
+  management:
+    ban-command:
+      command: "b"
+      description: "Ban the player"
+      usage: "/b <nickname> <reason> <duration(days)>"
+      parameter:
+        player: "player"
+        reason: "reason"
+        duration: "duration"
+      format-error: "Please enter in /b <nickname> <reason> <duration(days)> format."
+      ban-succeed: "§e%player§f was banned for §e%durationdays§f due to §e%reason§f."
+      ban-failed-playernotfound: "Could not find player §4%player§f."
+    unban-command:
+      command: "ub"
+      description: "Unban banned player"
+      usage: "/ub <nickname>"
+      parameter:
+        player: "player"
+      format-error: "Please enter in /ub <nickname> format."
+      unban-succeed: "Successfully unbanned §e%player§f."
+      unban-failed: "§4%player§f is not banned"
+    kick-command:
+      command: "k"
+      description: "Kick the player"
+      usage: "/k <nickname> <reason>"
+      parameter:
+        player: "player"
+        reason: "reason"
+      format-error: "Please enter in /k <nickname> <reason> format."
+      kick-succeed: "§e%player§f was kicked due to §e%reason§f."
+      kick-failed-playernotfound: "Could not find player §4%player§f."
+    group-command:
+      command: "g"
+      description: "Change group of player"
+      usage: "/g <nickname> <ID>"
+      parameter:
+        player: "nickname"
+        id: "group id"
+      format-error: "Please enter in /g <nickname> <ID> format."
+      update-succeed: "§e%player§f are classified as §e%id:%group-name§f."
+      update-failed-idnotfound: "Could not find player group-id §4%id§f."
+      update-failed-playernotfound: "Could not find player §4%player§f."
+  skyblock:
+    teleport-command:
+      command: "teleport"
+      description: "Teleport to my island or another player's island."
+      usage: "/teleport or /teleport <nickname>"
+      parameter:
+        player: "nickname"
+      teleport-failed-playernotfound: "Could not find player §4%player§f."
+    invite-command:
+      command: "invite"
+      description: "Invite other player to my island."
+      usage: "/invite <nickname>"
+      parameter:
+        player: "nickname"
+      format-error: "Please enter in /invite <nickname> format."
+      invite-failed-playeralradyinvited: "§e%player§f is already invited to my island."
+      invite-failed-playernotfound: "Could not find player §4%player§f."
+    purge-command:
+      command: "purge"
+      description: "Purge player invited to my island."
+      usage: "/purge <nickname>"
+      parameter:
+        player: "nickname"
+      format-error: "Please enter in /purge <nickname> format."
+      purge-failed-playernotfound: "Could not find player §4%player§f."
+      purge-failed-playernotinvited: "§4%player§f dose not exist in the invitation list."
+    invite-list-command:
+      command: "list"
+      description: "Check the list of players invited to my island."
+      usage: "/list"
+      show-invited-list: "§e%invited-list§f are invited to my island."
+      show-invited-list-empty: "No one is invited to my island."
+    protection-type-command:
+      command: "protect"
+      description: "Set protection type in my island."
+      usage: "/protect <me|invited|all>"
+      parameter:
+        protection-type: "protection type"
+      format-error: "Please enter in /protect <me|invited|all> format."
+
+form:
+  welcome-form:
+    title: "§lWelcome!"
+    content: "Welcome to §eJustSkyblock§f Server for the first time!
+    \n
+    \n • Please check the §eGuide Book§f.
+    \n
+    \n • Please check the §eAdded Recipe§f.
+    \n
+    \n • If you have any questions, please contact the operator with the §b[Staff]§f title.
+    \n
+    \nHave a good time at §eJustSkyblock§f server.
+    \n
+    \n§7JustSkyblock @2021
+    "
+
+guidebook:
+  version: 1
+  author: "§e§lJustSkyblock"
+  content:
+    - "page1 example\n
+    page1 line2\n
+    for %player."
+    - "page2 example\n
+    page2 line2\n
+    for %player."

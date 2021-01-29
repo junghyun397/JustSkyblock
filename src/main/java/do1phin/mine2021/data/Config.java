@@ -24,6 +24,9 @@ public class Config {
 
     private final File dataFolder;
 
+    private final static List<String> supportedLanguages = Arrays.asList("eng", "kor");
+    private final static String defaultLanguage = "eng";
+
     public Config(ServerAgent serverAgent) {
         this.dataFolder = serverAgent.getDataFolder();
 
@@ -31,8 +34,12 @@ public class Config {
         this.databaseConfig = this.initConfigFile(serverAgent, "database-config.yml");
         this.skyblockConfig = this.initConfigFile(serverAgent, "skyblock-config.yml");
         this.blockGenConfig = this.initConfigFile(serverAgent, "blockgen-config.yml");
-        this.userInterfaceConfig = this.initConfigFile(serverAgent, "user-interface-config.yml");
         this.userGroupsConfig = this.initConfigFile(serverAgent, "user-groups.yml");
+
+        String language = serverAgent.getServer().getLanguage().getLang();
+        if (!supportedLanguages.contains(language)) language = defaultLanguage;
+
+        this.userInterfaceConfig = this.initConfigFile(serverAgent, "user-interface-config-" + language + ".yml");
     }
 
     private cn.nukkit.utils.Config initConfigFile(ServerAgent serverAgent, String fileName) {

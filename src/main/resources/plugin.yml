@@ -3,17 +3,17 @@ main: do1phin.mine2021.ServerAgent
 version: "${pom.version}"
 api: ["1.0.0"]
 author: do1phin
-description: 언제 어디서나 즐기는 나만의 세상
+description: Simple yet powerful skyblock server plug-in for PowerNukkit
 website: http://skyblock.do1ph.in
 load: STARTUP
 
 permissions:
   justskyblock.general:
-    description: "서버 이용 권한"
+    description: "Allow access to general server functions"
     default: true
   justskyblock.skyblock:
-    description: "스카이블록 이용 권한"
+    description: "Allow access to skyblock functions"
     default: true
   justskyblock.management:
-    description: "관리 권한"
+    description: "Allow access to management functions"
     default: op

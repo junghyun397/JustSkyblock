@@ -55,12 +55,7 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/</directory>
                 <includes>
-                    <include>server-config.yml</include>
-                    <include>database-config.yml</include>
-                    <include>skyblock-config.yml</include>
-                    <include>blockgen-config.yml</include>
-                    <include>user-interface-config.yml</include>
-                    <include>user-groups.yml</include>
+                    <include>*.yml</include>
                 </includes>
             </resource>
         </resources>
