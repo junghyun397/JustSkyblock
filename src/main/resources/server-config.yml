@@ -24,12 +24,31 @@ crafting:
       amount: 1
       shape: "AAA,AAA,AAA"
       ingredients: "A=35:0"
+
     - name: "wheat2sugar-cane"
       id: 338
       meta: 0
       amount: 1
       shape: "AAA,ABA,AAA"
-      ingredients: "A=296:0,B=12:0"
+      ingredients: "A=170:0,B=12:0"
+    - name: "wheat2bamboo"
+      id: -163
+      meta: 0
+      amount: 1
+      shape: "AAA,ABA,AAA"
+      ingredients: "A=170:0,B=338:0"
+    - name: "wheat2potato"
+      id: 392
+      meta: 0
+      amount: 1
+      shape: "AAA,ABA,AAA"
+      ingredients: "A=170:0,B=3:1"
+    - name: "wheat2carrot"
+      id: 391
+      meta: 0
+      amount: 1
+      shape: "AAA,ABA,AAA"
+      ingredients: "A=170:0,B=3:0"
 
     - name: "log2sapling-1"
       id: 6
@@ -69,16 +88,40 @@ crafting:
       ingredients: "A=0:0,B=162:1"
 
   banned-recipes:
-    - id: 0
+    # LV 3 - SOUL TORCH
+    - id: -268
       meta: 0
-      amount: 0
-      inputs:
-        - id: 0
-          meta: 0
-          amount: 0
-        - id: 0
-          meta: 0
-          amount: 0
+      amount: 4
+    # LV 3 - SOUL LANTERN
+    - id: -269
+      meta: 0
+      amount: 1
+    # LV 3 - SOUL CAMPFIRE
+    - id: 801
+      meta: 0
+      amount: 1
+
+    # LV 4 - NETHER WART BLOCK
+    - id: 214
+      meta: 0
+      amount: 1
+
+    # LV 5 - END STONE BRICK
+    - id: 206
+      meta: 0
+      amount: 4
+    # LV 5 - END STONE BRICK SLAB
+    - id: -162
+      meta: 0
+      amount: 6
+    # LV 5 - END STONE BRICK STAIRS
+    - id: -178
+      meta: 0
+      amount: 4
+    # LV 5 - END STONE BRICK WALL
+    - id: 139
+      meta: 10
+      amount: 6
 
 default-items:
   - id: 270

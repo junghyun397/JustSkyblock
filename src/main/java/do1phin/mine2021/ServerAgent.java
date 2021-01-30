@@ -1,6 +1,9 @@
 package do1phin.mine2021;
 
 import cn.nukkit.Player;
+import cn.nukkit.inventory.CraftingManager;
+import cn.nukkit.inventory.Recipe;
+import cn.nukkit.inventory.ShapedRecipe;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBookWritten;
 import cn.nukkit.level.Level;
@@ -28,7 +31,11 @@ import do1phin.mine2021.ui.command.skyblock.*;
 import do1phin.mine2021.utils.CalendarHelper;
 import do1phin.mine2021.utils.EmptyGenerator;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class ServerAgent extends PluginBase {
@@ -115,10 +122,16 @@ public class ServerAgent extends PluginBase {
         this.getServer().getCommandMap().register("mine2021", new KickCommand(this, this.messageAgent, config));
         this.getServer().getCommandMap().register("mine2021", new GroupCommand(this, this.messageAgent, config, this.playerGroupAgent));
 
-        config.parseAdditionalRecipes().forEach(recipe -> getServer().getCraftingManager().registerRecipe(recipe));
-        this.getServer().getCraftingManager().rebuildPacket();
+        this.resolveRecipes(config.parseAdditionalRecipes(), config.parseBannedRecipes());
+
+        this.getServer().getOnlinePlayers().forEach((key, value) -> this.registerPlayer(value));
 
         this.loggerInfo("§eloading succeed.");
+    }
+
+    @Override
+    public void onDisable() {
+        this.databaseAgent.disconnect();
     }
 
     public void registerPlayer(Player player) {
@@ -230,6 +243,53 @@ public class ServerAgent extends PluginBase {
     private void removeDefaultCommandPermission(Player player) {
         player.addAttachment(this, "nukkit.command", false);
         player.recalculatePermissions();
+    }
+
+    @SuppressWarnings({"unchecked", "RedundantCast"})
+    private void resolveRecipes(Collection<ShapedRecipe> additionalRecipes, Collection<Item> bannedRecipes) {
+        additionalRecipes.forEach(recipe -> getServer().getCraftingManager().registerRecipe(recipe));
+
+        final Class<CraftingManager> craftingManagerClass = CraftingManager.class;
+        try {
+            final Field shapedRecipesField = craftingManagerClass.getDeclaredField("shapedRecipes");
+            shapedRecipesField.setAccessible(true);
+            final Map<Integer, Map<UUID, ShapedRecipe>> shapedRecipes = (Map<Integer, Map<UUID, ShapedRecipe>>)
+                    shapedRecipesField.get(this.getServer().getCraftingManager());
+
+            final Method getMultiItemHashMethod = craftingManagerClass.getDeclaredMethod("getItemHash", Item.class);
+            getMultiItemHashMethod.setAccessible(true);
+
+            final Collection<Integer> hashedBannedRecipes = bannedRecipes.stream().map(results ->
+            {
+                try {
+                    return (Integer) getMultiItemHashMethod.invoke(null, results);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                    this.loggerWarning(e.getMessage());
+                }
+                return 0;
+            }).collect(Collectors.toList());
+
+            hashedBannedRecipes.forEach(shapedRecipes::remove);
+
+            final Collection<Recipe> recipes = this.getServer().getCraftingManager().getRecipes().stream().filter(recipe -> {
+                try {
+                    return !hashedBannedRecipes.contains((int) getMultiItemHashMethod.invoke(null, recipe.getResult()));
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                    this.loggerWarning(e.getMessage());
+                }
+                return false;
+            }).collect(Collectors.toList());
+
+            this.getServer().getCraftingManager().recipes.clear();
+            this.getServer().getCraftingManager().recipes.addAll(recipes);
+        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException e) {
+            e.printStackTrace();
+            this.loggerWarning(e.getMessage());
+        }
+
+        this.getServer().getCraftingManager().rebuildPacket();
     }
 
     public boolean isEnableInventorySave() {

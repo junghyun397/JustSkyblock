@@ -22,6 +22,10 @@ public class DatabaseAgent {
         this.databaseHelper = databaseHelper;
     }
 
+    public void disconnect() {
+        this.databaseHelper.disconnect();
+    }
+
     public boolean checkPlayerData(UUID uuid) {
         try {
             final PreparedStatement pstmt = this.databaseHelper.getConnection().prepareStatement(

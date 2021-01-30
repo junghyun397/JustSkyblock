@@ -113,15 +113,10 @@ public class Config {
         }).collect(Collectors.toList());
     }
 
-    public Collection<Pair<Item, List<Item>>> parseBannedRecipes() {
+    public Collection<Item> parseBannedRecipes() {
         return ((List<?>) this.serverConfig.getList("crafting.banned-recipes")).stream().map(o -> {
             final ConfigSection configSection = (ConfigSection) o;
-            return new Pair<>(
-                    Item.get(configSection.getInt("id"), configSection.getInt("meta"), configSection.getInt("amount")),
-                    ((List<?>) configSection.getList("inputs")).stream().map(o1 -> {
-                        final ConfigSection inputsSection = (ConfigSection) o1;
-                        return Item.get(inputsSection.getInt("id"), inputsSection.getInt("meta"), inputsSection.getInt("amount"));
-                    }).collect(Collectors.toList()));
+            return Item.get(configSection.getInt("id"), configSection.getInt("meta"), configSection.getInt("amount"));
         }).collect(Collectors.toList());
     }
 
