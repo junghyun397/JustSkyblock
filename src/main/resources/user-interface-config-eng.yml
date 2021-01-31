@@ -26,7 +26,7 @@ message:
     teleport-incoming: "§e%player§f has arrived at my island."
     teleport-succeed-self: "Successfully teleported to my island."
     invite-succeed: "Successfully invited §e%player§f to my island."
-    invite-received: "You were invited to §eowner§f's island."
+    invite-received: "You were invited to §e%owner§f's island."
     purge-succeed: "Successfully purged §e%owner§f from my island."
     protection-type-updated: "Successfully update protection type to §e%protection-type§f."
   blockgen:

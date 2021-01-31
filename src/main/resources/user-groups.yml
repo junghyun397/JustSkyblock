@@ -1,10 +1,17 @@
 Provider: Yaml
 
+# Player Group Settings
+# * Change the player's name tag and display name with the /g <player> <id> command
+# * Group ID and name cannot be duplicated
+# * %name replaced with this player's nickname
 groups:
+  # Default group, When the player first joins, the player receives this group.
   user:
     id: 0
     display-name: "<§2[User]§f %name>"
     nametag: "§7<<§l§f%name§r§7>>"
+  # Operator group, operator titles do not imply OP authority.
+  # After using the /op command, use the /g player 10 command.
   staff:
     id: 10
     display-name: "<§b[Staff]§f %name>"

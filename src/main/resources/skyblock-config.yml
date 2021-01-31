@@ -1,8 +1,14 @@
 Provider: Yaml
 
+# Skyblock Settings
 skyblock:
+  # Set the world name to create the skyblock section.
   main-level: "world"
+  # Set distance of one seciton allocated to one player in chunks (16*16).
   distance: 16
+  # Set the shape of the skyblock island to be created by default.
+  # - It can be set by creating a 3D array of block IDs, and can be declared in the order of X, Z, Y axes.
+  # - Distance must be defined as an even number.
   default-island-shape: [[[0, 0, 31, 37, 0, 0], [0, 31, 0, 31, 31, 0], [31, 31, 0, 37, 0, 0], [0, 0, 31, 0, 31, 0], [0, 0, 38, 0, 31, 0], [0, 0, 0, 31, 0, 0]],
                          [[0, 0, 2, 2, 0, 0], [0, 2, 2, 2, 2, 0], [2, 2, 2, 2, 2, 2], [2, 2, 2, 2, 2, 2], [0, 2, 2, 2, 2, 0], [0, 0, 2, 2, 0, 0]],
                          [[0, 0, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 0], [0, 0, 1, 1, 0, 0]],

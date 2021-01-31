@@ -1,16 +1,27 @@
 Provider: Yaml
 
+# User Experience Settings
 system:
   rule:
+    # When enable, the default command provided by Nukkit is disabled.
     disable-nukkit-commands: true
+    # When enable, keeps the player's inventory and experience.
     enable-inventory-save: true
   ux:
+    # When enable, teleports player to the island assigned to the player when player first join.
     enable-telepot-to-island: true
+    # When enable, the form is displayed when player first join.
     enable-welcome-form: true
+    # When enable, player receives basic items when player first join.
     enable-default-items: true
+    # When enable, player receives guidebook when player first join.
     enable-guidebook: true
 
+# Added/Removed recipe is displayed on the Crafting tab.
 crafting:
+  # Additional Shaped Recipes Settings
+  # * Define the results of the recipe using id, meta, and amount.
+  # * Define recipe using shapes and ingredients.
   additional-recipes:
     - name: "wool2string"
       id: 287
@@ -87,6 +98,8 @@ crafting:
       shape: "ABA,BBB,ABA"
       ingredients: "A=0:0,B=162:1"
 
+  # Banned Recipes Settings
+  # * Define the result of the recipe to be banned using id, meta, and mount.
   banned-recipes:
     # LV 3 - SOUL TORCH
     - id: -268
@@ -123,6 +136,9 @@ crafting:
       meta: 10
       amount: 6
 
+# Default Items Settings
+# * Define the list of items to receive by default using id, meta, and mount.
+#   - Resource Block LV1 and guidebooks will be added automatically.
 default-items:
   - id: 270
     meta: 0
