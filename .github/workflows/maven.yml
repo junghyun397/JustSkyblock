@@ -5,9 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ master ]
+    branches: [ nukkitx ]
   pull_request:
-    branches: [ master ]
+    branches: [ nukkitx ]
 
 jobs:
   build:
@@ -22,25 +22,10 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Rename artifacts
-      run: mv target/JustSkyblock-*.jar target/JustSkyblock-SNAPSHOT.jar
+      run: mv target/JustSkyblock-*.jar target/JustSkyblock-NukkitX-SNAPSHOT.jar
     - name: Archive artifacts
       uses: actions/upload-artifact@v1
       if: success()
       with:
         name: JustSkyblock-SNAPSHOT
-        path: target/JustSkyblock-SNAPSHOT.jar
-    
-    - name: Zip resource pack
-      uses: papeloto/action-zip@v1
-      with:
-        files: resource-pack/JustSkyblock_Resource_Pack
-        recursive: true
-        dest: JustSkyblock_Resource_Pack.zip
-    - name: Rename resource pack
-      run: mv JustSkyblock_Resource_Pack.zip JustSkyblock_Resource_Pack.mcpack
-    - name: Archive resource pack
-      uses: actions/upload-artifact@v1
-      if: success()
-      with:
-        name: JustSkyblock-ResourcePack
-        path: JustSkyblock_Resource_Pack.mcpack
+        path: target/JustSkyblock-NukkitX-SNAPSHOT.jar
