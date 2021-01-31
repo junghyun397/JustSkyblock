@@ -43,6 +43,9 @@ public class MysqlDatabaseHelper extends DatabaseHelper {
     @SuppressWarnings("SqlResolve")
     @Override
     public void initDatabase() {
+        Executors.newSingleThreadScheduledExecutor()
+                .scheduleAtFixedRate(this::validateConnection, 1, 1, TimeUnit.MINUTES);
+
         try {
             final Statement stmt = this.connection.createStatement();
 
@@ -70,9 +73,6 @@ public class MysqlDatabaseHelper extends DatabaseHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        Executors.newSingleThreadScheduledExecutor()
-                .scheduleAtFixedRate(this::validateConnection, 1, 1, TimeUnit.MINUTES);
     }
 
     @SuppressWarnings("SqlResolve")
@@ -80,7 +80,7 @@ public class MysqlDatabaseHelper extends DatabaseHelper {
     public int getNextAutoIncrement() {
         try {
             final PreparedStatement pstmt = this.connection.prepareStatement("SHOW TABLE STATUS LIKE 'user_info'");
-            ResultSet resultSet = pstmt.executeQuery();
+            final ResultSet resultSet = pstmt.executeQuery();
 
             if (resultSet.next()) return resultSet.getInt("Auto_increment");
         } catch (SQLException e) {
@@ -94,7 +94,8 @@ public class MysqlDatabaseHelper extends DatabaseHelper {
         try {
             final PreparedStatement pstmt = this.connection.prepareStatement("SELECT 1");
             if (pstmt.executeQuery().next()) return;
-        } catch (SQLException ignored) {}
+        } catch (Exception ignored) {}
+        this.disconnect();
         this.connect();
     }
 
