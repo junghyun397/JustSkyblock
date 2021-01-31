@@ -2,7 +2,6 @@ package do1phin.mine2021.blockgen;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
-import cn.nukkit.blockstate.BlockState;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Level;
 import cn.nukkit.level.ParticleEffect;
@@ -58,13 +57,13 @@ public class BlockGenAgent {
             final Class<? extends BlockGenSource> blockClass;
             try {
                 blockClass = (Class<? extends BlockGenSource>) Class.forName("do1phin.mine2021.blockgen.blocks.BlockGenSource" + (i + 1));
-            } catch (ClassNotFoundException e) {
+                Block.list[id] = blockClass;
+                Block.fullList[id << 4] = blockClass.newInstance();
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
                 this.serverAgent.loggerWarning(e.getMessage());
                 return;
             }
-
-            Block.registerBlockImplementation(id, blockClass, blockName, false);
         }
     }
 
@@ -92,7 +91,7 @@ public class BlockGenAgent {
             if (rand < entry.a) return entry.b.clone();
         }
 
-        return BlockState.of(1, 0).getBlock().clone();
+        return Block.get(1).clone();
     }
 
     public boolean registerBlockGenSource(Player player, Block block) {
@@ -116,7 +115,7 @@ public class BlockGenAgent {
                     && this.getMainLevel().getBlock(x, y, z).getId() == 0) {
                 final Block reGenBlock;
                 if (Math.random() < 1 / (float) ((Math.pow(6, sourceLevel + 1)) * 4))
-                    reGenBlock = BlockState.of(this.blockGenSource.get(sourceLevel)).getBlock().clone();
+                    reGenBlock = Block.get(this.blockGenSource.get(sourceLevel)).clone();
                 else reGenBlock = this.getReGenBlock(sourceLevel);
 
                 this.getMainLevel().setBlock(new Vector3(x, y, z), reGenBlock);

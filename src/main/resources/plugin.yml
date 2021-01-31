@@ -1,9 +1,9 @@
-name: JustSkyblock
+name: JustSkyblock-forNukkitX
 main: do1phin.mine2021.ServerAgent
 version: "${pom.version}"
 api: ["1.0.0"]
 author: do1phin
-description: Simple yet powerful skyblock server plug-in for PowerNukkit
+description: Simple yet powerful skyblock server plug-in for NukkitX
 website: http://skyblock.do1ph.in
 load: STARTUP
 

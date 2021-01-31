@@ -1,7 +1,6 @@
 package do1phin.mine2021.data;
 
 import cn.nukkit.block.Block;
-import cn.nukkit.blockstate.BlockState;
 import cn.nukkit.inventory.ShapedRecipe;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.ConfigSection;
@@ -188,7 +187,7 @@ public class Config {
                 rawBlocks.add(new Tuple<>(
                         blockSection.getDouble("percentage"),
                         blockSection.getDouble("factor"),
-                        BlockState.of(blockSection.getInt("id"), blockSection.getInt("meta")).getBlock()
+                        Block.get(blockSection.getInt("id"), blockSection.getInt("meta")).clone()
                 ));
             });
 
