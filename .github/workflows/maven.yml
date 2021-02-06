@@ -10,9 +10,8 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build_plugin:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
@@ -29,7 +28,10 @@ jobs:
       with:
         name: JustSkyblock-SNAPSHOT
         path: target/JustSkyblock-SNAPSHOT.jar
-    
+
+  build_reosurce_pack:
+    runs-on: ubuntu-latest
+    steps:
     - name: Zip resource pack
       uses: papeloto/action-zip@v1
       with:
