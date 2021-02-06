@@ -58,9 +58,7 @@ public class SkyBlockAgent {
     }
 
     public Optional<SkyblockData> getSkyblockData(int section) {
-        final SkyblockData skyblockData = this.skyblockDataMap.get(section);
-        if (skyblockData != null) return Optional.of(skyblockData);
-        else return Optional.empty();
+        return Optional.ofNullable(this.skyblockDataMap.get(section));
     }
 
     public void purgeSkyblockData(int section) {
@@ -96,22 +94,21 @@ public class SkyBlockAgent {
             return this.databaseAgent.getNextSection();
     }
 
-    public void teleportPlayerToIsland(Player player, UUID destinationUUID, String destinationName) {
-        final int section = this.getSkyblockSectionByUUID(destinationUUID);
+    public void teleportPlayerToIsland(Player player, SkyblockData skyblockData) {
+        if (!this.getSkyblockData(skyblockData.getSection()).isPresent())
+            this.registerSkyblockData(this.databaseAgent.getPlayerData(skyblockData.getOwnerUUID()).getSkyblockData());
 
-        if (!this.getSkyblockData(section).isPresent())
-            this.registerSkyblockData(this.databaseAgent.getPlayerData(destinationUUID).getSkyblockData());
+        this.loadIslandDefaultChunk(skyblockData.getSection());
+        player.teleport(this.findSafeSpawn(this.getSkyblockSpawn(skyblockData.getSection())).orElseGet(() ->
+                this.generateSafeSpawn(skyblockData.getSection())));
 
-        this.loadIslandDefaultChunk(section);
-        player.teleport(this.findSafeSpawn(this.getSkyblockSpawn(section)).orElseGet(() -> this.generateSafeSpawn(section)));
-
-        if (player.getUniqueId().equals(destinationUUID))
+        if (player.getUniqueId().equals(skyblockData.getOwnerUUID()))
             this.messageAgent.sendMessage(player, "message.skyblock.teleport-succeed-self");
         else {
             this.messageAgent.sendMessage(player, "message.skyblock.teleport-succeed",
-                    new String[]{"%player"}, new String[]{destinationName});
+                    new String[]{"%player"}, new String[]{skyblockData.getOwnerName()});
 
-            this.serverAgent.getPlayerData(destinationUUID).ifPresent(playerData ->
+            this.serverAgent.getPlayerData(skyblockData.getOwnerUUID()).ifPresent(playerData ->
                     this.messageAgent.sendMessage(playerData.getPlayer(), "message.skyblock.teleport-incoming",
                             new String[]{"%player"}, new String[]{player.getName()}));
         }
@@ -143,29 +140,29 @@ public class SkyBlockAgent {
         return safeSpawn;
     }
 
-    public boolean onPlayerModifyBlock(Player player, int blockX) {
+    boolean onPlayerModifyBlock(Player player, int blockX) {
         final int section = this.getSkyblockSectionByX(blockX);
-        Optional<SkyblockData> skyblockData = this.getSkyblockData(section);
-        if (!skyblockData.isPresent()) {
-            skyblockData = this.databaseAgent.getSkyblockDataBySection(section);
-            if (!skyblockData.isPresent()) return false;
-            this.registerSkyblockData(skyblockData.get());
-        }
 
-        if (player.getUniqueId().equals(skyblockData.get().getOwnerUUID())) return true;
+        final SkyblockData skyblockData = this.getSkyblockData(section)
+                .orElseGet(() -> this.databaseAgent.getSkyblockDataBySection(section).map(skyblockData1 -> {
+                    this.registerSkyblockData(skyblockData1);
+                    return skyblockData1;
+                }).orElseGet(() -> SkyblockData.getErrorDummy(section)));
 
-        if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_ALL) return true;
-        else if (skyblockData.get().getProtectionType() == ProtectionType.ALLOW_INVITED) {
-            if (skyblockData.get().getCollaborators().contains(player.getUniqueId())) return true;
+        if (player.getUniqueId().equals(skyblockData.getOwnerUUID())) return true;
+
+        if (skyblockData.getProtectionType() == ProtectionType.ALLOW_ALL) return true;
+        else if (skyblockData.getProtectionType() == ProtectionType.ALLOW_INVITED) {
+            if (skyblockData.getCollaborators().contains(player.getUniqueId())) return true;
             this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
                     new String[]{"%player", "%protection-type"},
-                    new String[]{skyblockData.get().getOwnerName(), this.messageAgent.getText("skyblock.protection-type.allow-invited")});
+                    new String[]{skyblockData.getOwnerName(), this.messageAgent.getText("skyblock.protection-type.allow-invited")});
             return false;
         }
         else {
             this.messageAgent.sendPopup(player, "popup.skyblock.protection-type-warning",
                     new String[]{"%player", "%protection-type"},
-                    new String[]{skyblockData.get().getOwnerName(), this.messageAgent.getText("skyblock.protection-type.allow-only-owner")});
+                    new String[]{skyblockData.getOwnerName(), this.messageAgent.getText("skyblock.protection-type.allow-only-owner")});
             return false;
         }
     }
@@ -180,12 +177,23 @@ public class SkyBlockAgent {
         this.databaseAgent.updatePlayerData(playerData);
     }
 
+    public ProtectionType getSkyblockLockType(int section) {
+        return this.getSkyblockData(section).map(SkyblockData::getLockType).orElseGet(() ->
+                        this.databaseAgent.getSkyblockDataBySection(section)
+                                .map(SkyblockData::getLockType).orElse(ProtectionType.ALLOW_ONLY_OWNER));
+    }
+
+    public void updateLockType(Player player, ProtectionType lockType) {
+        final PlayerData playerData = this.serverAgent.getPlayerData(player);
+        playerData.getSkyblockData().setLockType(lockType);
+        this.databaseAgent.updatePlayerData(playerData);
+    }
+
     public void addCollaborator(Player player, UUID collaborator) {
         final PlayerData playerData = this.serverAgent.getPlayerData(player);
         final SkyblockData skyblockData = playerData.getSkyblockData();
         final List<UUID> collaborators = skyblockData.getCollaborators();
         collaborators.add(collaborator);
-        skyblockData.setCollaborators(collaborators);
         this.databaseAgent.updatePlayerData(playerData);
     }
 
@@ -194,7 +202,6 @@ public class SkyBlockAgent {
         final SkyblockData skyblockData = playerData.getSkyblockData();
         final List<UUID> collaborators = skyblockData.getCollaborators();
         collaborators.remove(collaborator);
-        skyblockData.setCollaborators(collaborators);
         this.databaseAgent.updatePlayerData(playerData);
     }
 

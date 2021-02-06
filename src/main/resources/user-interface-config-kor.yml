@@ -13,6 +13,11 @@ text:
       allow-only-owner: "나만"
       allow-invited: "초대된"
       allow-all: "모두"
+    lock-type:
+      protection-type: "잠금 수준"
+      allow-only-owner: "나만"
+      allow-invited: "초대된"
+      allow-all: "모두"
   blockgen:
     item-tag: "§e생성 블럭 §aLV."
 
@@ -29,6 +34,7 @@ message:
     invite-received: "§e%owner§f 님의 구역으로 초대되었습니다."
     purge-succeed: "§e%player§f 님을 내 구역에서 추방했습니다."
     protection-type-updated: "내 구역의 보호 수준이 §e%protection-type§f 으로 설정 되었습니다."
+    lock-type-updated: "내 구역의 접근 수준이 §e%lock-type§f 으로 설정 되었습니다."
   blockgen:
     blockgen-upgrade-succeed: "생성 블럭이 §e%level단계§f로 강화 되었습니다."
   management:
@@ -94,6 +100,7 @@ command:
       parameter:
         player: "닉네임"
       teleport-failed-playernotfound: "§4%player§f 님을 찾을 수 없습니다."
+      teleport-failed-locked: "§e%player§f 님의 구역은 §e%lock-type§f 수준으로 접근이 제한되어 있습니다."
     invite-command:
       command: "초대"
       description: "다른 유저를 내 구역으로 초대합니다."
@@ -125,6 +132,13 @@ command:
       parameter:
         protection-type: "보호 수준"
       format-error: "/보호 <나만|초대된|모두> 형식으로 입력해 주시기 바랍니다."
+    lock-type-command:
+      command: "접근"
+      description: "내 구역의 접근 수준을 설정합니다."
+      usage: "/접근 <나만|초대된|모두>"
+      parameter:
+        lock-type: "접근 수준"
+      format-error: "/접근 <나만|초대된|모두> 형식으로 입력해 주시기 바랍니다."
 
 form:
   welcome-form:

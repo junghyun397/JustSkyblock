@@ -116,6 +116,7 @@ public class ServerAgent extends PluginBase {
         this.getServer().getCommandMap().register("mine2021", new InviteListCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
         this.getServer().getCommandMap().register("mine2021", new PurgeCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
         this.getServer().getCommandMap().register("mine2021", new ProtectionTypeCommand(this, this.messageAgent, config, this.skyBlockAgent));
+        this.getServer().getCommandMap().register("mine2021", new LockTypeCommand(this, this.messageAgent, config, this.skyBlockAgent));
 
         this.getServer().getCommandMap().register("mine2021", new BanCommand(this, this.messageAgent, config, this.databaseAgent));
         this.getServer().getCommandMap().register("mine2021", new UnBanCommand(this, this.messageAgent, config, this.databaseAgent));
@@ -169,9 +170,7 @@ public class ServerAgent extends PluginBase {
     }
 
     public Optional<PlayerData> getPlayerData(UUID uuid) {
-        final PlayerData playerData = this.playerDataMap.get(uuid);
-        if (playerData != null) return Optional.of(playerData);
-        else return Optional.empty();
+        return Optional.ofNullable(this.playerDataMap.get(uuid));
     }
 
     public void purgePlayer(Player player) {
