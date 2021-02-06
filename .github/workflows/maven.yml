@@ -32,6 +32,7 @@ jobs:
   build_reosurce_pack:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - name: Zip resource pack
       uses: papeloto/action-zip@v1
       with:
