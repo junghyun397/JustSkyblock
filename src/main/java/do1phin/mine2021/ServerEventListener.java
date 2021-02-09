@@ -28,7 +28,7 @@ public class ServerEventListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        this.serverAgent.purgePlayer(event.getPlayer());
+        this.serverAgent.unregisterPlayer(event.getPlayer());
         event.setQuitMessage("");
     }
 

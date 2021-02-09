@@ -76,13 +76,12 @@ public class TeleportCommand extends SkyblockCommand {
     }
 
     private Optional<SkyblockData> findRandomAllowedIsland() {
-        int counter = 0;
-        while (counter < 1000) {
+        final int MAX_DEPTH = 1000;
+        for (int i = 0; i < MAX_DEPTH; i++) {
             final Optional<SkyblockData> targetSkyblockData
                     = this.databaseAgent.getSkyblockDataBySection(new Random().nextInt(this.databaseAgent.getNextSection()))
-                    .filter(skyblockData -> skyblockData.getLockType() != ProtectionType.ALLOW_ALL);
+                    .filter(skyblockData -> skyblockData.getLockType() == ProtectionType.ALLOW_ALL);
             if (targetSkyblockData.isPresent()) return targetSkyblockData;
-            counter++;
         }
         return Optional.empty();
     }

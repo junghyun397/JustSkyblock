@@ -163,28 +163,24 @@ public class ServerAgent extends PluginBase {
         this.uxAgent.resolvePermissions(player);
     }
 
+    private void registerNewPlayer(PlayerData playerData) {
+        this.databaseAgent.registerPlayerData(playerData);
+        this.skyBlockAgent.registerNewSkyblock(playerData, this.systemConfig.enableTeleportToIsland);
+    }
+
+    void unregisterPlayer(Player player) {
+        this.getPlayerData(player.getUniqueId()).ifPresent(playerData -> {
+            this.playerDataMap.remove(playerData.getUuid());
+            this.uxAgent.resolvePlayerQuit(playerData.getPlayer());
+        });
+    }
+
     public PlayerData getPlayerData(Player player) {
         return this.playerDataMap.get(player.getUniqueId());
     }
 
     public Optional<PlayerData> getPlayerData(UUID uuid) {
         return Optional.ofNullable(this.playerDataMap.get(uuid));
-    }
-
-    void purgePlayer(Player player) {
-        this.getPlayerData(player.getUniqueId()).ifPresent(playerData -> {
-            this.playerDataMap.remove(playerData.getUuid());
-            this.uxAgent.resolvePlayerQuit(player);
-        });
-    }
-
-    private void registerNewPlayer(PlayerData playerData) {
-        this.databaseAgent.registerPlayerData(playerData);
-        this.skyBlockAgent.registerNewSkyblock(playerData, this.systemConfig.enableTeleportToIsland);
-    }
-
-    public Level getMainLevel() {
-        return this.mainLevel;
     }
 
     public SkyBlockAgent getSkyBlockAgent() {
@@ -197,6 +193,10 @@ public class ServerAgent extends PluginBase {
 
     public PlayerGroupAgent getPlayerGroupAgent() {
         return this.playerGroupAgent;
+    }
+
+    public Level getMainLevel() {
+        return this.mainLevel;
     }
 
     void setMainLevel(Level level) {
