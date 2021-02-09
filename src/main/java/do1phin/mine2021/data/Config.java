@@ -23,7 +23,6 @@ public class Config {
 
     private final File dataFolder;
 
-    private final static List<String> supportedLanguages = Arrays.asList("eng", "kor");
     private final static String defaultLanguage = "eng";
 
     public Config(ServerAgent serverAgent) {
@@ -36,7 +35,8 @@ public class Config {
         this.userGroupsConfig = this.initConfigFile(serverAgent, "user-groups.yml");
 
         String language = serverAgent.getServer().getLanguage().getLang();
-        if (!supportedLanguages.contains(language)) language = defaultLanguage;
+        if (serverAgent.getResource("user-interface-config-" + language + ".yml") == null)
+            language = defaultLanguage;
 
         this.userInterfaceConfig = this.initConfigFile(serverAgent, "user-interface-config-" + language + ".yml");
     }

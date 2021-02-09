@@ -13,6 +13,11 @@ text:
       allow-only-owner: "me"
       allow-invited: "invited"
       allow-all: "all"
+    lock-type:
+      lock-type: "lock type"
+      allow-only-owner: "me"
+      allow-invited: "invited"
+      allow-all: "all"
   blockgen:
     item-tag: "§eResource Block §aLV."
 
@@ -29,6 +34,7 @@ message:
     invite-received: "You were invited to §e%owner§f's island."
     purge-succeed: "Successfully purged §e%owner§f from my island."
     protection-type-updated: "Successfully update protection type to §e%protection-type§f."
+    lock-type-updated: "Successfully update lock type to §e%protection-type§f."
   blockgen:
     blockgen-upgrade-succeed: "Resource Block has been upgraded to §e%level§flevels."
   management:
@@ -94,6 +100,7 @@ command:
       parameter:
         player: "nickname"
       teleport-failed-playernotfound: "Could not find player §4%player§f."
+      teleport-failed-locked: "§e%player§f's island is locked by §e%lock-type§f type."
     invite-command:
       command: "invite"
       description: "Invite other player to my island."
@@ -125,6 +132,13 @@ command:
       parameter:
         protection-type: "protection type"
       format-error: "Please enter in /protect <me|invited|all> format."
+    lock-type-command:
+      command: "lock"
+      description: "Set lock type in my island."
+      usage: "/lock <me|invited|all>"
+      parameter:
+        protection-type: "lock type"
+      format-error: "Please enter in /lock <me|invited|all> format."
 
 form:
   welcome-form:
@@ -146,9 +160,9 @@ guidebook:
   version: 1
   author: "§e§lJustSkyblock"
   content:
-    - "page1 example\n
-    page1 line2\n
-    for %player."
-    - "page2 example\n
-    page2 line2\n
-    for %player."
+    - "page1 example
+    \npage1 line2
+    \nfor %player."
+    - "page2 example
+    \npage2 line2
+    \nfor %player."

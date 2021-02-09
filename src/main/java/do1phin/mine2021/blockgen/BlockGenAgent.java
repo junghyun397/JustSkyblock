@@ -100,13 +100,12 @@ public class BlockGenAgent {
 
         if (blockGenSourceLevel + 2 > this.blockGenSource.size()) return false;
 
-        final Optional<Position> core = this.canUpgradeBlockGen(block);
-        if (core.isPresent()) {
-            this.upgradeBlockGen(blockGenSourceLevel, core.get());
+        return this.canUpgradeBlockGen(block).map(position -> {
+            this.upgradeBlockGen(blockGenSourceLevel, position);
             this.messageAgent.sendMessage(player, "message.blockgen.blockgen-upgrade-succeed",
                     new String[]{"%level"}, new String[]{String.valueOf(blockGenSourceLevel + 2)});
             return true;
-        } else return false;
+        }).orElse(false);
     }
 
     void spawnNextBlock(int x, int y, int z, int sourceLevel) {

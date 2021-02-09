@@ -8,9 +8,12 @@ import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
 import do1phin.mine2021.data.db.DatabaseAgent;
 import do1phin.mine2021.skyblock.SkyBlockAgent;
+import do1phin.mine2021.skyblock.data.ProtectionType;
+import do1phin.mine2021.skyblock.data.SkyblockData;
 import do1phin.mine2021.ui.MessageAgent;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 public class TeleportCommand extends SkyblockCommand {
@@ -33,20 +36,54 @@ public class TeleportCommand extends SkyblockCommand {
     public boolean execute(CommandSender commandSender, String ignored, String[] args) {
         if (!this.checkExecutable(commandSender)) return false;
 
-        if (args.length == 0) {
-            this.skyBlockAgent.teleportPlayerToIsland((Player) commandSender, ((Player) commandSender).getUniqueId(), commandSender.getName());
+        if (args.length == 0 || args[0].equals("@s")) {
+            this.skyBlockAgent.teleportPlayerToIsland((Player) commandSender, this.skyBlockAgent.getSkyblockData((Player) commandSender));
+            return true;
+        }
+
+        final SkyblockData skyblockData;
+        if (args[0].equals("@r")) {
+            final Optional<SkyblockData> randomSkyblockData = this.findRandomAllowedIsland();
+            if (!randomSkyblockData.isPresent()) return false;
+            skyblockData = randomSkyblockData.get();
         } else {
-            final Optional<UUID> targetUUID = this.databaseAgent.getUUIDByPlayerName(args[0]);
-            if (!targetUUID.isPresent()) {
+            final Optional<UUID> maybeUUID = this.databaseAgent.getUUIDByPlayerName(args[0]);
+            if (!maybeUUID.isPresent()) {
                 this.messageAgent.sendMessage(commandSender, "command.skyblock.teleport-command.teleport-failed-playernotfound",
                         new String[]{"%player"}, new String[]{args[0]});
                 return false;
             }
 
-            this.skyBlockAgent.teleportPlayerToIsland((Player) commandSender, targetUUID.get(), args[0]);
+            skyblockData = this.databaseAgent.getPlayerData(maybeUUID.get()).getSkyblockData();
+
+            if (skyblockData.getLockType() == ProtectionType.ALLOW_ONLY_OWNER) {
+                this.messageAgent.sendMessage(commandSender, "command.skyblock.teleport-command.teleport-failed-locked",
+                        new String[]{"%player", "%lock-type"},
+                        new String[]{args[0], this.messageAgent.getText("skyblock.lock-type.allow-only-owner")});
+                return false;
+            } else if (skyblockData.getLockType() == ProtectionType.ALLOW_INVITED
+                    && !skyblockData.getCollaborators().contains(((Player) commandSender).getUniqueId())) {
+                this.messageAgent.sendMessage(commandSender, "command.skyblock.teleport-command.teleport-failed-locked",
+                        new String[]{"%player", "%lock-type"},
+                        new String[]{args[0], this.messageAgent.getText("skyblock.lock-type.allow-invited")});
+                return false;
+            }
         }
 
+        this.skyBlockAgent.teleportPlayerToIsland((Player) commandSender, skyblockData);
+
         return true;
+    }
+
+    private Optional<SkyblockData> findRandomAllowedIsland() {
+        final int MAX_DEPTH = 1000;
+        for (int i = 0; i < MAX_DEPTH; i++) {
+            final Optional<SkyblockData> targetSkyblockData
+                    = this.databaseAgent.getSkyblockDataBySection(new Random().nextInt(this.databaseAgent.getNextSection()))
+                    .filter(skyblockData -> skyblockData.getLockType() == ProtectionType.ALLOW_ALL);
+            if (targetSkyblockData.isPresent()) return targetSkyblockData;
+        }
+        return Optional.empty();
     }
 
 }
