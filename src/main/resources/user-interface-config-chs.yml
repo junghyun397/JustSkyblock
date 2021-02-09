@@ -1,0 +1,168 @@
+Provider: Yaml
+
+prefix:
+  info: "<§eInfo§f>"
+  notice: "<§eNotice§f>"
+
+text:
+  general:
+    guidebook: "§e游戏指南"
+  skyblock:
+    protection-type:
+      protection-type: "保护类型"
+      allow-only-owner: "仅限自己"
+      allow-invited: "受邀的人"
+      allow-all: "所有人"
+    lock-type:
+      lock-type: "封锁类型"
+      allow-only-owner: "仅限自己"
+      allow-invited: "受邀的人"
+      allow-all: "所有人"
+  blockgen:
+    item-tag: "§e资源区等级§aLV."
+
+message:
+  general:
+    on-player-join: "§e%player §f加入了服务器."
+    on-player-quit: "§e%player§f 离开了服务器"
+    on-player-first-join: "§e%player§f 第一次加入服务器."
+  skyblock:
+    teleport-succeed: "成功传送到 §e%player §f的岛屿."
+    teleport-incoming: "§e%player§f 来到了我的岛上."
+    teleport-succeed-self: "成功传送到我的岛上."
+    invite-succeed: "成功邀请 §e%player §f来到我的岛上."
+    invite-received: "你被邀请去 §e%owner §f的岛屿."
+    purge-succeed: "成功地把 §e%owner§f 从我的岛上驱逐出去"
+    protection-type-updated: "成功地将保护类型更新为 §e%protection-type§f."
+    lock-type-updated: "成功地将锁类型更新为 §e%protection-type§f."
+  blockgen:
+    blockgen-upgrade-succeed: "资源区已升级为§e%level§f级."
+  management:
+    on-player-kicked: "你因为§e%reason§f§e被踢出§f  ."
+    on-player-banned: "成功封建了 §e%player§f 到 §e%year-%month-%day %hour:%minute §f因为由于 §e%reason§f 的原因"
+    player-banned: "§e%player§f 被封禁到 §e%year-%month-%day %hour:%minute§f因为 §e%reason§f 的原因"
+
+popup:
+  general:
+    on-player-join: "+%player"
+    on-player-quit: "-%player"
+  skyblock:
+    protection-type-warning: "§e%player§7的岛屿通过 §e%protection-type§7 类型保护."
+
+command:
+  management:
+    ban-command:
+      command: "b"
+      description: "封禁玩家"
+      usage: "/b <玩家名> <原因> <持续时间(days)>"
+      parameter:
+        player: "player"
+        reason: "reason"
+        duration: "duration"
+      format-error: "请依照 /b <nickname> <reason> <duration(days)> 的格式输入."
+      ban-succeed: "§e%player§f 由于 §e%reason§f 封禁到§e%durationdays§f "
+      ban-failed-playernotfound: "无法找到玩家： §4%player§f."
+    unban-command:
+      command: "ub"
+      description: "解禁玩家"
+      usage: "/ub <玩家名>"
+      parameter:
+        player: "player"
+      format-error: "请依照 /ub <nickname> 的格式输入."
+      unban-succeed: "成功解禁 §e%player§f."
+      unban-failed: "§4%player§f 没有被封禁"
+    kick-command:
+      command: "k"
+      description: "提出玩家"
+      usage: "/k <玩家名> <原因>"
+      parameter:
+        player: "player"
+        reason: "reason"
+      format-error: "请依照 /k <nickname> <reason> 的格式输入."
+      kick-succeed: "§e%player§f 被踢出了因为 §e%reason§f."
+      kick-failed-playernotfound: "无法找到玩家： §4%player§f."
+    group-command:
+      command: "g"
+      description: "更换玩家团队"
+      usage: "/g <玩家名> <ID>"
+      parameter:
+        player: "nickname"
+        id: "group id"
+      format-error: "请依照 /g <nickname> <ID> 的格式输入."
+      update-succeed: "§e%player§f 现在归属于 §e%id:%group-name§f."
+      update-failed-idnotfound: "无法找到团队ID： §4%id§f."
+      update-failed-playernotfound: "无法找到玩家： §4%player§f."
+  skyblock:
+    teleport-command:
+      command: "teleport"
+      description: "传送到我的岛或者其他玩家的岛上。"
+      usage: "/teleport 或者 /teleport <玩家名>"
+      parameter:
+        player: "nickname"
+      teleport-failed-playernotfound: "无法找到玩家： §4%player§f."
+      teleport-failed-locked: "§e%player§f的岛屿被封锁了，使用 §e%lock-type§f 类型."
+    invite-command:
+      command: "invite"
+      description: "邀请其他玩家到我的岛上来。"
+      usage: "/invite <玩家名>"
+      parameter:
+        player: "nickname"
+      format-error: "请依照 /invite <nickname> 的格式输入."
+      invite-failed-playeralradyinvited: "§e%player§f 已经被邀请到我的岛上来了"
+      invite-failed-playernotfound: "无法找到玩家： §4%player§f."
+    purge-command:
+      command: "purge"
+      description: "取消被邀请我的岛上的玩家."
+      usage: "/purge <玩家名>"
+      parameter:
+        player: "nickname"
+      format-error: "请依照 /purge <nickname> 的格式输入."
+      purge-failed-playernotfound: "无法找到玩家： §4%player§f."
+      purge-failed-playernotinvited: "§4%player§f 不在被邀请的玩家之列."
+    invite-list-command:
+      command: "list"
+      description: "查一下被邀请到我的岛上的玩家名单."
+      usage: "/list"
+      show-invited-list: "§e%invited-list§f 被邀请到我的岛上."
+      show-invited-list-empty: "没有玩家."
+    protection-type-command:
+      command: "protect"
+      description: "在我的岛上设置保护类型."
+      usage: "/protect <me|invited|all>"
+      parameter:
+        protection-type: "protection type"
+      format-error: "请依照 /protect <me|invited|all> 的格式输入."
+    lock-type-command:
+      command: "lock"
+      description: "在我的岛上设置锁定类型."
+      usage: "/lock <me|invited|all>"
+      parameter:
+        protection-type: "lock type"
+      format-error: "请依照 /lock <me|invited|all> 的格式输入."
+
+form:
+  welcome-form:
+    title: "§l欢迎！!"
+    content: "欢迎来到 §eJustSkyblock§f 服务器!
+    \n
+    \n • 请查看 §e游戏指南§f.
+    \n
+    \n • 请查看 §eAdded Recipe§f.
+    \n
+    \n • 如果您有任何问题，请与管理员联系 §b[Staff]§f title.
+    \n
+    \n祝您在 §eJustSkyblock§f 服务器玩得开心！.
+    \n由CC米饭翻译为中文
+    \n§7JustSkyblock @2021
+    "
+
+guidebook:
+  version: 1
+  author: "§e§lJustSkyblock"
+  content:
+    - "page1 example\n
+    page1 line2\n
+    for %player."
+    - "page2 example\n
+    page2 line2\n
+    for %player."
