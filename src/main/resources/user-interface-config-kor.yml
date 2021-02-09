@@ -160,9 +160,9 @@ guidebook:
   version: 1
   author: "§e§lJustSkyblock"
   content:
-    - "page1 example\n
-    page1 line2\n
-    for %player."
-    - "page2 example\n
-    page2 line2\n
-    for %player."
+    - "page1 example
+    \npage1 line2
+    \nfor %player."
+    - "page2 example
+    \npage2 line2
+    \nfor %player."
