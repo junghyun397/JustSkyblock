@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>do1phin.mine2021</groupId>
-    <artifactId>JustSkyblock</artifactId>
+    <artifactId>JustSkyblock-NukkitX</artifactId>
     <version>1.0.2</version>
 
     <properties>
@@ -61,11 +61,18 @@
         </resources>
     </build>
 
+    <repositories>
+        <repository>
+            <id>nukkitx</id>
+            <url>https://repo.nukkitx.com/main/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
-            <groupId>org.powernukkit</groupId>
-            <artifactId>powernukkit</artifactId>
-            <version>1.4.0.0-PN-ALPHA.2</version>
+            <groupId>cn.nukkit</groupId>
+            <artifactId>nukkit</artifactId>
+            <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

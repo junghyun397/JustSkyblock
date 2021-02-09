@@ -5,9 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ master ]
+    branches: [ nukkitx ]
   pull_request:
-    branches: [ master ]
+    branches: [ nukkitx ]
 
 jobs:
   build_plugin:
@@ -21,13 +21,13 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Rename artifacts
-      run: mv target/JustSkyblock-*.jar target/JustSkyblock-SNAPSHOT.jar
+      run: mv target/JustSkyblock-NukkitX-*.jar target/JustSkyblock-NukkitX-SNAPSHOT.jar
     - name: Archive artifacts
       uses: actions/upload-artifact@v1
       if: success()
       with:
-        name: JustSkyblock-SNAPSHOT
-        path: target/JustSkyblock-SNAPSHOT.jar
+        name: JustSkyblock-NukkitX-SNAPSHOT
+        path: target/JustSkyblock-NukkitX-SNAPSHOT.jar
 
   build_reosurce_pack:
     runs-on: ubuntu-latest
