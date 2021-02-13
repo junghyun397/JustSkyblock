@@ -1,0 +1,168 @@
+Provider: Yaml
+
+prefix:
+  info: "<§e案内§f>"
+  notice: "<§eおしらせ§f>"
+
+text:
+  general:
+    guidebook: "§eガイドブック"
+  skyblock:
+    protection-type:
+      protection-type: "保護レベル"
+      allow-only-owner: "me"
+      allow-invited: "invited"
+      allow-all: "all"
+    lock-type:
+      protection-type: "接近レベル"
+      allow-only-owner: "me"
+      allow-invited: "invited"
+      allow-all: "all"
+  blockgen:
+    item-tag: "§eリソースブロック §aLV."
+
+message:
+  general:
+    on-player-join: "§e%player§fがログインしました。"
+    on-player-quit: "§e%player§fがログアウトしました。"
+    on-player-first-join: "§e%player§fがサーバーに初めてログインしました。"
+  skyblock:
+    teleport-succeed: "§e%player§fのエリアに移動しました。"
+    teleport-incoming: "§e%player§fが私のエリアに到着しました。"
+    teleport-succeed-self: "私のエリアに移動しました。"
+    invite-succeed: "§e%player§fを私のエリアに招待しました。"
+    invite-received: "§e%owner§fのエリアに招待されました。"
+    purge-succeed: "§e%player§fを私のエリアから追放しました。"
+    protection-type-updated: "私のエリアの保護レベルが§e%protection-type§fに設定されました。"
+    lock-type-updated: "私のエリアの接近レベルが§e%lock-type§fに設定されました。"
+  blockgen:
+    blockgen-upgrade-succeed: "リソースブロックが§e%level段階§fに強化されました。"
+  management:
+    on-player-kicked: "§e%reason§fの理由により§e追放§fされました。"
+    on-player-banned: "§e%player§fは§e%year年%month月%day日%hour時%minute分§fまで§e%reason§fの理由により遮断されました。"
+    player-banned: "§e%player§fさんは§e%year年%month月%day日%hour時%minute分§fまで§e%reason§fの理由により遮断されています。"
+
+popup:
+  general:
+    on-player-join: "+%player"
+    on-player-quit: "-%player"
+  skyblock:
+    protection-type-warning: "§e%player§7さんのエリアは§e%protection-type§7 レベルに保護されています。"
+
+command:
+  management:
+    ban-command:
+      command: "b"
+      description: "ユーザーを遮断します。"
+      usage: "/b <ニックネーム> <理由> <期間（日）>"
+      parameter:
+        player: "ユーザー"
+        reason: "理由"
+        duration: "期間"
+      format-error: "/b <ニックネーム> <理由> <期間（日）>の様式に入力してください。"
+      ban-succeed: "§e%player§fを§e%reason§fの理由により§e%duration日§f間遮断しました。"
+      ban-failed-playernotfound: "§4%player§fを見つかりません。"
+    unban-command:
+      command: "ub"
+      description: "ユーザーの遮断を解除します。"
+      usage: "/ub <ニックネーム>"
+      parameter:
+        player: "ユーザー"
+      format-error: "/ub <ニックネーム>の様式に入力してください。"
+      unban-succeed: "§e%player§fの遮断を解除しました。."
+      unban-failed: "§4%player§fは遮断されていません。"
+    kick-command:
+      command: "k"
+      description: "ユーザーを追放します。"
+      usage: "/k <ニックネーム> <理由>"
+      parameter:
+        player: "ユーザー"
+        reason: "理由"
+      format-error: "/k <ニックネーム> <理由>の様式に入力してください。"
+      kick-succeed: "§e%player§fを§e%reason§fの理由により遮断しました。"
+      kick-failed-playernotfound: "§4%player§fを見つかりません。"
+    group-command:
+      command: "g"
+      description: "ユーザーの称号を変えます。"
+      usage: "/g <ニックネーム> <ID>"
+      parameter:
+        player: "ユーザー"
+        id: "グループID"
+      format-error: "/g <ニックネーム> <ID>の様式に入力してください。"
+      update-succeed: "§e%player§fを分類ID §e%id:%group-name§fに分類しました。"
+      update-failed-idnotfound: "分類ID §4%id§fを見つかりません。"
+      update-failed-playernotfound: "§4%player§fを見つかりません。"
+  skyblock:
+    teleport-command:
+      command: "teleport"
+      description: "私のエリアまたは他のユーザーのエリアに移動します。"
+      usage: "/teleport または /teleport <ニックネーム>"
+      parameter:
+        player: "ニックネーム"
+      teleport-failed-playernotfound: "§4%player§fを見つかりません。"
+      teleport-failed-locked: "§e%player§fのエリアは§e%lock-type§fレベルで接近が制限されています。"
+    invite-command:
+      command: "invite"
+      description: "他のユーザーを私のエリアに招待します。"
+      usage: "/invite <ニックネーム>"
+      parameter:
+        player: "ニックネーム"
+      format-error: "/invite <ニックネーム>の様式に入力してください。"
+      invite-failed-playeralradyinvited: "§e%player§fはもう私のエリアに招待されています。"
+      invite-failed-playernotfound: "§4%player§fを見つかりません。"
+    purge-command:
+      command: "purge"
+      description: "私のエリアに招待されているユーザーを追放します。"
+      usage: "/purge <ニックネーム>"
+      parameter:
+        player: "ニックネーム"
+      format-error: "/purge <ニックネーム>の様式に入力してください。"
+      purge-failed-playernotfound: "§4%player§fを見つかりません。"
+      purge-failed-playernotinvited: "§4%player§fは招待リストにいません。"
+    invite-list-command:
+      command: "list"
+      description: "私のエリアに招待されているユーザーのリストを確認します。"
+      usage: "/list"
+      show-invited-list: "§e%invited-list§fが私のエリアに招待されています。"
+      show-invited-list-empty: "誰も私のエリアに招待されていません。"
+    protection-type-command:
+      command: "protect"
+      description: "私のエリアの保護レベルを設定します。"
+      usage: "/protect <me|invited|all>"
+      parameter:
+        protection-type: "保護レベル"
+      format-error: "/protect <me|invited|all>の様式に入力してください。"
+    lock-type-command:
+      command: "lock"
+      description: "私のエリアの接近レベルを設定します。"
+      usage: "/lock <me|invited|all>"
+      parameter:
+        lock-type: "接近レベル"
+      format-error: "/lock <all|invited|all>の様式に入力してください。"
+
+form:
+  welcome-form:
+    title: "§lようこそ！"
+    content: "§eJustSkyblock§fサーバーに初めてログインしました。
+    \n
+    \n • §eガイドブック§fをご確認ください。
+    \n
+    \n • §e追加レシピ§fをご確認ください。
+    \n
+    \n • ご不明な点がございましたら、§b[Staff]§f称号を付けている§b管理者§fにお問い合わせください。
+    \n
+    \n§eJustSkyblock§f サーバーで楽しい時間を過ごしてください。
+    \n
+    \n§7JustSkyblock @2021
+    "
+
+guidebook:
+  version: 1
+  author: "§e§lJustSkyblock"
+  content:
+    - "page1 example
+    \npage1 line2
+    \nfor %player."
+    - "page2 example
+    \npage2 line2
+    \nfor %player."
