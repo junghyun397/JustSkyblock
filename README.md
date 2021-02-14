@@ -51,3 +51,29 @@ JustSkyblock is completed with a Resource Pack. Put ``JustSkyblock_Resource_Pack
 
 ### Additional plugins
 JustSkyblock is built without considering being used with other plug-ins. Applying other plug-ins, especially those with teleport or block management, is not validated and cannot guarantee fully operation. If you need to apply other plug-ins additionally, please avoid plug-ins with teleport or block management functions as much as possible.
+
+## Roadmap
+See the [open issues](https://github.com/junghyun397/JustSkyblock/issues) for a list of proposed features (and known issues).
+
+## Contributing
+New features, bug fixes, new language support, JustSkyblock welcomes all forms of contribution. Feel free to open PR to contribute to this project. If you want to participate more deeply in this project and develop it together as a main contributor, please contact me.
+
+## Contact
+You can contact me via e-mail junghyun397@gmail.com or discord junghyun397#6725.
+
+## License
+```
+           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+                   Version 2, December 2004
+ 
+Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+
+Everyone is permitted to copy and distribute verbatim or modified
+copies of this license document, and changing it is allowed as long
+as the name is changed.
+ 
+           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+ 0. You just DO WHAT THE FUCK YOU WANT TO.
+```
