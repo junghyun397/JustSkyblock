@@ -7,25 +7,25 @@ JustSkyblock, Skyblock Server Plug-in. Easily build a powerful Skyblock server o
 
 ## Features
 
-#### Skyblock Feature
+#### Skyblock
 * Skyblock Island generation and assignment
 * Skyblock Island ``lock``, ``protection`` and ``sharing``
 * Skyblock Island-related chunk managment logic
 
-#### Resource Block Freature
+#### Resource Block
 * Virtual quarry ``Resource Block``
 * Upgradable Resource block ― Place the same level of Resource Blocks on the floor at 3*3.
 * Provide ``Resource Pack`` for Resource Block
 
-#### UX Frature
+#### UX
 * Additional ``Custom Recipes`` / ``Banned Recipes``
 * ``Basic Items`` and ``Personalization Guidebook``
 
-#### Management Freature
+#### Management
 * Term-settable ``Ban System``
 * Customizable ``Kick System``
 
-#### Custom Name-Tag Feature
+#### Custom Name-Tag
 * Customize player chatting format and name tag using ``Player Groups``
 
 #### Database Support
@@ -40,7 +40,7 @@ JustSkyblock, Skyblock Server Plug-in. Easily build a powerful Skyblock server o
 ## Getting Started
 
 ### Download Plug-in
-To download this plug-in, you can download the latest release from the [releases gage](https://github.com/junghyun397/JustSkyblock/releases) and the latest build version from [ActionsCI](https://github.com/junghyun397/JustSkyblock/actions). The master branch is developed in PowerNukkit API, and NukkitX API version is developed in nukkitx branch. The nukkitx branch is updated when a new version is released.
+To download this plug-in, you can download the latest release from the [releases gage](https://github.com/junghyun397/JustSkyblock/releases) and the latest build version from [ActionsCI](https://github.com/junghyun397/JustSkyblock/actions). The [``master`` branch](https://github.com/junghyun397/JustSkyblock/tree/master) is developed in ``PowerNukkit`` API, and ``NukkitX`` API version is developed in [``nukkitx`` branch](https://github.com/junghyun397/JustSkyblock/tree/nukkitx). The nukkitx branch is updated when a new version is released.
 
 ### Install Resource Pack
 JustSkyblock is completed with a Resource Pack. Put ``JustSkyblock_Resource_Pack.mcpack`` file in the ``resource_packs`` folder to applying the Resource Pack. Resource Pack works seamlessly regardless of the block id used by Resource Block, and only supports up to LV5 Resource Block.
