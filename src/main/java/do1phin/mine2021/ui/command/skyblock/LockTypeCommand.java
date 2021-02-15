@@ -15,6 +15,7 @@ public class LockTypeCommand extends SkyblockCommand {
         super(config.getUIString("command.skyblock.lock-type-command.command"),
                 config.getUIString("command.skyblock.lock-type-command.description"),
                 config.getUIString("command.skyblock.lock-type-command.usage"),
+                "lock",
                 new CommandParameter[]{
                         CommandParameter.newEnum(config.getUIString("command.skyblock.lock-type-command.parameter.lock-type"),
                                 false, new String[]{messageAgent.getText("skyblock.lock-type.allow-only-owner"),

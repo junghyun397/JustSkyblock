@@ -8,10 +8,8 @@ import do1phin.mine2021.ui.command.BaseCommand;
 
 public abstract class ManagementCommand extends BaseCommand {
 
-    public ManagementCommand(String name, String description, String usageMessage, CommandParameter[] commandParameters, ServerAgent serverAgent, MessageAgent messageAgent) {
-        super(name, description, usageMessage, commandParameters, serverAgent, messageAgent);
-
-        this.setPermission("justskyblock.management");
+    public ManagementCommand(String name, String description, String usageMessage, String permission, CommandParameter[] commandParameters, ServerAgent serverAgent, MessageAgent messageAgent) {
+        super(name, description, usageMessage, "management." + permission, commandParameters, serverAgent, messageAgent);
     }
 
     @Override

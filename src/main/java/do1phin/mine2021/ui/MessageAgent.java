@@ -1,6 +1,7 @@
 package do1phin.mine2021.ui;
 
 import cn.nukkit.Player;
+import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.form.window.FormWindowSimple;
 import do1phin.mine2021.ServerAgent;
@@ -29,6 +30,14 @@ public class MessageAgent {
 
     public void sendMessage(CommandSender player, String key, String[] params, String[] values) {
         player.sendMessage(this.prefixInfo + this.getMessage(key, params, values));
+    }
+
+    public void sendCommandMessage(CommandSender player, String key) {
+        this.sendCommandMessage(player, key, null, null);
+    }
+
+    public void sendCommandMessage(CommandSender player, String key, String[] params, String[] values) {
+        Command.broadcastCommandMessage(player, this.getMessage(key, params, values));
     }
 
     public void sendBroadcast(String key) {

@@ -16,6 +16,7 @@ public class InviteCommand extends SkyblockCommand {
         super(config.getUIString("command.skyblock.invite-command.command"),
                 config.getUIString("command.skyblock.invite-command.description"),
                 config.getUIString("command.skyblock.invite-command.usage"),
+                "invite",
                 new CommandParameter[]{
                         CommandParameter.newType(config.getUIString("command.skyblock.invite-command.parameter.player"),
                                 false, CommandParamType.TARGET)

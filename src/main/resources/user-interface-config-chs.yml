@@ -60,8 +60,8 @@ command:
         reason: "reason"
         duration: "duration"
       format-error: "请依照 /b <nickname> <reason> <duration(days)> 的格式输入."
-      ban-succeed: "§e%player§f 由于 §e%reason§f 封禁到§e%durationdays§f "
-      ban-failed-playernotfound: "无法找到玩家： §4%player§f."
+      ban-succeed: "§e%player§r 由于 §e%reason§r 封禁到§e%durationdays§r"
+      ban-failed-playernotfound: "无法找到玩家： §4%player§r."
     unban-command:
       command: "ub"
       description: "解禁玩家"
@@ -69,8 +69,9 @@ command:
       parameter:
         player: "player"
       format-error: "请依照 /ub <nickname> 的格式输入."
-      unban-succeed: "成功解禁 §e%player§f."
-      unban-failed: "§4%player§f 没有被封禁"
+      unban-succeed: "成功解禁 §e%player§r."
+      unban-failed: "§4%player§r 没有被封禁"
+      unban-failed-playernotfound: "无法找到玩家： §4%player§r."
     kick-command:
       command: "k"
       description: "提出玩家"
@@ -79,8 +80,8 @@ command:
         player: "player"
         reason: "reason"
       format-error: "请依照 /k <nickname> <reason> 的格式输入."
-      kick-succeed: "§e%player§f 被踢出了因为 §e%reason§f."
-      kick-failed-playernotfound: "无法找到玩家： §4%player§f."
+      kick-succeed: "§e%player§r 被踢出了因为 §e%reason§r."
+      kick-failed-playernotfound: "无法找到玩家： §4%player§r."
     group-command:
       command: "g"
       description: "更换玩家团队"
@@ -89,9 +90,9 @@ command:
         player: "nickname"
         id: "group id"
       format-error: "请依照 /g <nickname> <ID> 的格式输入."
-      update-succeed: "§e%player§f 现在归属于 §e%id:%group-name§f."
-      update-failed-idnotfound: "无法找到团队ID： §4%id§f."
-      update-failed-playernotfound: "无法找到玩家： §4%player§f."
+      update-succeed: "§e%player§r 现在归属于 §e%id:%group-name§r."
+      update-failed-idnotfound: "无法找到团队ID： §4%id§r."
+      update-failed-playernotfound: "无法找到玩家： §4%player§r."
   skyblock:
     teleport-command:
       command: "teleport"

@@ -60,8 +60,8 @@ command:
         reason: "reason"
         duration: "duration"
       format-error: "Please enter in /b <nickname> <reason> <duration(days)> format."
-      ban-succeed: "§e%player§f was banned for §e%durationdays§f due to §e%reason§f."
-      ban-failed-playernotfound: "Could not find player §4%player§f."
+      ban-succeed: "§e%player§r was banned for §e%durationdays§r due to §e%reason§r."
+      ban-failed-playernotfound: "Could not find player §4%player§r."
     unban-command:
       command: "ub"
       description: "Unban banned player"
@@ -69,8 +69,9 @@ command:
       parameter:
         player: "player"
       format-error: "Please enter in /ub <nickname> format."
-      unban-succeed: "Successfully unbanned §e%player§f."
-      unban-failed: "§4%player§f is not banned"
+      unban-succeed: "Successfully unbanned §e%player§r."
+      unban-failed: "§4%player§r is not banned"
+      unban-failed-playernotfound: "Could not find player §4%player§r."
     kick-command:
       command: "k"
       description: "Kick the player"
@@ -79,8 +80,8 @@ command:
         player: "player"
         reason: "reason"
       format-error: "Please enter in /k <nickname> <reason> format."
-      kick-succeed: "§e%player§f was kicked due to §e%reason§f."
-      kick-failed-playernotfound: "Could not find player §4%player§f."
+      kick-succeed: "§e%player§r was kicked due to §e%reason§r."
+      kick-failed-playernotfound: "Could not find player §4%player§r."
     group-command:
       command: "g"
       description: "Change group of player"
@@ -89,9 +90,9 @@ command:
         player: "nickname"
         id: "group id"
       format-error: "Please enter in /g <nickname> <ID> format."
-      update-succeed: "§e%player§f are classified as §e%id:%group-name§f."
-      update-failed-idnotfound: "Could not find player group-id §4%id§f."
-      update-failed-playernotfound: "Could not find player §4%player§f."
+      update-succeed: "§e%player§r are classified as §e%id:%group-name§r."
+      update-failed-idnotfound: "Could not find player group-id §4%id§r."
+      update-failed-playernotfound: "Could not find player §4%player§r."
   skyblock:
     teleport-command:
       command: "teleport"

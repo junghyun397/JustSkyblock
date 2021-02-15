@@ -22,6 +22,7 @@ public class PurgeCommand extends SkyblockCommand {
         super(config.getUIString("command.skyblock.purge-command.command"),
                 config.getUIString("command.skyblock.purge-command.description"),
                 config.getUIString("command.skyblock.purge-command.usage"),
+                "purge",
                 new CommandParameter[]{CommandParameter.newType(config.getUIString("command.skyblock.purge-command.parameter.player"),
                         false, CommandParamType.TARGET)
                 },

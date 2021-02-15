@@ -26,6 +26,7 @@ public class DebugCommand extends ManagementCommand {
         super("debug",
                 "debug command",
                 "/debug <debug type>",
+                "debug",
                 new CommandParameter[]{
                         CommandParameter.newEnum("debug type", false,
                                 Arrays.stream(DebugCommandType.values()).map(DebugCommandType::toString).toArray(String[]::new)),

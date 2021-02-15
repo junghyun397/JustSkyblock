@@ -9,11 +9,11 @@ load: STARTUP
 
 permissions:
   justskyblock.general:
-    description: "Allow access to general server functions"
+    description: "Allow access to general server feature"
     default: true
   justskyblock.skyblock:
-    description: "Allow access to skyblock functions"
+    description: "Allow access to skyblock feature"
     default: true
   justskyblock.management:
-    description: "Allow access to management functions"
+    description: "Allow access to management feature"
     default: op

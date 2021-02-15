@@ -24,6 +24,7 @@ public class TeleportCommand extends SkyblockCommand {
         super(config.getUIString("command.skyblock.teleport-command.command"),
                 config.getUIString("command.skyblock.teleport-command.description"),
                 config.getUIString("command.skyblock.teleport-command.usage"),
+                "teleport",
                 new CommandParameter[]{CommandParameter.newType(config.getUIString("command.skyblock.teleport-command.parameter.player"),
                         true, CommandParamType.TARGET)
                 },
@@ -79,7 +80,7 @@ public class TeleportCommand extends SkyblockCommand {
         for (int i = 0; i < MAX_DEPTH; i++) {
             final Optional<SkyblockData> targetSkyblockData
                     = this.databaseAgent.getSkyblockDataBySection(new Random().nextInt(this.databaseAgent.getNextSection()))
-                    .filter(skyblockData -> skyblockData.getLockType() != ProtectionType.ALLOW_ALL);
+                    .filter(skyblockData -> skyblockData.getLockType() == ProtectionType.ALLOW_ALL);
             if (targetSkyblockData.isPresent()) return targetSkyblockData;
         }
         return Optional.empty();

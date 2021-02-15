@@ -24,6 +24,7 @@ public class BanCommand extends ManagementCommand {
         super(config.getUIString("command.management.ban-command.command"),
                 config.getUIString("command.management.ban-command.description"),
                 config.getUIString("command.management.ban-command.usage"),
+                "ban",
                 new CommandParameter[]{
                         CommandParameter.newType(config.getUIString("command.management.ban-command.parameter.player"),
                                 false, CommandParamType.TARGET),
@@ -79,11 +80,8 @@ public class BanCommand extends ManagementCommand {
                     new String[]{targetPlayer.getName(), ymdhm[0], ymdhm[1], ymdhm[2], ymdhm[3], ymdhm[4], args[1]}), false);
         }
 
-        this.messageAgent.sendMessage(commandSender, "command.management.ban-command.ban-succeed",
+        this.messageAgent.sendCommandMessage(commandSender, "command.management.ban-command.ban-succeed",
                 new String[]{"%player", "%reason", "%duration"}, new String[]{targetPlayerData.getName(), args[1], args[2]});
-
-        Command.broadcastCommandMessage(commandSender,
-                "ban " + targetPlayerData.getName() + " duration " + duration + " reason " + args[1]);
 
         return true;
     }

@@ -69,8 +69,9 @@ command:
       parameter:
         player: "ユーザー"
       format-error: "/ub <ニックネーム>の様式に入力してください。"
-      unban-succeed: "§e%player§fの遮断を解除しました。."
-      unban-failed: "§4%player§fは遮断されていません。"
+      unban-succeed: "§e%player§rの遮断を解除しました。."
+      unban-failed: "§4%player§rは遮断されていません。"
+      unban-failed-playernotfound: "§4%player§rを見つかりません。"
     kick-command:
       command: "k"
       description: "ユーザーを追放します。"
@@ -79,8 +80,8 @@ command:
         player: "ユーザー"
         reason: "理由"
       format-error: "/k <ニックネーム> <理由>の様式に入力してください。"
-      kick-succeed: "§e%player§fを§e%reason§fの理由により遮断しました。"
-      kick-failed-playernotfound: "§4%player§fを見つかりません。"
+      kick-succeed: "§e%player§rを§e%reason§rの理由により遮断しました。"
+      kick-failed-playernotfound: "§4%player§rを見つかりません。"
     group-command:
       command: "g"
       description: "ユーザーの称号を変えます。"
@@ -89,9 +90,9 @@ command:
         player: "ユーザー"
         id: "グループID"
       format-error: "/g <ニックネーム> <ID>の様式に入力してください。"
-      update-succeed: "§e%player§fを分類ID §e%id:%group-name§fに分類しました。"
-      update-failed-idnotfound: "分類ID §4%id§fを見つかりません。"
-      update-failed-playernotfound: "§4%player§fを見つかりません。"
+      update-succeed: "§e%player§rを分類ID §e%id:%group-name§rに分類しました。"
+      update-failed-idnotfound: "分類ID §4%id§rを見つかりません。"
+      update-failed-playernotfound: "§4%player§rを見つかりません。"
   skyblock:
     teleport-command:
       command: "teleport"

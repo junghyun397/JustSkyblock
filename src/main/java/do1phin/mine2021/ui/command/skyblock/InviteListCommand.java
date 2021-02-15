@@ -20,6 +20,7 @@ public class InviteListCommand extends SkyblockCommand {
         super(config.getUIString("command.skyblock.invite-list-command.command"),
                 config.getUIString("command.skyblock.invite-list-command.description"),
                 config.getUIString("command.skyblock.invite-list-command.usage"),
+                "list",
                 new CommandParameter[]{},
                 serverAgent, messageAgent, skyBlockAgent);
 

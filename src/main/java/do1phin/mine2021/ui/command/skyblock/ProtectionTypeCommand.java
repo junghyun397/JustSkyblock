@@ -15,6 +15,7 @@ public class ProtectionTypeCommand extends SkyblockCommand {
         super(config.getUIString("command.skyblock.protection-type-command.command"),
                 config.getUIString("command.skyblock.protection-type-command.description"),
                 config.getUIString("command.skyblock.protection-type-command.usage"),
+                "protection",
                 new CommandParameter[]{
                         CommandParameter.newEnum(config.getUIString("command.skyblock.protection-type-command.parameter.protection-type"),
                                 false, new String[]{messageAgent.getText("skyblock.protection-type.allow-only-owner"),

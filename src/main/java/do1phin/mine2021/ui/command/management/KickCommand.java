@@ -15,6 +15,7 @@ public class KickCommand extends ManagementCommand {
         super(config.getUIString("command.management.kick-command.command"),
                 config.getUIString("command.management.kick-command.description"),
                 config.getUIString("command.management.kick-command.usage"),
+                "kick",
                 new CommandParameter[]{
                         CommandParameter.newType(config.getUIString("command.management.kick-command.parameter.player"),
                                 false, CommandParamType.TARGET),
@@ -43,11 +44,8 @@ public class KickCommand extends ManagementCommand {
         targetPlayer.kick(this.messageAgent.getMessage("message.management.on-player-kicked",
                 new String[]{"%reason"}, new String[]{args[1]}), false);
 
-        this.messageAgent.sendMessage(commandSender, "command.management.kick-command.kick-succeed",
+        this.messageAgent.sendCommandMessage(commandSender, "command.management.kick-command.kick-succeed",
                 new String[]{"%player", "%reason"}, new String[]{targetPlayer.getName(), args[1]});
-
-        Command.broadcastCommandMessage(commandSender,
-                "kick " + targetPlayer.getName() + " reason " + args[1]);
 
         return true;
     }

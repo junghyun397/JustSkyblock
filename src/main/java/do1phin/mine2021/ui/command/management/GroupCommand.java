@@ -19,6 +19,7 @@ public class GroupCommand extends ManagementCommand {
         super(config.getUIString("command.management.group-command.command"),
                 config.getUIString("command.management.group-command.description"),
                 config.getUIString("command.management.group-command.usage"),
+                "group",
                 new CommandParameter[]{
                         CommandParameter.newType(config.getUIString("command.management.group-command.parameter.player"),
                                 false, CommandParamType.TARGET),
@@ -60,15 +61,12 @@ public class GroupCommand extends ManagementCommand {
 
         final String groupName = this.playerGroupAgent.getPlayerGroupMap().get(groupID).a;
 
-        this.messageAgent.sendMessage(commandSender, "command.management.group-command.update-succeed",
+        this.messageAgent.sendCommandMessage(commandSender, "command.management.group-command.update-succeed",
                 new String[]{"%player", "%id", "%group-name"}, new String[]{
                         targetPlayer.getName(),
                         String.valueOf(groupID),
                         groupName
         });
-
-        Command.broadcastCommandMessage(commandSender,
-                "group " + targetPlayerData.getName() + " code " + groupID + " name " + groupName);
 
         return true;
     }

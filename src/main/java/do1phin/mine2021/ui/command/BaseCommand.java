@@ -12,8 +12,9 @@ public abstract class BaseCommand extends Command {
     protected final ServerAgent serverAgent;
     protected final MessageAgent messageAgent;
 
-    public BaseCommand(String name, String description, String usageMessage, CommandParameter[] commandParameters, ServerAgent serverAgent, MessageAgent messageAgent) {
+    public BaseCommand(String name, String description, String usageMessage, String permission, CommandParameter[] commandParameters, ServerAgent serverAgent, MessageAgent messageAgent) {
         super(name, description, usageMessage);
+        this.setPermission("justskyblock." + permission);
         this.commandParameters.clear();
         this.commandParameters.put("default", commandParameters);
 

@@ -20,6 +20,7 @@ public class UnBanCommand extends ManagementCommand {
         super(config.getUIString("command.management.unban-command.command"),
                 config.getUIString("command.management.unban-command.description"),
                 config.getUIString("command.management.unban-command.usage"),
+                "unban",
                 new CommandParameter[]{
                         CommandParameter.newType(config.getUIString("command.management.unban-command.parameter.player"),
                                 false, CommandParamType.TEXT),
@@ -40,22 +41,24 @@ public class UnBanCommand extends ManagementCommand {
 
         final Optional<UUID> targetUUID = this.databaseAgent.getUUIDByPlayerName(args[0]);
         if (!targetUUID.isPresent()) {
-            this.messageAgent.sendMessage(commandSender, "command.management.unban-command.unban-failed",
+            this.messageAgent.sendMessage(commandSender, "command.management.unban-command.unban-failed-playernotfound",
                     new String[]{"%player"}, new String[]{args[0]});
             return false;
         }
 
         final PlayerData playerData = this.databaseAgent.getPlayerData(targetUUID.get());
-        if (playerData.getBanDate() != null) {
-            playerData.setBanDate(null);
-            playerData.setBanReason(null);
-            this.databaseAgent.updatePlayerData(playerData);
-
-            this.messageAgent.sendMessage(commandSender, "command.management.unban-command.unban-succeed",
-                    new String[]{"%player"}, new String[]{playerData.getName()});
-            return true;
+        if (playerData.getBanDate() == null) {
+            this.messageAgent.sendMessage(commandSender, "command.management.unban-command.unban-failed",
+                    new String[]{"%player"}, new String[]{args[0]});
+            return false;
         }
 
+        playerData.setBanDate(null);
+        playerData.setBanReason(null);
+        this.databaseAgent.updatePlayerData(playerData);
+
+        this.messageAgent.sendCommandMessage(commandSender, "command.management.unban-command.unban-succeed",
+                new String[]{"%player"}, new String[]{playerData.getName()});
         return true;
     }
 

@@ -10,11 +10,9 @@ public abstract class SkyblockCommand extends BaseCommand {
 
     protected SkyBlockAgent skyBlockAgent;
 
-    public SkyblockCommand(String name, String description, String usageMessage, CommandParameter[] commandParameters, ServerAgent serverAgent, MessageAgent messageAgent, SkyBlockAgent skyBlockAgent) {
-        super(name, description, usageMessage, commandParameters, serverAgent, messageAgent);
+    public SkyblockCommand(String name, String description, String usageMessage, String permission, CommandParameter[] commandParameters, ServerAgent serverAgent, MessageAgent messageAgent, SkyBlockAgent skyBlockAgent) {
+        super(name, description, usageMessage, "skyblock." + permission, commandParameters, serverAgent, messageAgent);
         this.skyBlockAgent = skyBlockAgent;
-
-        this.setPermission("justskyblock.skyblock");
     }
 
 }
