@@ -2,7 +2,7 @@ package do1phin.mine2021.data;
 
 import cn.nukkit.Player;
 import do1phin.mine2021.ServerAgent;
-import do1phin.mine2021.data.db.DatabaseAgent;
+import do1phin.mine2021.database.DatabaseAgent;
 import do1phin.mine2021.utils.Tuple;
 
 import java.util.Map;

@@ -90,7 +90,10 @@ public class Config {
                 this.serverConfig.getBoolean("system.ux.enable-teleport-to-island"),
                 this.serverConfig.getBoolean("system.ux.enable-welcome-form"),
                 this.serverConfig.getBoolean("system.ux.enable-default-items"),
-                this.serverConfig.getBoolean("system.ux.enable-guidebook"));
+                this.serverConfig.getBoolean("system.ux.enable-guidebook"),
+                this.serverConfig.getBoolean("system.logging.command-logging"),
+                this.serverConfig.getBoolean("system.logging.blockgen-logging")
+        );
     }
 
     // SERVER CONFIG
@@ -249,19 +252,24 @@ public class Config {
         public final boolean enableDefaultItems;
         public final boolean enableGuideBook;
 
-        public SystemConfig(boolean disableDefaultCommands,
-                            boolean enableInventorySave,
+        public final boolean commandLogging;
+        public final boolean blockGenLogging;
 
-                            Collection<Tuple<Integer, Integer, Integer>> defaultItemCollection,
+        private SystemConfig(boolean disableDefaultCommands,
+                             boolean enableInventorySave,
 
-                            int guideBookVersion,
-                            String guideBookAuthor,
-                            String[] guideBookPages,
+                             Collection<Tuple<Integer, Integer, Integer>> defaultItemCollection,
 
-                            boolean enableTeleportToIsland,
-                            boolean enableWelcomeForm,
-                            boolean enableDefaultItems,
-                            boolean enableGuideBook) {
+                             int guideBookVersion,
+                             String guideBookAuthor,
+                             String[] guideBookPages,
+
+                             boolean enableTeleportToIsland,
+                             boolean enableWelcomeForm,
+                             boolean enableDefaultItems,
+                             boolean enableGuideBook,
+                             boolean commandLogging,
+                             boolean blockGenLogging) {
             this.disableDefaultCommands = disableDefaultCommands;
             this.enableInventorySave = enableInventorySave;
 
@@ -275,6 +283,9 @@ public class Config {
             this.enableWelcomeForm = enableWelcomeForm;
             this.enableDefaultItems = enableDefaultItems;
             this.enableGuideBook = enableGuideBook;
+
+            this.commandLogging = commandLogging;
+            this.blockGenLogging = blockGenLogging;
         }
     }
 

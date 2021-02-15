@@ -14,7 +14,7 @@ text:
       allow-invited: "초대된"
       allow-all: "모두"
     lock-type:
-      protection-type: "잠금 수준"
+      protection-type: "접근 수준"
       allow-only-owner: "나만"
       allow-invited: "초대된"
       allow-all: "모두"

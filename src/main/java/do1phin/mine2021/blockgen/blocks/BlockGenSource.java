@@ -27,7 +27,7 @@ public abstract class BlockGenSource extends BlockSolid {
 
     @Override
     public int getDropExp() {
-        return 2;
+        return 1;
     }
 
     @Override
@@ -49,7 +49,7 @@ public abstract class BlockGenSource extends BlockSolid {
 
     @Override
     public boolean isBreakable(Item item) {
-        return !item.isNull();
+        return item.isTool();
     }
 
     @Override

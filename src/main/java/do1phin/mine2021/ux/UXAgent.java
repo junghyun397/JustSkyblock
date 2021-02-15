@@ -1,4 +1,4 @@
-package do1phin.mine2021.ui;
+package do1phin.mine2021.ux;
 
 import cn.nukkit.Player;
 import cn.nukkit.inventory.CraftingManager;
@@ -9,6 +9,7 @@ import cn.nukkit.item.ItemBookWritten;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
 import do1phin.mine2021.data.PlayerData;
+import do1phin.mine2021.ui.MessageAgent;
 import do1phin.mine2021.utils.CalendarHelper;
 
 import java.lang.reflect.Field;
@@ -39,12 +40,16 @@ public class UXAgent {
         if (playerData.getBanDate() != null
                 && !this.processBannedPlayer(playerData)) return;
 
+        if (this.systemConfig.enableGuideBook) this.resolveGuideBook(playerData.getPlayer());
+
+
         this.messageAgent.sendBroadcast("message.general.on-player-join",
                 new String[]{"%player"}, new String[]{playerData.getName()});
     }
 
     public void resolvePlayerFirstJoin(Player player) {
         if (this.systemConfig.enableDefaultItems) this.giveDefaultItems(player);
+        if (this.systemConfig.enableGuideBook) this.giveGuideBook(player, 1);
         this.addPendingRegisterNewPlayer(player.getUniqueId());
 
         this.messageAgent.sendBroadcast("message.general.on-player-first-join",
@@ -85,21 +90,35 @@ public class UXAgent {
         return false;
     }
 
-    private void giveDefaultItems(Player player) {
+    public void giveDefaultItems(Player player) {
         this.systemConfig.defaultItemCollection.forEach(item ->
                 player.getInventory().addItem(Item.get(item.a, item.b, item.c).clone()));
 
         player.getInventory().addItem(this.serverAgent.getBlockGenAgent().getBasicBlockGenSource());
+    }
 
-        if (this.systemConfig.enableGuideBook) {
-            final ItemBookWritten book = (ItemBookWritten) Item.get(387, 0, 1);
-            final String bookName = this.messageAgent.getText("general.guidebook") + " v" + this.systemConfig.guideBookVersion;
-            book.writeBook(this.systemConfig.guideBookAuthor, bookName, Arrays.stream(this.systemConfig.guideBookPages).map(s ->
-                    s.replaceAll("%player", player.getName())).toArray(String[]::new));
-            book.setCustomName(bookName);
+    public void giveGuideBook(Player player, int count) {
+        final String bookName = this.messageAgent.getText("general.guidebook") + " v" + this.systemConfig.guideBookVersion;
 
-            player.getInventory().addItem(book);
-        }
+        final ItemBookWritten guideBook = (ItemBookWritten) Item.get(387, 0, 1);
+
+        guideBook.writeBook(this.systemConfig.guideBookAuthor, bookName, Arrays.stream(this.systemConfig.guideBookPages)
+                .map(s -> s.replaceAll("%player", player.getName()))
+                .toArray(String[]::new));
+        guideBook.setCustomName(bookName);
+
+        player.getInventory().addItem(guideBook);
+    }
+
+    private void resolveGuideBook(final Player player) {
+        final String bookName = this.messageAgent.getText("general.guidebook") + " v" + this.systemConfig.guideBookVersion;
+
+        final Item[] legacyBooks = player.getInventory().slots.values().stream()
+                .filter(item -> !item.getName().equals(bookName))
+                .toArray(Item[]::new);
+
+        player.getInventory().removeItem(legacyBooks);
+        this.giveGuideBook(player, legacyBooks.length);
     }
 
     public void resolvePermissions(Player player) {
@@ -111,8 +130,6 @@ public class UXAgent {
 
     @SuppressWarnings({"unchecked", "RedundantCast"})
     private void resolveRecipes(Collection<ShapedRecipe> additionalRecipes, Collection<Item> bannedRecipes) {
-        additionalRecipes.forEach(recipe -> this.serverAgent.getServer().getCraftingManager().registerRecipe(recipe));
-
         final Class<CraftingManager> craftingManagerClass = CraftingManager.class;
         try {
             final Field shapedRecipesField = craftingManagerClass.getDeclaredField("shapedRecipes");
@@ -152,6 +169,8 @@ public class UXAgent {
             e.printStackTrace();
             this.serverAgent.loggerWarning(e.getMessage());
         }
+
+        additionalRecipes.forEach(recipe -> this.serverAgent.getServer().getCraftingManager().registerRecipe(recipe));
 
         this.serverAgent.getServer().getCraftingManager().rebuildPacket();
     }

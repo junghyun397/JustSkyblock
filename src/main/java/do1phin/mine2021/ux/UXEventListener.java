@@ -1,4 +1,4 @@
-package do1phin.mine2021.ui;
+package do1phin.mine2021.ux;
 
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;

@@ -1,13 +1,14 @@
 package do1phin.mine2021.ui.command.management;
 
 import cn.nukkit.Player;
+import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
 import do1phin.mine2021.data.PlayerData;
-import do1phin.mine2021.data.db.DatabaseAgent;
+import do1phin.mine2021.database.DatabaseAgent;
 import do1phin.mine2021.ui.MessageAgent;
 import do1phin.mine2021.utils.CalendarHelper;
 
@@ -56,7 +57,7 @@ public class BanCommand extends ManagementCommand {
         final PlayerData targetPlayerData;
         final Player targetPlayer = this.serverAgent.getServer().getPlayer(args[0]);
         if (targetPlayer == null) {
-            Optional<UUID> uuidByName = this.databaseAgent.getUUIDByPlayerName(args[0]);
+            final Optional<UUID> uuidByName = this.databaseAgent.getUUIDByPlayerName(args[0]);
             if (uuidByName.isPresent())
                 targetPlayerData = this.databaseAgent.getPlayerData(uuidByName.get());
             else {
@@ -80,6 +81,9 @@ public class BanCommand extends ManagementCommand {
 
         this.messageAgent.sendMessage(commandSender, "command.management.ban-command.ban-succeed",
                 new String[]{"%player", "%reason", "%duration"}, new String[]{targetPlayerData.getName(), args[1], args[2]});
+
+        Command.broadcastCommandMessage(commandSender,
+                "ban " + targetPlayerData.getName() + " duration " + duration + " reason " + args[1]);
 
         return true;
     }

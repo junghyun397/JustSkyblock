@@ -16,6 +16,12 @@ system:
     enable-default-items: true
     # When enable, player receives guidebook when player first join.
     enable-guidebook: true
+  logging:
+    # When enable, logging when players use commands.
+    command-logging: true
+    # When enable, logging when resource blocks are upgraded.
+    blockgen-logging: true
+
 
 # Added/Removed recipe is displayed on the Crafting tab.
 crafting:
@@ -35,6 +41,13 @@ crafting:
       amount: 1
       shape: "AAA,AAA,AAA"
       ingredients: "A=35:0"
+
+    - name: "gold2blaze-rod"
+      id: 369
+      meta: 0
+      amount: 1
+      shape: "AAA,AAA,AAA"
+      ingredients: "A=266:0"
 
     - name: "wheat2sugar-cane"
       id: 338
@@ -60,6 +73,13 @@ crafting:
       amount: 1
       shape: "AAA,ABA,AAA"
       ingredients: "A=170:0,B=3:0"
+
+    - name: "dirt2grass"
+      id: 2
+      meta: 0
+      amount: 1
+      shape: "ASA,ABA,ADA"
+      ingredients: "A=0:0,S=295:0,B=351:15,D=3:0"
 
     - name: "log2sapling-1"
       id: 6
@@ -101,6 +121,11 @@ crafting:
   # Banned Recipes Settings
   # * Define the result of the recipe to be banned using id, meta, and mount.
   banned-recipes:
+    # rabbit-leather2leather
+    - id: 334
+      meta: 0
+      amount: 1
+
     # LV 3 - SOUL TORCH
     - id: -268
       meta: 0

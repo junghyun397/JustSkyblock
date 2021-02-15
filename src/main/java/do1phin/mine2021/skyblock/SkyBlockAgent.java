@@ -6,7 +6,7 @@ import cn.nukkit.level.Position;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
 import do1phin.mine2021.data.PlayerData;
-import do1phin.mine2021.data.db.DatabaseAgent;
+import do1phin.mine2021.database.DatabaseAgent;
 import do1phin.mine2021.skyblock.data.ProtectionType;
 import do1phin.mine2021.skyblock.data.SkyblockData;
 import do1phin.mine2021.ui.MessageAgent;

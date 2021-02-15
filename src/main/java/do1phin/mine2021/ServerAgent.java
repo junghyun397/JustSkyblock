@@ -10,20 +10,17 @@ import do1phin.mine2021.data.Config;
 import do1phin.mine2021.data.PlayerData;
 import do1phin.mine2021.data.PlayerGroupAgent;
 import do1phin.mine2021.data.PlayerGroupEventListener;
-import do1phin.mine2021.data.db.DatabaseAgent;
-import do1phin.mine2021.data.db.DatabaseHelper;
-import do1phin.mine2021.data.db.MysqlDatabaseHelper;
-import do1phin.mine2021.data.db.SqliteDatabaseHelper;
+import do1phin.mine2021.database.DatabaseAgent;
+import do1phin.mine2021.database.DatabaseHelper;
+import do1phin.mine2021.database.MysqlDatabaseHelper;
+import do1phin.mine2021.database.SqliteDatabaseHelper;
 import do1phin.mine2021.skyblock.SkyBlockAgent;
 import do1phin.mine2021.skyblock.SkyBlockEventListener;
 import do1phin.mine2021.skyblock.data.SkyblockData;
 import do1phin.mine2021.ui.MessageAgent;
-import do1phin.mine2021.ui.UXAgent;
-import do1phin.mine2021.ui.UXEventListener;
-import do1phin.mine2021.ui.command.management.BanCommand;
-import do1phin.mine2021.ui.command.management.GroupCommand;
-import do1phin.mine2021.ui.command.management.KickCommand;
-import do1phin.mine2021.ui.command.management.UnBanCommand;
+import do1phin.mine2021.ux.UXAgent;
+import do1phin.mine2021.ux.UXEventListener;
+import do1phin.mine2021.ui.command.management.*;
 import do1phin.mine2021.ui.command.skyblock.*;
 import do1phin.mine2021.utils.EmptyGenerator;
 
@@ -125,6 +122,7 @@ public class ServerAgent extends PluginBase {
         this.getServer().getCommandMap().register("mine2021", new UnBanCommand(this, this.messageAgent, config, this.databaseAgent));
         this.getServer().getCommandMap().register("mine2021", new KickCommand(this, this.messageAgent, config));
         this.getServer().getCommandMap().register("mine2021", new GroupCommand(this, this.messageAgent, config, this.playerGroupAgent));
+        this.getServer().getCommandMap().register("mine2021", new DebugCommand(this, this.messageAgent, config, this.uxAgent));
 
         this.getServer().getOnlinePlayers().forEach((key, value) -> this.registerPlayer(value));
 
@@ -179,6 +177,14 @@ public class ServerAgent extends PluginBase {
         return this.playerDataMap.get(player.getUniqueId());
     }
 
+    public Level getMainLevel() {
+        return this.mainLevel;
+    }
+
+    void setMainLevel(Level level) {
+        this.mainLevel = level;
+    }
+
     public Optional<PlayerData> getPlayerData(UUID uuid) {
         return Optional.ofNullable(this.playerDataMap.get(uuid));
     }
@@ -193,14 +199,6 @@ public class ServerAgent extends PluginBase {
 
     public PlayerGroupAgent getPlayerGroupAgent() {
         return this.playerGroupAgent;
-    }
-
-    public Level getMainLevel() {
-        return this.mainLevel;
-    }
-
-    void setMainLevel(Level level) {
-        this.mainLevel = level;
     }
 
 }

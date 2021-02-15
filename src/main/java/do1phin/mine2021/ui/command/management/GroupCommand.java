@@ -1,6 +1,7 @@
 package do1phin.mine2021.ui.command.management;
 
 import cn.nukkit.Player;
+import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
@@ -57,12 +58,17 @@ public class GroupCommand extends ManagementCommand {
         this.playerGroupAgent.setPlayerGroup(targetPlayer, groupID);
         this.playerGroupAgent.setPlayerNameTag(targetPlayerData);
 
+        final String groupName = this.playerGroupAgent.getPlayerGroupMap().get(groupID).a;
+
         this.messageAgent.sendMessage(commandSender, "command.management.group-command.update-succeed",
                 new String[]{"%player", "%id", "%group-name"}, new String[]{
                         targetPlayer.getName(),
                         String.valueOf(groupID),
-                        this.playerGroupAgent.getPlayerGroupMap().get(groupID).a
+                        groupName
         });
+
+        Command.broadcastCommandMessage(commandSender,
+                "group " + targetPlayerData.getName() + " code " + groupID + " name " + groupName);
 
         return true;
     }

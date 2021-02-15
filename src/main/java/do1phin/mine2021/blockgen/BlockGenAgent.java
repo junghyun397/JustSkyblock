@@ -109,7 +109,7 @@ public class BlockGenAgent {
         }).orElse(false);
     }
 
-    void spawnNextBlock(int x, int y, int z, int sourceLevel) {
+    void spawnNextBlock(final int x, final int y, final int z, final int sourceLevel) {
         TimerWrapper.schedule(() -> {
             if (this.getBlockGenSourceLevel(this.getMainLevel().getBlock(x, y - 1, z).getId()) == sourceLevel
                     && this.getMainLevel().getBlock(x, y, z).getId() == 0) {

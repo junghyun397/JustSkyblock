@@ -6,7 +6,7 @@ import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
-import do1phin.mine2021.data.db.DatabaseAgent;
+import do1phin.mine2021.database.DatabaseAgent;
 import do1phin.mine2021.skyblock.SkyBlockAgent;
 import do1phin.mine2021.skyblock.data.SkyblockData;
 import do1phin.mine2021.ui.MessageAgent;
