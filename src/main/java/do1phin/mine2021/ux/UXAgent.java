@@ -6,6 +6,7 @@ import cn.nukkit.inventory.Recipe;
 import cn.nukkit.inventory.ShapedRecipe;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBookWritten;
+import cn.nukkit.network.protocol.ProtocolInfo;
 import do1phin.mine2021.ServerAgent;
 import do1phin.mine2021.data.Config;
 import do1phin.mine2021.data.PlayerData;
@@ -15,8 +16,10 @@ import do1phin.mine2021.utils.CalendarHelper;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class UXAgent {
 
@@ -34,6 +37,7 @@ public class UXAgent {
         this.systemConfig = config.parseSystemConfig();
 
         this.resolveRecipes(config.parseAdditionalRecipes(), config.parseBannedRecipes());
+        this.resolveAcceptableProtocols(config.parseAcceptableProtocols());
     }
 
     public void resolvePlayerJoin(PlayerData playerData) {
@@ -41,7 +45,6 @@ public class UXAgent {
                 && !this.processBannedPlayer(playerData)) return;
 
         if (this.systemConfig.enableGuideBook) this.resolveGuideBook(playerData.getPlayer());
-
 
         this.messageAgent.sendBroadcast("message.general.on-player-join",
                 new String[]{"%player"}, new String[]{playerData.getName()});
@@ -100,7 +103,7 @@ public class UXAgent {
     public void giveGuideBook(Player player, int count) {
         final String bookName = this.messageAgent.getText("general.guidebook") + " v" + this.systemConfig.guideBookVersion;
 
-        final ItemBookWritten guideBook = (ItemBookWritten) Item.get(387, 0, 1);
+        final ItemBookWritten guideBook = (ItemBookWritten) Item.get(387, 0, count);
 
         guideBook.writeBook(this.systemConfig.guideBookAuthor, bookName, Arrays.stream(this.systemConfig.guideBookPages)
                 .map(s -> s.replaceAll("%player", player.getName()))
@@ -125,6 +128,22 @@ public class UXAgent {
         if (this.systemConfig.disableDefaultCommands && !player.isOp()) {
             player.addAttachment(this.serverAgent, "nukkit.command", false);
             player.recalculatePermissions();
+        }
+    }
+
+    private void resolveAcceptableProtocols(Collection<Integer> acceptableProtocols) {
+        try {
+            final Field supportedProtocolsField = ProtocolInfo.class.getField("SUPPORTED_PROTOCOLS");
+            final Field modifiersField = Field.class.getDeclaredField("modifiers");
+
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(supportedProtocolsField, supportedProtocolsField.getModifiers() & ~Modifier.FINAL);
+
+            supportedProtocolsField.set(null, Stream.concat(ProtocolInfo.SUPPORTED_PROTOCOLS.stream(), acceptableProtocols.stream())
+                    .collect(Collectors.toList()));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+            this.serverAgent.loggerWarning(e.getMessage());
         }
     }
 

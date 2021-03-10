@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class Config {
 
     private final cn.nukkit.utils.Config serverConfig;
@@ -121,6 +122,10 @@ public class Config {
             final ConfigSection configSection = (ConfigSection) o;
             return Item.get(configSection.getInt("id"), configSection.getInt("meta"), configSection.getInt("amount"));
         }).collect(Collectors.toList());
+    }
+
+    public Collection<Integer> parseAcceptableProtocols() {
+        return this.serverConfig.getIntegerList("system.protocol.acceptable-protocols");
     }
 
     public Collection<Tuple<Integer, Integer, Integer>> parseDefaultItems() {

@@ -6,7 +6,7 @@
 
     <groupId>do1phin.mine2021</groupId>
     <artifactId>JustSkyblock</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

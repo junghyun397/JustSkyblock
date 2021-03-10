@@ -7,6 +7,9 @@ system:
     disable-nukkit-commands: true
     # When enable, keeps the player's inventory and experience.
     enable-inventory-save: true
+  protocol:
+    # Additional protocol versions available to join the server
+    acceptable-protocols: []
   ux:
     # When enable, teleports player to the island assigned to the player when player first join.
     enable-telepot-to-island: true
