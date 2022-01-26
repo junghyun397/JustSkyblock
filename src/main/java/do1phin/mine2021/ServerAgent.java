@@ -10,10 +10,7 @@ import do1phin.mine2021.data.Config;
 import do1phin.mine2021.data.PlayerData;
 import do1phin.mine2021.data.PlayerGroupAgent;
 import do1phin.mine2021.data.PlayerGroupEventListener;
-import do1phin.mine2021.database.DatabaseAgent;
-import do1phin.mine2021.database.DatabaseHelper;
-import do1phin.mine2021.database.MysqlDatabaseHelper;
-import do1phin.mine2021.database.SqliteDatabaseHelper;
+import do1phin.mine2021.database.*;
 import do1phin.mine2021.skyblock.SkyBlockAgent;
 import do1phin.mine2021.skyblock.SkyBlockEventListener;
 import do1phin.mine2021.skyblock.data.SkyblockData;
@@ -24,12 +21,9 @@ import do1phin.mine2021.ui.command.management.*;
 import do1phin.mine2021.ui.command.skyblock.*;
 import do1phin.mine2021.utils.EmptyGenerator;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
-@SuppressWarnings("FieldCanBeLocal")
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ServerAgent extends PluginBase {
 
     private static ServerAgent instance;
@@ -83,13 +77,20 @@ public class ServerAgent extends PluginBase {
         this.loggerInfo("loading rdbms...");
 
         final DatabaseHelper databaseHelper;
-        if (config.getDatabaseConfig().getString("database.type").equalsIgnoreCase("mysql"))
-            databaseHelper = new MysqlDatabaseHelper(this, config);
-        else
-            databaseHelper = new SqliteDatabaseHelper(this, config);
+        switch (config.getDatabaseConfig().getString("database.type").toLowerCase()) {
+            case "mysql":
+                databaseHelper = new MysqlDatabaseHelper(this, config);
+                break;
+            case "dblib":
+                databaseHelper = new DBLibDatabaseHelper(this, config);
+                break;
+            default:
+                databaseHelper = new SqliteDatabaseHelper(this, config);
+                break;
+        }
 
         if (!databaseHelper.connect()) {
-            this.loggerCritical("loading rdbms failed.");
+            this.loggerCritical("loading database failed.");
             this.getServer().shutdown();
             return;
         }
@@ -111,18 +112,18 @@ public class ServerAgent extends PluginBase {
         this.getServer().getPluginManager().registerEvents(new BlockGenEventListener(this.blockGenAgent), this);
         this.getServer().getPluginManager().registerEvents(new PlayerGroupEventListener(this.playerGroupAgent), this);
 
-        this.getServer().getCommandMap().register("mine2021", new TeleportCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
-        this.getServer().getCommandMap().register("mine2021", new InviteCommand(this, this.messageAgent, config, this.skyBlockAgent));
-        this.getServer().getCommandMap().register("mine2021", new InviteListCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
-        this.getServer().getCommandMap().register("mine2021", new PurgeCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
-        this.getServer().getCommandMap().register("mine2021", new ProtectionTypeCommand(this, this.messageAgent, config, this.skyBlockAgent));
-        this.getServer().getCommandMap().register("mine2021", new LockTypeCommand(this, this.messageAgent, config, this.skyBlockAgent));
+        this.getServer().getCommandMap().register("/", new TeleportCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
+        this.getServer().getCommandMap().register("/", new InviteCommand(this, this.messageAgent, config, this.skyBlockAgent));
+        this.getServer().getCommandMap().register("/", new InviteListCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
+        this.getServer().getCommandMap().register("/", new PurgeCommand(this, this.messageAgent, config, this.skyBlockAgent, this.databaseAgent));
+        this.getServer().getCommandMap().register("/", new ProtectionTypeCommand(this, this.messageAgent, config, this.skyBlockAgent));
+        this.getServer().getCommandMap().register("/", new LockTypeCommand(this, this.messageAgent, config, this.skyBlockAgent));
 
-        this.getServer().getCommandMap().register("mine2021", new BanCommand(this, this.messageAgent, config, this.databaseAgent));
-        this.getServer().getCommandMap().register("mine2021", new UnBanCommand(this, this.messageAgent, config, this.databaseAgent));
-        this.getServer().getCommandMap().register("mine2021", new KickCommand(this, this.messageAgent, config));
-        this.getServer().getCommandMap().register("mine2021", new GroupCommand(this, this.messageAgent, config, this.playerGroupAgent));
-        this.getServer().getCommandMap().register("mine2021", new DebugCommand(this, this.messageAgent, config, this.uxAgent));
+        this.getServer().getCommandMap().register("/", new BanCommand(this, this.messageAgent, config, this.databaseAgent));
+        this.getServer().getCommandMap().register("/", new UnBanCommand(this, this.messageAgent, config, this.databaseAgent));
+        this.getServer().getCommandMap().register("/", new KickCommand(this, this.messageAgent, config));
+        this.getServer().getCommandMap().register("/", new GroupCommand(this, this.messageAgent, config, this.playerGroupAgent));
+        this.getServer().getCommandMap().register("/", new DebugCommand(this, this.messageAgent, config, this.uxAgent));
 
         this.getServer().getOnlinePlayers().forEach((key, value) -> this.registerPlayer(value));
 

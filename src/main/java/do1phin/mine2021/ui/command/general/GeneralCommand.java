@@ -11,8 +11,6 @@ public abstract class GeneralCommand extends BaseCommand {
     protected ServerAgent serverAgent;
 
     public GeneralCommand(String name, String description, String usageMessage, String permission, CommandParameter[] commandParameters, ServerAgent serverAgent, MessageAgent messageAgent, Config config) {
-        super(name, description, usageMessage, "general." + permission, commandParameters, serverAgent, messageAgent);
-
-        this.setPermission("justskyblock.general");
+        super(name, description, usageMessage, "general", commandParameters, serverAgent, messageAgent);
     }
 }

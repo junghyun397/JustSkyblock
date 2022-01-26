@@ -117,7 +117,7 @@ public class UXAgent {
         final String bookName = this.messageAgent.getText("general.guidebook") + " v" + this.systemConfig.guideBookVersion;
 
         final Item[] legacyBooks = player.getInventory().slots.values().stream()
-                .filter(item -> !item.getName().equals(bookName))
+                .filter(item -> item.getName().equals(bookName))
                 .toArray(Item[]::new);
 
         player.getInventory().removeItem(legacyBooks);
@@ -128,6 +128,7 @@ public class UXAgent {
         if (this.systemConfig.disableDefaultCommands && !player.isOp()) {
             player.addAttachment(this.serverAgent, "nukkit.command", false);
             player.recalculatePermissions();
+            player.sendCommandData();
         }
     }
 
@@ -147,7 +148,7 @@ public class UXAgent {
         }
     }
 
-    @SuppressWarnings({"unchecked", "RedundantCast"})
+    @SuppressWarnings({"unchecked"})
     private void resolveRecipes(Collection<ShapedRecipe> additionalRecipes, Collection<Item> bannedRecipes) {
         final Class<CraftingManager> craftingManagerClass = CraftingManager.class;
         try {

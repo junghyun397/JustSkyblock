@@ -2,12 +2,12 @@ Provider: Yaml
 
 # Database Settings
 database:
-  # Set to sqlite to use the SQLite3 database, and to mysql to use the MySQL database.
+  # Set to sqlite to use the SQLite3 database, and to mysql to use the MySQL, dblib to use MySQL via DBLib plugin.
   type: "sqlite"
   # SQLite Database Settings
   sqlite:
     db-file: "user-info.db"
-  # MySQL Database Settings
+  # MySQL / DBLib Database Settings
   mysql:
     host: "localhost"
     database: "justskyblock"
