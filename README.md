@@ -29,7 +29,7 @@ JustSkyblock, Skyblock Server Plug-in. Easily build a powerful Skyblock server o
 * Customize player chatting format and name tag using ``Player Groups``
 
 #### Database Support
-* ``MySQL`` / ``SQLite`` Database Support
+* ``MySQL`` / ``SQLite`` / ``DBLib(WIP)`` Database Support
 * Use pre-compiled SQL queries
 * No SQL Injection and Database overhead issues
 
@@ -59,14 +59,14 @@ See the [open issues](https://github.com/junghyun397/JustSkyblock/issues) for a 
 New features, bug fixes, new language support, JustSkyblock welcomes all forms of contribution. Feel free to open PR to contribute to this project. If you want to participate more deeply in this project and develop it together as a main contributor, please contact me.
 
 ## Contact
-You can contact me via e-mail junghyun397@gmail.com or discord junghyun397#6725.
+You can contact me via e-mail me@do1ph.in or discord junghyun397#6725.
 
 ## License
 ```
            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
                    Version 2, December 2004
  
-Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+Copyright (C) JeongHyeon Choi <me@do1ph.in>
 
 Everyone is permitted to copy and distribute verbatim or modified
 copies of this license document, and changing it is allowed as long
