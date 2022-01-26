@@ -34,7 +34,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Zip resource pack
-      uses: papeloto/action-zip@v1
+      uses: vimtor/action-zip@v1
       with:
         files: resource-pack/JustSkyblock_Resource_Pack
         recursive: true
